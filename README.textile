@@ -4,7 +4,15 @@ This repository contains several open source flow-based applications written in 
 
 h2. Getting started with development
 
-All of the projects have corresponding Eclipse projects that can be easily imported into Eclipse Juno (or later) for development. When coding with Eclipse, please use the included code formatter (from Eclipse JDT) in the "Coding conventions" folder. For more information on using the custom code formatter, refer to this "guide":http://help.eclipse.org/juno/index.jsp?topic=/org.eclipse.jdt.doc.user/reference/preferences/java/codestyle/ref-preferences-formatter.htm.
+All of the projects have corresponding Eclipse projects that can be easily imported into Eclipse Juno (or later) for development. 
+
+h4. Java Version
+
+Please use Java 1.6. The version of the WALA analysis libraries that I will be using does not support the newer Java 7 bytecodes.
+
+h4. Coding Conventions
+
+When coding with Eclipse, please use the included code formatter (from Eclipse JDT) in the "Coding conventions" folder. For more information on using the custom code formatter, refer to this "guide":http://help.eclipse.org/juno/index.jsp?topic=/org.eclipse.jdt.doc.user/reference/preferences/java/codestyle/ref-preferences-formatter.htm.
 
 h2. The benchmarks
 
