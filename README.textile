@@ -1,0 +1,16 @@
+h1. JFlow Benchmarks
+
+This repository contains several open source flow-based applications written in Java that we have parallelized.
+
+h2. Getting started with development
+
+All of the projects have corresponding Eclipse projects that can be easily imported into Eclipse Juno (or later) for development. When coding with Eclipse, please use the included code formatter (from Eclipse JDT) in the "Coding conventions" folder. For more information on using the custom code formatter, refer to this "guide":http://help.eclipse.org/juno/index.jsp?topic=/org.eclipse.jdt.doc.user/reference/preferences/java/codestyle/ref-preferences-formatter.htm.
+
+h2. The benchmarks
+
+h4. Lire
+
+The LIRE (Lucene Image REtrieval) library provides a simple way to retrieve images and photos based on their color and texture characteristics. LIRE creates a Lucene index of image features for content based image retrieval (CBIR). Three of the available image features are taken from the MPEG-7 Standard: ScalableColor, ColorLayout and EdgeHistogram a fourth one, the Auto Color Correlogram has been implemented based on recent research results.
+
+Original code from "Lire":http://sourceforge.net/projects/caliph-emir/?source=navbar.
+
