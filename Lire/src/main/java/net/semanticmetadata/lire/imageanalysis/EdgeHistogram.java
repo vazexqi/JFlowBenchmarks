@@ -35,10 +35,8 @@ import net.semanticmetadata.lire.utils.ConversionUtils;
 import net.semanticmetadata.lire.utils.SerializationUtils;
 
 /**
- * Just a wrapper for the use of LireFeature.
- * Date: 27.08.2008
- * Time: 12:14:19
- *
+ * Just a wrapper for the use of LireFeature. Date: 27.08.2008 Time: 12:14:19
+ * 
  * @author Mathias Lux, mathias@juggle.at
  */
 public class EdgeHistogram extends EdgeHistogramImplementation implements LireFeature {
@@ -47,7 +45,7 @@ public class EdgeHistogram extends EdgeHistogramImplementation implements LireFe
     }
 
     public void setByteArrayRepresentation(byte[] in) {
-        edgeHistogram = SerializationUtils.toIntArray(in);
+        edgeHistogram= SerializationUtils.toIntArray(in);
     }
 
     public double[] getDoubleHistogram() {

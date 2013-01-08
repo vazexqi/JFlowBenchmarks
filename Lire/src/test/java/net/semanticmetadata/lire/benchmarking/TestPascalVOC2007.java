@@ -48,18 +48,20 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 /**
- * Main test class for testing algorithms on the PASCAL VOC 2007 data set,
- * which is available at http://pascallin.ecs.soton.ac.uk/challenges/VOC/voc2007/index.html#testdata
- * Created: 11.05.2011 09:04:25
+ * Main test class for testing algorithms on the PASCAL VOC 2007 data set, which is available at
+ * http://pascallin.ecs.soton.ac.uk/challenges/VOC/voc2007/index.html#testdata Created: 11.05.2011
+ * 09:04:25
  */
 public class TestPascalVOC2007 extends TestCase {
     private ChainedDocumentBuilder builder;
-    private String testExtensive = "VOC2007/JPEGImages";
-    private String indexPath = "./pascal-map-test";
+
+    private String testExtensive= "VOC2007/JPEGImages";
+
+    private String indexPath= "./pascal-map-test";
 
     public void setUp() {
         // Setting up DocumentBuilder:
-        builder = new ChainedDocumentBuilder();
+        builder= new ChainedDocumentBuilder();
         builder.addBuilder(new CEDDDocumentBuilder());
         builder.addBuilder(DocumentBuilderFactory.getColorHistogramDocumentBuilder());
 //        builder.addBuilder(DocumentBuilderFactory.getFCTHDocumentBuilder());
@@ -79,7 +81,7 @@ public class TestPascalVOC2007 extends TestCase {
     public void testIndex() throws IOException {
         // indexing
         System.out.println("-< Getting files to index >--------------");
-        ArrayList<String> images = FileUtils.getAllImages(new File(testExtensive), true);
+        ArrayList<String> images= FileUtils.getAllImages(new File(testExtensive), true);
         System.out.println("-< Indexing " + images.size() + " files >--------------");
         indexFiles(images, builder, indexPath);
 
@@ -97,18 +99,19 @@ public class TestPascalVOC2007 extends TestCase {
 
     private void indexFiles(ArrayList<String> images, DocumentBuilder builder, String indexPath) throws IOException {
         System.out.println(">> Indexing " + images.size() + " files.");
-        IndexWriter iw = LuceneUtils.createIndexWriter(indexPath, true);
-        int count = 0;
-        long time = System.currentTimeMillis();
+        IndexWriter iw= LuceneUtils.createIndexWriter(indexPath, true);
+        int count= 0;
+        long time= System.currentTimeMillis();
         for (String identifier : images) {
-            Document doc = builder.createDocument(new FileInputStream(identifier), identifier);
+            Document doc= builder.createDocument(new FileInputStream(identifier), identifier);
             iw.addDocument(doc);
             count++;
-            if (count % 100 == 0) System.out.println(count + " files indexed.");
+            if (count % 100 == 0)
+                System.out.println(count + " files indexed.");
 //            if (count == 200) break;
         }
-        long timeTaken = (System.currentTimeMillis() - time);
-        float sec = ((float) timeTaken) / 1000f;
+        long timeTaken= (System.currentTimeMillis() - time);
+        float sec= ((float)timeTaken) / 1000f;
 
         System.out.println(sec + " seconds taken, " + (timeTaken / count) + " ms per image.");
         iw.optimize();

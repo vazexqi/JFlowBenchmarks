@@ -43,18 +43,15 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * This class provides some common functions for Lucene. As there are many changes to
- * the API of Lucene over time this class is the central place to change common variable
- * like the employed Lucene version.
- * User: Mathias
- * Date: 03.08.11
- * Time: 09:33
+ * This class provides some common functions for Lucene. As there are many changes to the API of
+ * Lucene over time this class is the central place to change common variable like the employed
+ * Lucene version. User: Mathias Date: 03.08.11 Time: 09:33
  */
 public class LuceneUtils {
     /**
      * Currently employed version of Lucene
      */
-    public static final Version LUCENE_VERSION = Version.LUCENE_33;
+    public static final Version LUCENE_VERSION= Version.LUCENE_33;
 
     /**
      * Different types of analyzers
@@ -67,10 +64,10 @@ public class LuceneUtils {
 
     /**
      * Creates an IndexWriter for given index path, with given analyzer.
-     *
+     * 
      * @param indexPath the path to the index directory
-     * @param create    set to true if you want to create a new index
-     * @param analyzer  gives the analyzer used for the Indexwriter.
+     * @param create set to true if you want to create a new index
+     * @param analyzer gives the analyzer used for the Indexwriter.
      * @return an IndexWriter
      * @throws IOException
      */
@@ -80,21 +77,23 @@ public class LuceneUtils {
 
     /**
      * Creates an IndexWriter for given index path, with given analyzer.
-     *
+     * 
      * @param directory the path to the index directory
-     * @param create    set to true if you want to create a new index
-     * @param analyzer  gives the analyzer used for the Indexwriter.
+     * @param create set to true if you want to create a new index
+     * @param analyzer gives the analyzer used for the Indexwriter.
      * @return an IndexWriter
      * @throws IOException
      */
     public static IndexWriter createIndexWriter(Directory directory, boolean create, AnalyzerType analyzer) throws IOException {
         // set the analyzer according to the method params
-        Analyzer tmpAnalyzer = null;
-        if (analyzer == AnalyzerType.SimpleAnalyzer) tmpAnalyzer = new SimpleAnalyzer(LUCENE_VERSION);
-        else if (analyzer == AnalyzerType.WhitespaceAnalyzer) tmpAnalyzer = new WhitespaceAnalyzer(LUCENE_VERSION);
+        Analyzer tmpAnalyzer= null;
+        if (analyzer == AnalyzerType.SimpleAnalyzer)
+            tmpAnalyzer= new SimpleAnalyzer(LUCENE_VERSION);
+        else if (analyzer == AnalyzerType.WhitespaceAnalyzer)
+            tmpAnalyzer= new WhitespaceAnalyzer(LUCENE_VERSION);
 
         // The config
-        IndexWriterConfig config = new IndexWriterConfig(LUCENE_VERSION, tmpAnalyzer);
+        IndexWriterConfig config= new IndexWriterConfig(LUCENE_VERSION, tmpAnalyzer);
         if (create)
             config.setOpenMode(IndexWriterConfig.OpenMode.CREATE); // overwrite if it exists.
         else
@@ -105,12 +104,14 @@ public class LuceneUtils {
 
     public static IndexWriter createIndexWriter(Directory directory, boolean create, AnalyzerType analyzer, double RAMBufferSize) throws IOException {
         // set the analyzer according to the method params
-        Analyzer tmpAnalyzer = null;
-        if (analyzer == AnalyzerType.SimpleAnalyzer) tmpAnalyzer = new SimpleAnalyzer(LUCENE_VERSION);
-        else if (analyzer == AnalyzerType.WhitespaceAnalyzer) tmpAnalyzer = new WhitespaceAnalyzer(LUCENE_VERSION);
+        Analyzer tmpAnalyzer= null;
+        if (analyzer == AnalyzerType.SimpleAnalyzer)
+            tmpAnalyzer= new SimpleAnalyzer(LUCENE_VERSION);
+        else if (analyzer == AnalyzerType.WhitespaceAnalyzer)
+            tmpAnalyzer= new WhitespaceAnalyzer(LUCENE_VERSION);
 
         // The config
-        IndexWriterConfig config = new IndexWriterConfig(LUCENE_VERSION, tmpAnalyzer);
+        IndexWriterConfig config= new IndexWriterConfig(LUCENE_VERSION, tmpAnalyzer);
         if (create)
             config.setOpenMode(IndexWriterConfig.OpenMode.CREATE); // overwrite if it exists.
         else
@@ -121,9 +122,9 @@ public class LuceneUtils {
 
     /**
      * Creates an IndexWriter for given index path, with a SimpleAnalyzer.
-     *
+     * 
      * @param indexPath the path to the index directory
-     * @param create    set to true if you want to create a new index
+     * @param create set to true if you want to create a new index
      * @return the IndexWriter
      * @throws IOException
      */

@@ -33,24 +33,23 @@ package net.semanticmetadata.lire.indexing.fastmap;
 import net.semanticmetadata.lire.imageanalysis.LireFeature;
 
 /**
- * Date: 13.01.2005
- * Time: 22:47:01
- *
+ * Date: 13.01.2005 Time: 22:47:01
+ * 
  * @author Mathias Lux, mathias@juggle.at
  */
 public class FeatureDistanceCalculator extends DistanceCalculator {
 
     /**
      * Allows the distance calculations based on visual descriptors.
-     *
+     * 
      * @param o1
      * @param o2
      * @return
      */
     public double getDistance(Object o1, Object o2) {
         if (o1 instanceof LireFeature && o2 instanceof LireFeature) {
-            LireFeature c1 = (LireFeature) o1;
-            LireFeature c2 = (LireFeature) o2;
+            LireFeature c1= (LireFeature)o1;
+            LireFeature c2= (LireFeature)o2;
             return c1.getDistance(c2);
         } else {
             return -1d;

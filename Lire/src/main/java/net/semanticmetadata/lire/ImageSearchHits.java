@@ -33,38 +33,37 @@ package net.semanticmetadata.lire;
 import org.apache.lucene.document.Document;
 
 /**
- * This class simulates the original Lucene Hits object.
- * Please note the only a certain number of results are returned.<br>
+ * This class simulates the original Lucene Hits object. Please note the only a certain number of
+ * results are returned.<br>
  * <p/>
- * This file is part of the Caliph and Emir project: http://www.SemanticMetadata.net
- * <br>Date: 02.02.2006
- * <br>Time: 23:45:20
- *
+ * This file is part of the Caliph and Emir project: http://www.SemanticMetadata.net <br>
+ * Date: 02.02.2006 <br>
+ * Time: 23:45:20
+ * 
  * @author Mathias Lux, mathias@juggle.at
  */
 public interface ImageSearchHits {
     /**
      * Returns the size of the result list.
-     *
+     * 
      * @return the size of the result list.
      */
     public int length();
 
     /**
-     * Returns the score of the document at given position.
-     * Please note that the score in this case is a distance,
-     * which means a score of 0 denotes the best possible hit.
-     * The result list starts with position 0 as everything
-     * in computer science does.
-     *
+     * Returns the score of the document at given position. Please note that the score in this case
+     * is a distance, which means a score of 0 denotes the best possible hit. The result list starts
+     * with position 0 as everything in computer science does.
+     * 
      * @param position defines the position
-     * @return the score of the document at given position. The lower the better (its a distance measure).
+     * @return the score of the document at given position. The lower the better (its a distance
+     *         measure).
      */
     public float score(int position);
 
     /**
      * Returns the document at given position
-     *
+     * 
      * @param position defines the position.
      * @return the document at given position.
      */

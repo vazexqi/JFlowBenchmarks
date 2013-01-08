@@ -39,30 +39,30 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 /**
- * This file is part of the Caliph and Emir project: http://www.SemanticMetadata.net
- * <br>Date: 04.02.2006
- * <br>Time: 09:44:49
- *
+ * This file is part of the Caliph and Emir project: http://www.SemanticMetadata.net <br>
+ * Date: 04.02.2006 <br>
+ * Time: 09:44:49
+ * 
  * @author Mathias Lux, mathias@juggle.at
  */
 public class FileUtils {
     /**
      * Returns all jpg images from a directory in an array.
-     *
-     * @param directory                 the directory to start with
+     * 
+     * @param directory the directory to start with
      * @param descendIntoSubDirectories should we include sub directories?
      * @return an ArrayList<String> containing all the files or nul if none are found..
      * @throws IOException
      */
     public static ArrayList<String> getAllImages(File directory, boolean descendIntoSubDirectories) throws IOException {
-        ArrayList<String> resultList = new ArrayList<String>(256);
-        File[] f = directory.listFiles();
+        ArrayList<String> resultList= new ArrayList<String>(256);
+        File[] f= directory.listFiles();
         for (File file : f) {
             if (file != null && (file.getName().toLowerCase().endsWith(".jpg") || file.getName().toLowerCase().endsWith(".png")) && !file.getName().startsWith("tn_")) {
                 resultList.add(file.getCanonicalPath());
             }
             if (descendIntoSubDirectories && file.isDirectory()) {
-                ArrayList<String> tmp = getAllImages(file, true);
+                ArrayList<String> tmp= getAllImages(file, true);
                 if (tmp != null) {
                     resultList.addAll(tmp);
                 }
@@ -75,15 +75,15 @@ public class FileUtils {
     }
 
     public static void saveImageResultsToHtml(String prefix, ImageSearchHits hits, String queryImage) throws IOException {
-        long l = System.currentTimeMillis() / 1000;
-        BufferedWriter bw = new BufferedWriter(new FileWriter("results-" + prefix + "-" + l + ".html"));
+        long l= System.currentTimeMillis() / 1000;
+        BufferedWriter bw= new BufferedWriter(new FileWriter("results-" + prefix + "-" + l + ".html"));
         bw.write("<html>\n" +
                 "<head><title>Search Results</title></head>\n" +
                 "<body bgcolor=\"#FFFFFF\">\n");
         bw.write("<h3>query</h3>\n");
         bw.write("<a href=\"file://" + queryImage + "\"><img src=\"file://" + queryImage + "\"></a><p>\n");
         bw.write("<h3>results</h3>\n");
-        for (int i = 0; i < hits.length(); i++) {
+        for (int i= 0; i < hits.length(); i++) {
             bw.write(hits.score(i) + " - <a href=\"file://" + hits.doc(i).get("descriptorImageIdentifier") + "\"><img src=\"file://" + hits.doc(i).get("descriptorImageIdentifier") + "\"></a><p>\n");
         }
         bw.write("</body>\n" +

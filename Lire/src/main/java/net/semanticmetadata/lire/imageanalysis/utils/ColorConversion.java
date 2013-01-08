@@ -30,59 +30,59 @@
 package net.semanticmetadata.lire.imageanalysis.utils;
 
 /**
- * This class provides some basic routines for color space conversion on a pixel basis.
- * Date: 28.05.2008
- * Time: 11:27:46
- *
+ * This class provides some basic routines for color space conversion on a pixel basis. Date:
+ * 28.05.2008 Time: 11:27:46
+ * 
  * @author Mathias Lux, mathias@juggle.at
  */
 public class ColorConversion {
     /**
      * Adapted from ImageJ documentation:
      * http://www.f4.fhtw-berlin.de/~barthel/ImageJ/ColorInspector//HTMLHelp/farbraumJava.htm
-     *
-     * @param r   from [0-255]
-     * @param g   from [0-255]
-     * @param b   from [0-255]
-     * @param hsv where HSV values (results) are stored. hsv[0] is h from [0-365], hsv[1] is s from [0-100] and hsv[2] is v from [0-100]
+     * 
+     * @param r from [0-255]
+     * @param g from [0-255]
+     * @param b from [0-255]
+     * @param hsv where HSV values (results) are stored. hsv[0] is h from [0-365], hsv[1] is s from
+     *            [0-100] and hsv[2] is v from [0-100]
      */
     public static void rgb2hsv(int r, int g, int b, int hsv[]) {
 
-        int min;    //Min. value of RGB
-        int max;    //Max. value of RGB
+        int min; //Min. value of RGB
+        int max; //Max. value of RGB
         int delMax; //Delta RGB value
 
-        min = Math.min(r, g);
-        min = Math.min(min, b);
+        min= Math.min(r, g);
+        min= Math.min(min, b);
 
-        max = Math.max(r, g);
-        max = Math.max(max, b);
+        max= Math.max(r, g);
+        max= Math.max(max, b);
 
-        delMax = max - min;
+        delMax= max - min;
 
-        float H = 0f, S = 0f;
-        float V = max / 255f;
+        float H= 0f, S= 0f;
+        float V= max / 255f;
 
         if (delMax == 0) {
-            H = 0f;
-            S = 0f;
+            H= 0f;
+            S= 0f;
         } else {
-            S = delMax / 255f;
+            S= delMax / 255f;
             if (r == max) {
                 if (g >= b) {
-                    H = ((g / 255f - b / 255f) / (float) delMax / 255f) * 60;
+                    H= ((g / 255f - b / 255f) / (float)delMax / 255f) * 60;
                 } else {
-                    H = ((g / 255f - b / 255f) / (float) delMax / 255f) * 60 + 360;
+                    H= ((g / 255f - b / 255f) / (float)delMax / 255f) * 60 + 360;
                 }
             } else if (g == max) {
-                H = (2 + (b / 255f - r / 255f) / (float) delMax / 255f) * 60;
+                H= (2 + (b / 255f - r / 255f) / (float)delMax / 255f) * 60;
             } else if (b == max) {
-                H = (4 + (r / 255f - g / 255f) / (float) delMax / 255f) * 60;
+                H= (4 + (r / 255f - g / 255f) / (float)delMax / 255f) * 60;
             }
         }
-        hsv[0] = (int) (H);
-        hsv[1] = (int) (S * 100);
-        hsv[2] = (int) (V * 100);
+        hsv[0]= (int)(H);
+        hsv[1]= (int)(S * 100);
+        hsv[2]= (int)(V * 100);
     }
 
 }

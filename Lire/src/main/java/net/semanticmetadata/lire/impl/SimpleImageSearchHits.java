@@ -38,29 +38,29 @@ import java.util.Collection;
 import java.util.Iterator;
 
 /**
- * This file is part of the Caliph and Emir project: http://www.SemanticMetadata.net
- * <br>Date: 02.02.2006
- * <br>Time: 23:56:15
- *
+ * This file is part of the Caliph and Emir project: http://www.SemanticMetadata.net <br>
+ * Date: 02.02.2006 <br>
+ * Time: 23:56:15
+ * 
  * @author Mathias Lux, mathias@juggle.at
  */
 public class SimpleImageSearchHits implements ImageSearchHits {
     ArrayList<SimpleResult> results;
 
     public SimpleImageSearchHits(Collection<SimpleResult> results, float maxDistance) {
-        this.results = new ArrayList<SimpleResult>(results.size());
+        this.results= new ArrayList<SimpleResult>(results.size());
         this.results.addAll(results);
         // this step normalizes and inverts the distance ...
         // although its now a score or similarity like measure its further called distance
-        for (Iterator<SimpleResult> iterator = this.results.iterator(); iterator.hasNext(); ) {
-            SimpleResult result = iterator.next();
+        for (Iterator<SimpleResult> iterator= this.results.iterator(); iterator.hasNext();) {
+            SimpleResult result= iterator.next();
             result.setDistance(1f - result.getDistance() / maxDistance);
         }
     }
 
     /**
      * Returns the size of the result list.
-     *
+     * 
      * @return the size of the result list.
      */
     public int length() {
@@ -68,14 +68,13 @@ public class SimpleImageSearchHits implements ImageSearchHits {
     }
 
     /**
-     * Returns the score of the document at given position.
-     * Please note that the score in this case is a distance,
-     * which means a score of 0 denotes the best possible hit.
-     * The result list starts with position 0 as everything
-     * in computer science does.
-     *
+     * Returns the score of the document at given position. Please note that the score in this case
+     * is a distance, which means a score of 0 denotes the best possible hit. The result list starts
+     * with position 0 as everything in computer science does.
+     * 
      * @param position defines the position
-     * @return the score of the document at given position. The lower the better (its a distance measure).
+     * @return the score of the document at given position. The lower the better (its a distance
+     *         measure).
      */
     public float score(int position) {
         return results.get(position).getDistance();
@@ -83,7 +82,7 @@ public class SimpleImageSearchHits implements ImageSearchHits {
 
     /**
      * Returns the document at given position
-     *
+     * 
      * @param position defines the position.
      * @return the document at given position.
      */
@@ -92,8 +91,8 @@ public class SimpleImageSearchHits implements ImageSearchHits {
     }
 
     private float sigmoid(float f) {
-        double result = 0f;
-        result = -1d + 2d / (1d + Math.exp(-2d * f / 0.6));
-        return (float) (1d - result);
+        double result= 0f;
+        result= -1d + 2d / (1d + Math.exp(-2d * f / 0.6));
+        return (float)(1d - result);
     }
 }

@@ -33,19 +33,20 @@ package net.semanticmetadata.lire.impl;
 import org.apache.lucene.document.Document;
 
 /**
- * This file is part of the Caliph and Emir project: http://www.SemanticMetadata.net
- * <br>Date: 03.02.2006
- * <br>Time: 00:02:27
- *
+ * This file is part of the Caliph and Emir project: http://www.SemanticMetadata.net <br>
+ * Date: 03.02.2006 <br>
+ * Time: 00:02:27
+ * 
  * @author Mathias Lux, mathias@juggle.at
  */
 public class SimpleResult implements Comparable<SimpleResult> {
     private float distance;
+
     private Document document;
 
     public SimpleResult(float distance, Document document) {
-        this.distance = distance;
-        this.document = document;
+        this.distance= distance;
+        this.document= document;
     }
 
     public float getDistance() {
@@ -54,7 +55,7 @@ public class SimpleResult implements Comparable<SimpleResult> {
     }
 
     public void setDistance(float distance) {
-        this.distance = distance;
+        this.distance= distance;
     }
 
     public Document getDocument() {
@@ -62,14 +63,14 @@ public class SimpleResult implements Comparable<SimpleResult> {
     }
 
     public void setDocument(Document document) {
-        this.document = document;
+        this.document= document;
     }
 
     public int compareTo(SimpleResult o) {
-        int compareValue = (int) Math.signum(distance - ((SimpleResult) o).distance);
+        int compareValue= (int)Math.signum(distance - ((SimpleResult)o).distance);
         // Bugfix after hint from Kai Jauslin
-        if (compareValue == 0 && !(document.equals(((SimpleResult) o).document)))
-            compareValue = document.hashCode() - ((SimpleResult) o).document.hashCode();
+        if (compareValue == 0 && !(document.equals(((SimpleResult)o).document)))
+            compareValue= document.hashCode() - ((SimpleResult)o).document.hashCode();
         return compareValue;
     }
 }

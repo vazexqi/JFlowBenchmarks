@@ -37,10 +37,10 @@ import java.util.List;
 /**
  * This class implements the format for returning found duplicates.<br>
  * <p/>
- * This file is part of the Caliph and Emir project: http://www.SemanticMetadata.net
- * <br>Date: 04.08.2006
- * <br>Time: 10:20:20
- *
+ * This file is part of the Caliph and Emir project: http://www.SemanticMetadata.net <br>
+ * Date: 04.08.2006 <br>
+ * Time: 10:20:20
+ * 
  * @author Mathias Lux, mathias@juggle.at
  */
 public class SimpleImageDuplicates implements ImageDuplicates {
@@ -48,7 +48,7 @@ public class SimpleImageDuplicates implements ImageDuplicates {
 
 
     public SimpleImageDuplicates(List<List<String>> duplicates) {
-        this.duplicates = duplicates;
+        this.duplicates= duplicates;
     }
 
     public int length() {

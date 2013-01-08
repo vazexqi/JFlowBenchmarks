@@ -39,41 +39,41 @@ import java.io.InputStream;
 import java.util.Set;
 
 /**
- * <h2>Searching in an Index</h2>
- * Use the ImageSearcherFactory for creating an ImageSearcher, which will retrieve the images
- * for you from the index.
+ * <h2>Searching in an Index</h2> Use the ImageSearcherFactory for creating an ImageSearcher, which
+ * will retrieve the images for you from the index.
  * <p/>
+ * 
  * <pre>
- * IndexReader reader = IndexReader.open(indexPath);
- * ImageSearcher searcher = ImageSearcherFactory.createDefaultSearcher();
- * FileInputStream imageStream = new FileInputStream("image.jpg");
- * BufferedImage bimg = ImageIO.read(imageStream);
+ * IndexReader reader= IndexReader.open(indexPath);
+ * ImageSearcher searcher= ImageSearcherFactory.createDefaultSearcher();
+ * FileInputStream imageStream= new FileInputStream(&quot;image.jpg&quot;);
+ * BufferedImage bimg= ImageIO.read(imageStream);
  * // searching for an image:
- * ImageSearchHits hits = null;
- * hits = searcher.search(bimg, reader);
- * for (int i = 0; i < 5; i++) {
- * System.out.println(hits.score(i) + ": " + hits.doc(i).getField(DocumentBuilder.FIELD_NAME_IDENTIFIER).stringValue());
+ * ImageSearchHits hits= null;
+ * hits= searcher.search(bimg, reader);
+ * for (int i= 0; i &lt; 5; i++) {
+ *     System.out.println(hits.score(i) + &quot;: &quot; + hits.doc(i).getField(DocumentBuilder.FIELD_NAME_IDENTIFIER).stringValue());
  * }
- *
+ * 
  * // searching for a document:
- * Document document = hits.doc(0);
- * hits = searcher.search(document, reader);
- * for (int i = 0; i < 5; i++) {
- * System.out.println(hits.score(i) + ": " + hits.doc(i).getField(DocumentBuilder.FIELD_NAME_IDENTIFIER).stringValue());
+ * Document document= hits.doc(0);
+ * hits= searcher.search(document, reader);
+ * for (int i= 0; i &lt; 5; i++) {
+ *     System.out.println(hits.score(i) + &quot;: &quot; + hits.doc(i).getField(DocumentBuilder.FIELD_NAME_IDENTIFIER).stringValue());
  * }
  * </pre>
  * <p/>
- * This file is part of the Caliph and Emir project: http://www.SemanticMetadata.net
- * <br>Date: 01.02.2006
- * <br>Time: 00:09:42
- *
+ * This file is part of the Caliph and Emir project: http://www.SemanticMetadata.net <br>
+ * Date: 01.02.2006 <br>
+ * Time: 00:09:42
+ * 
  * @author Mathias Lux, mathias@juggle.at
  */
 public interface ImageSearcher {
     /**
      * Searches for images similar to the given image.
-     *
-     * @param image  the example image to search for.
+     * 
+     * @param image the example image to search for.
      * @param reader the IndexReader which is used to dsearch through the images.
      * @return a sorted list of hits.
      * @throws java.io.IOException in case exceptions in the reader occurs
@@ -82,8 +82,8 @@ public interface ImageSearcher {
 
     /**
      * Searches for images similar to the given image, defined by the Document from the index.
-     *
-     * @param doc    the example image to search for.
+     * 
+     * @param doc the example image to search for.
      * @param reader the IndexReader which is used to dsearch through the images.
      * @return a sorted list of hits.
      * @throws java.io.IOException in case exceptions in the reader occurs
@@ -92,8 +92,8 @@ public interface ImageSearcher {
 
     /**
      * Searches for images similar to the given image.
-     *
-     * @param image  the example image to search for.
+     * 
+     * @param image the example image to search for.
      * @param reader the IndexReader which is used to dsearch through the images.
      * @return a sorted list of hits.
      * @throws IOException in case the image could not be read from stream.
@@ -102,7 +102,7 @@ public interface ImageSearcher {
 
     /**
      * Identifies duplicates in the database.
-     *
+     * 
      * @param reader the IndexReader which is used to dsearch through the images.
      * @return a sorted list of hits.
      * @throws IOException in case the image could not be read from stream.
@@ -110,14 +110,14 @@ public interface ImageSearcher {
     public ImageDuplicates findDuplicates(IndexReader reader) throws IOException;
 
     /**
-     * Modifies the given search by the provided positive and negative examples. This process follows the idea
-     * of relevance feedback.
-     *
+     * Modifies the given search by the provided positive and negative examples. This process
+     * follows the idea of relevance feedback.
+     * 
      * @param originalSearch
      * @param positives
      * @param negatives
      * @return
      */
     public ImageSearchHits relevanceFeedback(ImageSearchHits originalSearch,
-                                             Set<Document> positives, Set<Document> negatives);
+            Set<Document> positives, Set<Document> negatives);
 }

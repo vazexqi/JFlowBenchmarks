@@ -38,21 +38,19 @@ import net.semanticmetadata.lire.utils.SerializationUtils;
 import java.awt.image.BufferedImage;
 
 /**
- * Mathias Lux, mathias@juggle.at
- * Date: 29.09.2010
- * Time: 15:44:14
- * To change this template use File | Settings | File Templates.
+ * Mathias Lux, mathias@juggle.at Date: 29.09.2010 Time: 15:44:14 To change this template use File |
+ * Settings | File Templates.
  */
 public class SurfFeature extends Histogram implements LireFeature {
     SURFInterestPoint sip;
 
     public SurfFeature(SURFInterestPoint surfInterestPoint) {
-        this.sip = surfInterestPoint;
-        descriptor = sip.getDescriptor();
+        this.sip= surfInterestPoint;
+        descriptor= sip.getDescriptor();
     }
 
     public SurfFeature() {
-        sip = null;
+        sip= null;
     }
 
     public void extract(BufferedImage bimg) {
@@ -60,8 +58,9 @@ public class SurfFeature extends Histogram implements LireFeature {
     }
 
     public float getDistance(LireFeature feature) {
-        if (!(feature instanceof SurfFeature)) return -1;
-        return MetricsUtils.distL2(descriptor, ((SurfFeature) feature).descriptor);
+        if (!(feature instanceof SurfFeature))
+            return -1;
+        return MetricsUtils.distL2(descriptor, ((SurfFeature)feature).descriptor);
     }
 
     public String getStringRepresentation() {
@@ -74,7 +73,7 @@ public class SurfFeature extends Histogram implements LireFeature {
 
     /**
      * Provides a much faster way of serialization.
-     *
+     * 
      * @return a byte array that can be read with the corresponding method.
      * @see net.semanticmetadata.lire.imageanalysis.CEDD#setByteArrayRepresentation(byte[])
      */
@@ -84,12 +83,12 @@ public class SurfFeature extends Histogram implements LireFeature {
 
     /**
      * Reads descriptor from a byte array. Much faster than the String based method.
-     *
+     * 
      * @param in byte array from corresponding method
      * @see net.semanticmetadata.lire.imageanalysis.CEDD#getByteArrayRepresentation
      */
     public void setByteArrayRepresentation(byte[] in) {
-        descriptor = SerializationUtils.toFloatArray(in);
+        descriptor= SerializationUtils.toFloatArray(in);
     }
 
     public double[] getDoubleHistogram() {

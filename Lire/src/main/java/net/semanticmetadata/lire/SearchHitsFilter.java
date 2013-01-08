@@ -33,17 +33,17 @@ package net.semanticmetadata.lire;
 import org.apache.lucene.document.Document;
 
 /**
- * Interface for all filters that take a result list and create a new result list. This can be done by actual
- * filtering (removing parts) or by re-ranking, which would be a change in the ranking of the given results.
- * Created 03.08.11, 10:28 <br/>
- *
+ * Interface for all filters that take a result list and create a new result list. This can be done
+ * by actual filtering (removing parts) or by re-ranking, which would be a change in the ranking of
+ * the given results. Created 03.08.11, 10:28 <br/>
+ * 
  * @author Mathias Lux, mathias@juggle.at
  * @see net.semanticmetadata.lire.filter.RerankFilter
  */
 public interface SearchHitsFilter {
     /**
      * Filters a given result list based on the given query document.
-     *
+     * 
      * @param results
      * @param query
      * @return

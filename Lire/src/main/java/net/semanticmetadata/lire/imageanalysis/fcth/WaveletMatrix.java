@@ -31,16 +31,18 @@ package net.semanticmetadata.lire.imageanalysis.fcth;
 
 /**
  * The FCTH feature was created, implemented and provided by Savvas A. Chatzichristofis<br/>
- * More information can be found in: Savvas A. Chatzichristofis and Yiannis S. Boutalis,
- * <i>FCTH: Fuzzy Color and Texture Histogram - A Low Level Feature for Accurate Image
- * Retrieval</i>, in Proceedings of the Ninth International Workshop on Image Analysis for
- * Multimedia Interactive Services, IEEE, Klagenfurt, May, 2008.
- *
+ * More information can be found in: Savvas A. Chatzichristofis and Yiannis S. Boutalis, <i>FCTH:
+ * Fuzzy Color and Texture Histogram - A Low Level Feature for Accurate Image Retrieval</i>, in
+ * Proceedings of the Ninth International Workshop on Image Analysis for Multimedia Interactive
+ * Services, IEEE, Klagenfurt, May, 2008.
+ * 
  * @author: Savvas A. Chatzichristofis, savvash@gmail.com
  */
 
 public class WaveletMatrix {
     public double F1;
+
     public double F2;
+
     public double F3;
 }

@@ -43,29 +43,28 @@ import java.util.List;
 import java.util.logging.Logger;
 
 /**
- * ...
- * Date: 23.09.2008
- * Time: 12:05:08
- *
+ * ... Date: 23.09.2008 Time: 12:05:08
+ * 
  * @author Mathias Lux, mathias@juggle.at
  */
 public class SiftDocumentBuilder extends AbstractDocumentBuilder {
-    private Logger logger = Logger.getLogger(getClass().getName());
+    private Logger logger= Logger.getLogger(getClass().getName());
+
     private Extractor extractor;
 
     public SiftDocumentBuilder() {
-        extractor = new Extractor();
+        extractor= new Extractor();
     }
 
     public Document createDocument(BufferedImage image, String identifier) {
-        Document doc = null;
+        Document doc= null;
         try {
             // extract features from image:
-            List<Feature> features = extractor.computeSiftFeatures(image);
+            List<Feature> features= extractor.computeSiftFeatures(image);
             // create new document:
-            doc = new Document();
-            for (Iterator<Feature> fit = features.iterator(); fit.hasNext(); ) {
-                Feature f = fit.next();
+            doc= new Document();
+            for (Iterator<Feature> fit= features.iterator(); fit.hasNext();) {
+                Feature f= fit.next();
                 // add each feature to the document:
                 doc.add(new Field(DocumentBuilder.FIELD_NAME_SIFT, f.getByteArrayRepresentation()));
             }

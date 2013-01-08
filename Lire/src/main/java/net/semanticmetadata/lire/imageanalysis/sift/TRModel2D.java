@@ -38,9 +38,9 @@ import java.util.List;
 
 public class TRModel2D extends Model {
 
-    static final public int MIN_SET_SIZE = 2;
+    static final public int MIN_SET_SIZE= 2;
 
-    final private AffineTransform affine = new AffineTransform();
+    final private AffineTransform affine= new AffineTransform();
 
     public AffineTransform getAffine() {
         return affine;
@@ -48,7 +48,7 @@ public class TRModel2D extends Model {
 
     @Override
     public float[] apply(float[] point) {
-        float[] transformed = new float[2];
+        float[] transformed= new float[2];
         affine.transform(point, 0, transformed, 0, 1);
         return transformed;
     }
@@ -61,53 +61,53 @@ public class TRModel2D extends Model {
     @Override
     public float[] applyInverse(float[] point) {
         // the brilliant java.awt.geom.AffineTransform implements transform for float[] but inverseTransform for double[] only...
-        double[] double_point = new double[]{point[0], point[1]};
-        double[] transformed = new double[2];
+        double[] double_point= new double[] { point[0], point[1] };
+        double[] transformed= new double[2];
         try {
             affine.inverseTransform(double_point, 0, transformed, 0, 1);
         } catch (Exception e) {
             System.err.println("Noninvertible transformation.");
         }
-        return new float[]{(float) transformed[0], (float) transformed[1]};
+        return new float[] { (float)transformed[0], (float)transformed[1] };
     }
 
     @Override
     public void applyInverseInPlace(float[] point) {
-        float[] temp_point = applyInverse(point);
-        point[0] = temp_point[0];
-        point[1] = temp_point[1];
+        float[] temp_point= applyInverse(point);
+        point[0]= temp_point[0];
+        point[1]= temp_point[1];
     }
 
     @Override
     public boolean fit(PointMatch[] min_matches) {
-        PointMatch m1 = min_matches[0];
-        PointMatch m2 = min_matches[1];
+        PointMatch m1= min_matches[0];
+        PointMatch m2= min_matches[1];
 
-        float[] m1_p1 = m1.getP1().getL();
-        float[] m2_p1 = m2.getP1().getL();
-        float[] m1_p2 = m1.getP2().getW();
-        float[] m2_p2 = m2.getP2().getW();
+        float[] m1_p1= m1.getP1().getL();
+        float[] m2_p1= m2.getP1().getL();
+        float[] m1_p2= m1.getP2().getW();
+        float[] m2_p2= m2.getP2().getW();
 
-        float x1 = m2_p1[0] - m1_p1[0];
-        float y1 = m2_p1[1] - m1_p1[1];
-        float x2 = m2_p2[0] - m1_p2[0];
-        float y2 = m2_p2[1] - m1_p2[1];
-        float l1 = (float) Math.sqrt(x1 * x1 + y1 * y1);
-        float l2 = (float) Math.sqrt(x2 * x2 + y2 * y2);
+        float x1= m2_p1[0] - m1_p1[0];
+        float y1= m2_p1[1] - m1_p1[1];
+        float x2= m2_p2[0] - m1_p2[0];
+        float y2= m2_p2[1] - m1_p2[1];
+        float l1= (float)Math.sqrt(x1 * x1 + y1 * y1);
+        float l2= (float)Math.sqrt(x2 * x2 + y2 * y2);
 
-        x1 /= l1;
-        x2 /= l2;
-        y1 /= l1;
-        y2 /= l2;
+        x1/= l1;
+        x2/= l2;
+        y1/= l1;
+        y2/= l2;
 
         //! unrotate (x2,y2)^T to (x1,y1)^T = (1,0)^T getting the sinus and cosinus of the rotation angle
-        float cos = x1 * x2 + y1 * y2;
-        float sin = x1 * y2 - y1 * x2;
+        float cos= x1 * x2 + y1 * y2;
+        float sin= x1 * y2 - y1 * x2;
 
         //m.alpha = atan2( y, x );
 
-        float tx = m1_p2[0] - cos * m1_p1[0] + sin * m1_p1[1];
-        float ty = m1_p2[1] - sin * m1_p1[0] - cos * m1_p1[1];
+        float tx= m1_p2[0] - cos * m1_p1[0] + sin * m1_p1[1];
+        float ty= m1_p2[1] - sin * m1_p1[0] - cos * m1_p1[1];
         affine.setTransform(cos, sin, -sin, cos, tx, ty);
 
 //		System.out.println( this );
@@ -122,46 +122,47 @@ public class TRModel2D extends Model {
 
     public void minimize(Collection<PointMatch> matches) {
         // center of mass:
-        float xo1 = 0, yo1 = 0;
-        float xo2 = 0, yo2 = 0;
+        float xo1= 0, yo1= 0;
+        float xo2= 0, yo2= 0;
         // Implementing Johannes Schindelin's squared error minimization formula
         // tan(angle) = Sum(x1*y1 + x2y2) / Sum(x1*y2 - x2*y1)
-        int length = matches.size();
+        int length= matches.size();
         // 1 - compute centers of mass, for displacement and origin of rotation
 
-        if (0 == length) return;
+        if (0 == length)
+            return;
 
         for (PointMatch m : matches) {
-            float[] m_p1 = m.getP1().getL();
-            float[] m_p2 = m.getP2().getW();
+            float[] m_p1= m.getP1().getL();
+            float[] m_p2= m.getP2().getW();
 
-            xo1 += m_p1[0];
-            yo1 += m_p1[1];
-            xo2 += m_p2[0];
-            yo2 += m_p2[1];
+            xo1+= m_p1[0];
+            yo1+= m_p1[1];
+            xo2+= m_p2[0];
+            yo2+= m_p2[1];
         }
-        xo1 /= length;
-        yo1 /= length;
-        xo2 /= length;
-        yo2 /= length;
+        xo1/= length;
+        yo1/= length;
+        xo2/= length;
+        yo2/= length;
 
-        float dx = xo1 - xo2; // reversed, because the second will be moved relative to the first
-        float dy = yo1 - yo2;
-        float sum1 = 0, sum2 = 0;
+        float dx= xo1 - xo2; // reversed, because the second will be moved relative to the first
+        float dy= yo1 - yo2;
+        float sum1= 0, sum2= 0;
         float x1, y1, x2, y2;
         for (PointMatch m : matches) {
-            float[] m_p1 = m.getP1().getL();
-            float[] m_p2 = m.getP2().getW();
+            float[] m_p1= m.getP1().getL();
+            float[] m_p2= m.getP2().getW();
 
             // make points local to the center of mass of the first landmark set
-            x1 = m_p1[0] - xo1; // x1
-            y1 = m_p1[1] - yo1; // x2
-            x2 = m_p2[0] - xo2 + dx; // y1
-            y2 = m_p2[1] - yo2 + dy; // y2
-            sum1 += x1 * y2 - y1 * x2; //   x1 * y2 - x2 * y1 // assuming p1 is x1,x2, and p2 is y1,y2
-            sum2 += x1 * x2 + y1 * y2; //   x1 * y1 + x2 * y2
+            x1= m_p1[0] - xo1; // x1
+            y1= m_p1[1] - yo1; // x2
+            x2= m_p2[0] - xo2 + dx; // y1
+            y2= m_p2[1] - yo2 + dy; // y2
+            sum1+= x1 * y2 - y1 * x2; //   x1 * y2 - x2 * y1 // assuming p1 is x1,x2, and p2 is y1,y2
+            sum2+= x1 * x2 + y1 * y2; //   x1 * y1 + x2 * y2
         }
-        float angle = (float) Math.atan2(-sum1, sum2);
+        float angle= (float)Math.atan2(-sum1, sum2);
 
         affine.setToIdentity();
         affine.rotate(-angle, xo2, yo2);
@@ -171,75 +172,77 @@ public class TRModel2D extends Model {
     /**
      * change the model a bit
      * <p/>
-     * estimates the necessary amount of shaking for each single dimensional
-     * distance in the set of matches
-     *
+     * estimates the necessary amount of shaking for each single dimensional distance in the set of
+     * matches
+     * 
      * @param matches point matches
-     * @param scale   gives a multiplicative factor to each dimensional distance (increases the amount of shaking)
-     * @param center  local pivot point
+     * @param scale gives a multiplicative factor to each dimensional distance (increases the amount
+     *            of shaking)
+     * @param center local pivot point
      */
     final public void shake(
             Collection<PointMatch> matches,
             float scale,
             float[] center) {
-        double xd = 0.0;
-        double yd = 0.0;
-        double rd = 0.0;
+        double xd= 0.0;
+        double yd= 0.0;
+        double rd= 0.0;
 
-        int num_matches = matches.size();
+        int num_matches= matches.size();
         if (num_matches > 0) {
             for (PointMatch m : matches) {
-                float[] m_p1 = m.getP1().getW();
-                float[] m_p2 = m.getP2().getW();
+                float[] m_p1= m.getP1().getW();
+                float[] m_p2= m.getP2().getW();
 
-                xd += Math.abs(m_p1[0] - m_p2[0]);
+                xd+= Math.abs(m_p1[0] - m_p2[0]);
                 ;
-                yd += Math.abs(m_p1[1] - m_p2[1]);
+                yd+= Math.abs(m_p1[1] - m_p2[1]);
                 ;
 
                 // shift relative to the center
-                float x1 = m_p1[0] - center[0];
-                float y1 = m_p1[1] - center[1];
-                float x2 = m_p2[0] - center[0];
-                float y2 = m_p2[1] - center[1];
+                float x1= m_p1[0] - center[0];
+                float y1= m_p1[1] - center[1];
+                float x2= m_p2[0] - center[0];
+                float y2= m_p2[1] - center[1];
 
-                float l1 = (float) Math.sqrt(x1 * x1 + y1 * y1);
-                float l2 = (float) Math.sqrt(x2 * x2 + y2 * y2);
+                float l1= (float)Math.sqrt(x1 * x1 + y1 * y1);
+                float l2= (float)Math.sqrt(x2 * x2 + y2 * y2);
 
-                x1 /= l1;
-                x2 /= l2;
-                y1 /= l1;
-                y2 /= l2;
+                x1/= l1;
+                x2/= l2;
+                y1/= l1;
+                y2/= l2;
 
                 //! unrotate (x1,y1)^T to (x2,y2)^T = (1,0)^T getting the sinus and cosinus of the rotation angle
-                float cos = x1 * x2 + y1 * y2;
-                float sin = y1 * x2 - x1 * y2;
+                float cos= x1 * x2 + y1 * y2;
+                float sin= y1 * x2 - x1 * y2;
 
-                rd += Math.abs(Math.atan2(sin, cos));
+                rd+= Math.abs(Math.atan2(sin, cos));
             }
-            xd /= matches.size();
-            yd /= matches.size();
-            rd /= matches.size();
+            xd/= matches.size();
+            yd/= matches.size();
+            rd/= matches.size();
 
             //System.out.println( rd );
         }
 
-        affine.rotate(rnd.nextGaussian() * (float) rd * scale, center[0], center[1]);
+        affine.rotate(rnd.nextGaussian() * (float)rd * scale, center[0], center[1]);
     }
 
     /**
-     * estimate the transformation model for a set of feature correspondences
-     * containing a high number of outliers using RANSAC
-     *
-     * @param candidates       set of correspondence candidates
-     * @param inliers          set ot correspondences that fit the finally estimated model if any
-     * @param iterations       number of iterations
-     * @param epsilon          maximally allowed displacement
+     * estimate the transformation model for a set of feature correspondences containing a high
+     * number of outliers using RANSAC
+     * 
+     * @param candidates set of correspondence candidates
+     * @param inliers set ot correspondences that fit the finally estimated model if any
+     * @param iterations number of iterations
+     * @param epsilon maximally allowed displacement
      * @param min_inlier_ratio minimal amount of inliers
      * @return TRModel2D or null
      *         <p/>
      *         <p/>
      *         Bibtex reference:
+     * 
      *         <pre>
      * @article{FischlerB81, author            = {Martin A. Fischler and Robert C. Bolles},
      * title			= {Random sample consensus: a paradigm for model fitting with applications to image analysis and automated cartography},
@@ -268,50 +271,48 @@ public class TRModel2D extends Model {
             return null;
         }
 
-        TRModel2D model = new TRModel2D();        //!< the final model to be estimated
+        TRModel2D model= new TRModel2D(); //!< the final model to be estimated
 
-        int i = 0;
+        int i= 0;
         while (i < iterations) {
             // choose T::MIN_SET_SIZE disjunctive matches randomly
-            PointMatch[] min_matches = new PointMatch[MIN_SET_SIZE];
-            int[] keys = new int[MIN_SET_SIZE];
+            PointMatch[] min_matches= new PointMatch[MIN_SET_SIZE];
+            int[] keys= new int[MIN_SET_SIZE];
 
-            for (int j = 0; j < MIN_SET_SIZE; ++j) {
+            for (int j= 0; j < MIN_SET_SIZE; ++j) {
                 int key;
-                boolean in_set = false;
+                boolean in_set= false;
                 do {
-                    key = (int) (rnd.nextDouble() * candidates.size());
-                    in_set = false;
+                    key= (int)(rnd.nextDouble() * candidates.size());
+                    in_set= false;
 
                     // check if this key exists already
-                    for (int k = 0; k < j; ++k) {
+                    for (int k= 0; k < j; ++k) {
                         if (key == keys[k]) {
-                            in_set = true;
+                            in_set= true;
                             break;
                         }
                     }
-                }
-                while (in_set);
-                keys[j] = key;
-                min_matches[j] = candidates.get(key);
+                } while (in_set);
+                keys[j]= key;
+                min_matches[j]= candidates.get(key);
             }
 
-            TRModel2D m = new TRModel2D();
-            final ArrayList<PointMatch> temp_inliers = new ArrayList<PointMatch>();
+            TRModel2D m= new TRModel2D();
+            final ArrayList<PointMatch> temp_inliers= new ArrayList<PointMatch>();
             m.fit(min_matches);
-            int num_inliers = 0;
-            boolean is_good = m.test(candidates, temp_inliers, epsilon, min_inlier_ratio);
+            int num_inliers= 0;
+            boolean is_good= m.test(candidates, temp_inliers, epsilon, min_inlier_ratio);
             while (is_good && num_inliers < temp_inliers.size()) {
-                num_inliers = temp_inliers.size();
+                num_inliers= temp_inliers.size();
                 m.minimize(temp_inliers);
-                is_good = m.test(candidates, temp_inliers, epsilon, min_inlier_ratio);
+                is_good= m.test(candidates, temp_inliers, epsilon, min_inlier_ratio);
             }
-            if (
-                    is_good &&
-                            m.betterThan(model) &&
-                            temp_inliers.size() >= 3 * MIN_SET_SIZE) // now at least 6 matches required
+            if (is_good &&
+                    m.betterThan(model) &&
+                    temp_inliers.size() >= 3 * MIN_SET_SIZE) // now at least 6 matches required
             {
-                model = m.clone();
+                model= m.clone();
                 inliers.clear();
                 inliers.addAll(temp_inliers);
             }
@@ -324,8 +325,8 @@ public class TRModel2D extends Model {
     }
 
     /**
-     * estimate the transformation model for a set of feature correspondences
-     * containing a high number of outliers using RANSAC
+     * estimate the transformation model for a set of feature correspondences containing a high
+     * number of outliers using RANSAC
      * <p/>
      * increase the error as long as not more inliers occur
      */
@@ -336,37 +337,36 @@ public class TRModel2D extends Model {
             float max_epsilon,
             float min_inlier_ratio) {
         inliers.clear();
-        TRModel2D model = null;
-        float epsilon = 0.0f;
+        TRModel2D model= null;
+        float epsilon= 0.0f;
         if (candidates.size() > MIN_SET_SIZE) {
-            int highest_num_inliers = 0;
-            int convergence_count = 0;
-            TRModel2D m = null;
+            int highest_num_inliers= 0;
+            int convergence_count= 0;
+            TRModel2D m= null;
             do {
-                final ArrayList<PointMatch> temp_inliers = new ArrayList<PointMatch>();
-                epsilon += min_epsilon;
+                final ArrayList<PointMatch> temp_inliers= new ArrayList<PointMatch>();
+                epsilon+= min_epsilon;
                 // 1000 iterations lead to a probability of < 0.01% that only bad data values were found
-                m = estimateModel(
-                        candidates,                    //!< point correspondence candidates
+                m= estimateModel(
+                        candidates, //!< point correspondence candidates
                         temp_inliers,
-                        1000,                        //!< iterations
-                        epsilon,                    //!< maximal alignment error for a good point pair when fitting the model
-                        min_inlier_ratio);                //!< minimal partition (of 1.0) of inliers
+                        1000, //!< iterations
+                        epsilon, //!< maximal alignment error for a good point pair when fitting the model
+                        min_inlier_ratio); //!< minimal partition (of 1.0) of inliers
 
                 if (m != null) {
-                    int num_inliers = temp_inliers.size();
+                    int num_inliers= temp_inliers.size();
                     if (num_inliers <= highest_num_inliers) {
                         ++convergence_count;
                     } else {
-                        model = m.clone();
+                        model= m.clone();
                         inliers.clear();
                         inliers.addAll(temp_inliers);
-                        convergence_count = 0;
-                        highest_num_inliers = num_inliers;
+                        convergence_count= 0;
+                        highest_num_inliers= num_inliers;
                     }
                 }
-            }
-            while ((m == null || convergence_count < 4) && epsilon < max_epsilon);
+            } while ((m == null || convergence_count < 4) && epsilon < max_epsilon);
         }
         if (model == null) {
             // IJ.log( "No model found." );
@@ -380,9 +380,9 @@ public class TRModel2D extends Model {
 
 
     public TRModel2D clone() {
-        TRModel2D trm = new TRModel2D();
+        TRModel2D trm= new TRModel2D();
         trm.affine.setTransform(affine);
-        trm.error = error;
+        trm.error= error;
         return trm;
     }
 

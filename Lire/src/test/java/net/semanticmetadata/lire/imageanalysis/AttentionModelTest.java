@@ -41,27 +41,25 @@ import java.io.IOException;
 //import net.semanticmetadata.lire.imageanalysis.visualattention.ParallelStentifordModel;
 
 /**
- * Tests the use of the Stentiford Attention Model.
- * User: Mathias Lux
- * Date: 22.03.2010
- * Time: 16:36:57
+ * Tests the use of the Stentiford Attention Model. User: Mathias Lux Date: 22.03.2010 Time:
+ * 16:36:57
  */
 public class AttentionModelTest extends TestCase {
     public void testExtraction() throws IOException {
-        StentifordModel sm = new StentifordModel();
+        StentifordModel sm= new StentifordModel();
         // sm.extract(ImageIO.read(new File("wang-1000/103.jpg")));
         sm.extract(ImageIO.read(new File("C:\\Temp\\kitty.png")));
         ImageIO.write(sm.getAttentionVisualization(), "png", new File("out.png"));
     }
 
     public void testParameters() throws IOException {
-        for (int i = 50; i < 250; i += 10)
+        for (int i= 50; i < 250; i+= 10)
             compute(5, i, 40);
     }
 
     private void compute(int neighbourhoodSize, int maxChecks, int maxDist) throws IOException {
-        StentifordModel sm = new StentifordModel(neighbourhoodSize, maxChecks, maxDist);
-        StringBuilder sb = new StringBuilder(256);
+        StentifordModel sm= new StentifordModel(neighbourhoodSize, maxChecks, maxDist);
+        StringBuilder sb= new StringBuilder(256);
         sb.append('_');
         sb.append(neighbourhoodSize);
         sb.append('_');
@@ -76,14 +74,14 @@ public class AttentionModelTest extends TestCase {
     }
 
     public void testPerformance() throws IOException {
-        StentifordModel sm = new StentifordModel(3, 100, 40);
-        int runs = 5;
-        BufferedImage img = ImageIO.read(new File("wang-1000/103.jpg"));
-        long t = System.currentTimeMillis();
-        for (int i = 0; i < runs; i++) {
+        StentifordModel sm= new StentifordModel(3, 100, 40);
+        int runs= 5;
+        BufferedImage img= ImageIO.read(new File("wang-1000/103.jpg"));
+        long t= System.currentTimeMillis();
+        for (int i= 0; i < runs; i++) {
             sm.extract(img);
         }
-        t = System.currentTimeMillis() - t;
+        t= System.currentTimeMillis() - t;
         System.out.println("t = " + t / runs);
     }
 

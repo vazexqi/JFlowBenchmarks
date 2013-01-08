@@ -35,7 +35,7 @@ import java.awt.image.BufferedImage;
 
 /**
  * A joint descriptor joining CEDD and FCTH in one histogram.
- *
+ * 
  * @author: Savvas A. Chatzichristofis, savvash@gmail.com
  */
 public class JCD implements LireFeature {
@@ -50,9 +50,9 @@ public class JCD implements LireFeature {
 
 
     public void extract(BufferedImage bimg) {
-        CEDD c = new CEDD();
+        CEDD c= new CEDD();
         c.extract(bimg);
-        FCTH f = new FCTH();
+        FCTH f= new FCTH();
         f.extract(bimg);
         init(c, f);
     }
@@ -62,7 +62,7 @@ public class JCD implements LireFeature {
     }
 
     public void setByteArrayRepresentation(byte[] in) {
-        data = SerializationUtils.toDoubleArray(in);
+        data= SerializationUtils.toDoubleArray(in);
     }
 
     public double[] getDoubleHistogram() {
@@ -70,7 +70,7 @@ public class JCD implements LireFeature {
     }
 
     public void init(CEDD c, FCTH f) {
-        data = joinHistograms(c.data, f.histogram);
+        data= joinHistograms(c.data, f.histogram);
     }
 
     public float getDistance(LireFeature vd) {
@@ -79,39 +79,41 @@ public class JCD implements LireFeature {
             throw new UnsupportedOperationException("Wrong descriptor.");
 
         // casting ...
-        JCD ch = (JCD) vd;
+        JCD ch= (JCD)vd;
 
         // check if parameters are fitting ...
         if ((ch.data.length != data.length))
             throw new UnsupportedOperationException("Histogram lengths or color spaces do not match");
 
         // Tanimoto coefficient
-        double Result = 0;
-        double Temp1 = 0;
-        double Temp2 = 0;
+        double Result= 0;
+        double Temp1= 0;
+        double Temp2= 0;
 
-        double TempCount1 = 0, TempCount2 = 0, TempCount3 = 0;
+        double TempCount1= 0, TempCount2= 0, TempCount3= 0;
 
-        for (int i = 0; i < ch.data.length; i++) {
-            Temp1 += ch.data[i];
-            Temp2 += data[i];
+        for (int i= 0; i < ch.data.length; i++) {
+            Temp1+= ch.data[i];
+            Temp2+= data[i];
         }
 
-        if (Temp1 == 0 || Temp2 == 0) Result = 100;
-        if (Temp1 == 0 && Temp2 == 0) Result = 0;
+        if (Temp1 == 0 || Temp2 == 0)
+            Result= 100;
+        if (Temp1 == 0 && Temp2 == 0)
+            Result= 0;
 
         if (Temp1 > 0 && Temp2 > 0) {
-            for (int i = 0; i < ch.data.length; i++) {
-                TempCount1 += (ch.data[i] / Temp1) * (data[i] / Temp2);
-                TempCount2 += (data[i] / Temp2) * (data[i] / Temp2);
-                TempCount3 += (ch.data[i] / Temp1) * (ch.data[i] / Temp1);
+            for (int i= 0; i < ch.data.length; i++) {
+                TempCount1+= (ch.data[i] / Temp1) * (data[i] / Temp2);
+                TempCount2+= (data[i] / Temp2) * (data[i] / Temp2);
+                TempCount3+= (ch.data[i] / Temp1) * (ch.data[i] / Temp1);
 
             }
 
-            Result = (100 - 100 * (TempCount1 / (TempCount2 + TempCount3
+            Result= (100 - 100 * (TempCount1 / (TempCount2 + TempCount3
                     - TempCount1))); //Tanimoto
         }
-        return (float) Result;
+        return (float)Result;
 
     }
 
@@ -125,30 +127,30 @@ public class JCD implements LireFeature {
 
     private double[] joinHistograms(double[] CEDD, double[] FCTH) {
 
-        double[] JointDescriptor = new double[168];
+        double[] JointDescriptor= new double[168];
 
-        double[] TempTable1 = new double[24];
-        double[] TempTable2 = new double[24];
-        double[] TempTable3 = new double[24];
-        double[] TempTable4 = new double[24];
+        double[] TempTable1= new double[24];
+        double[] TempTable2= new double[24];
+        double[] TempTable3= new double[24];
+        double[] TempTable4= new double[24];
 
-        for (int i = 0; i < 24; i++) {
-            TempTable1[i] = FCTH[0 + i] + FCTH[96 + i];
-            TempTable2[i] = FCTH[24 + i] + FCTH[120 + i];
-            TempTable3[i] = FCTH[48 + i] + FCTH[144 + i];
-            TempTable4[i] = FCTH[72 + i] + FCTH[168 + i];
+        for (int i= 0; i < 24; i++) {
+            TempTable1[i]= FCTH[0 + i] + FCTH[96 + i];
+            TempTable2[i]= FCTH[24 + i] + FCTH[120 + i];
+            TempTable3[i]= FCTH[48 + i] + FCTH[144 + i];
+            TempTable4[i]= FCTH[72 + i] + FCTH[168 + i];
 
         }
 
 
-        for (int i = 0; i < 24; i++) {
-            JointDescriptor[i] = (TempTable1[i] + CEDD[i]) / 2;
-            JointDescriptor[24 + i] = (TempTable2[i] + CEDD[48 + i]) / 2;
-            JointDescriptor[48 + i] = CEDD[96 + i];
-            JointDescriptor[72 + i] = (TempTable3[i] + CEDD[72 + i]) / 2;
-            JointDescriptor[96 + i] = CEDD[120 + i];
-            JointDescriptor[120 + i] = TempTable4[i];
-            JointDescriptor[144 + i] = CEDD[24 + i];
+        for (int i= 0; i < 24; i++) {
+            JointDescriptor[i]= (TempTable1[i] + CEDD[i]) / 2;
+            JointDescriptor[24 + i]= (TempTable2[i] + CEDD[48 + i]) / 2;
+            JointDescriptor[48 + i]= CEDD[96 + i];
+            JointDescriptor[72 + i]= (TempTable3[i] + CEDD[72 + i]) / 2;
+            JointDescriptor[96 + i]= CEDD[120 + i];
+            JointDescriptor[120 + i]= TempTable4[i];
+            JointDescriptor[144 + i]= CEDD[24 + i];
 
         }
 

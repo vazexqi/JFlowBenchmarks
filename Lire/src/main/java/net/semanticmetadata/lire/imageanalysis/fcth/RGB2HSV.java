@@ -31,50 +31,52 @@ package net.semanticmetadata.lire.imageanalysis.fcth;
 
 /**
  * The FCTH feature was created, implemented and provided by Savvas A. Chatzichristofis<br/>
- * More information can be found in: Savvas A. Chatzichristofis and Yiannis S. Boutalis,
- * <i>FCTH: Fuzzy Color and Texture Histogram - A Low Level Feature for Accurate Image
- * Retrieval</i>, in Proceedings of the Ninth International Workshop on Image Analysis for
- * Multimedia Interactive Services, IEEE, Klagenfurt, May, 2008.
- *
+ * More information can be found in: Savvas A. Chatzichristofis and Yiannis S. Boutalis, <i>FCTH:
+ * Fuzzy Color and Texture Histogram - A Low Level Feature for Accurate Image Retrieval</i>, in
+ * Proceedings of the Ninth International Workshop on Image Analysis for Multimedia Interactive
+ * Services, IEEE, Klagenfurt, May, 2008.
+ * 
  * @author: Savvas A. Chatzichristofis, savvash@gmail.com
  */
 
 public class RGB2HSV {
 
     public int[] ApplyFilter(int red, int green, int blue) {
-        int[] Results = new int[3];
-        int HSV_H = 0;
-        int HSV_S = 0;
-        int HSV_V = 0;
+        int[] Results= new int[3];
+        int HSV_H= 0;
+        int HSV_S= 0;
+        int HSV_V= 0;
 
-        double MaxHSV = (Math.max(red, Math.max(green, blue)));
-        double MinHSV = (Math.min(red, Math.min(green, blue)));
+        double MaxHSV= (Math.max(red, Math.max(green, blue)));
+        double MinHSV= (Math.min(red, Math.min(green, blue)));
 
-        HSV_V = (int) (MaxHSV);
+        HSV_V= (int)(MaxHSV);
 
-        HSV_S = 0;
-        if (MaxHSV != 0) HSV_S = (int) (255 - 255 * (MinHSV / MaxHSV));
+        HSV_S= 0;
+        if (MaxHSV != 0)
+            HSV_S= (int)(255 - 255 * (MinHSV / MaxHSV));
 
         if (MaxHSV != MinHSV) {
 
-            int IntegerMaxHSV = (int) (MaxHSV);
+            int IntegerMaxHSV= (int)(MaxHSV);
 
             if (IntegerMaxHSV == red && green >= blue) {
-                HSV_H = (int) (60 * (green - blue) / (MaxHSV - MinHSV));
+                HSV_H= (int)(60 * (green - blue) / (MaxHSV - MinHSV));
             } else if (IntegerMaxHSV == red && green < blue) {
-                HSV_H = (int) (359 + 60 * (green - blue) / (MaxHSV - MinHSV));
+                HSV_H= (int)(359 + 60 * (green - blue) / (MaxHSV - MinHSV));
             } else if (IntegerMaxHSV == green) {
-                HSV_H = (int) (119 + 60 * (blue - red) / (MaxHSV - MinHSV));
+                HSV_H= (int)(119 + 60 * (blue - red) / (MaxHSV - MinHSV));
             } else if (IntegerMaxHSV == blue) {
-                HSV_H = (int) (239 + 60 * (red - green) / (MaxHSV - MinHSV));
+                HSV_H= (int)(239 + 60 * (red - green) / (MaxHSV - MinHSV));
             }
 
 
-        } else HSV_H = 0;
+        } else
+            HSV_H= 0;
 
-        Results[0] = HSV_H;
-        Results[1] = HSV_S;
-        Results[2] = HSV_V;
+        Results[0]= HSV_H;
+        Results[1]= HSV_S;
+        Results[2]= HSV_V;
 
         return (Results);
     }

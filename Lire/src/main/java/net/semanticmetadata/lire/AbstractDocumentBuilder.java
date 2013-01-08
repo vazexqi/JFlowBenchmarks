@@ -38,13 +38,13 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * Abstract DocumentBuilder, which uses javax.imageio.ImageIO to create a BufferedImage
- * from an InputStream.
+ * Abstract DocumentBuilder, which uses javax.imageio.ImageIO to create a BufferedImage from an
+ * InputStream.
  * <p/>
- * This file is part of the Caliph and Emir project: http://www.SemanticMetadata.net
- * <br>Date: 31.01.2006
- * <br>Time: 23:07:39
- *
+ * This file is part of the Caliph and Emir project: http://www.SemanticMetadata.net <br>
+ * Date: 31.01.2006 <br>
+ * Time: 23:07:39
+ * 
  * @author Mathias Lux, mathias@juggle.at
  */
 public abstract class AbstractDocumentBuilder implements DocumentBuilder {
@@ -52,15 +52,15 @@ public abstract class AbstractDocumentBuilder implements DocumentBuilder {
      * Creates a new Lucene document from an InputStream. The identifier can be used like an id
      * (e.g. the file name or the url of the image). This is a simple implementation using
      * javax.imageio.ImageIO
-     *
-     * @param image      the image to index. Please note that
+     * 
+     * @param image the image to index. Please note that
      * @param identifier an id for the image, for instance the filename or an URL.
      * @return a Lucene Document containing the indexed image.
      * @see javax.imageio.ImageIO
      */
     public Document createDocument(InputStream image, String identifier) throws IOException {
         assert (image != null);
-        BufferedImage bufferedImage = ImageIO.read(image);
+        BufferedImage bufferedImage= ImageIO.read(image);
         return createDocument(bufferedImage, identifier);
     }
 }

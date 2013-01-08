@@ -37,9 +37,8 @@ import org.apache.lucene.index.IndexReader;
 
 /**
  * Implementing the BoVW approach for SIFT features.
- * @author Mathias Lux, mathias@juggle.at
- * Date: 18.10.11
- * Time: 11:15
+ * 
+ * @author Mathias Lux, mathias@juggle.at Date: 18.10.11 Time: 11:15
  */
 public class SiftFeatureHistogramBuilder extends LocalFeatureHistogramBuilder {
     public SiftFeatureHistogramBuilder(IndexReader reader) {
@@ -58,10 +57,10 @@ public class SiftFeatureHistogramBuilder extends LocalFeatureHistogramBuilder {
     }
 
     private void init() {
-        localFeatureFieldName = DocumentBuilder.FIELD_NAME_SIFT;
-        visualWordsFieldName = DocumentBuilder.FIELD_NAME_SIFT_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS;
-        localFeatureHistFieldName = DocumentBuilder.FIELD_NAME_SIFT_LOCAL_FEATURE_HISTOGRAM;
-        clusterFile = "./clusters-sift.dat";
+        localFeatureFieldName= DocumentBuilder.FIELD_NAME_SIFT;
+        visualWordsFieldName= DocumentBuilder.FIELD_NAME_SIFT_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS;
+        localFeatureHistFieldName= DocumentBuilder.FIELD_NAME_SIFT_LOCAL_FEATURE_HISTOGRAM;
+        clusterFile= "./clusters-sift.dat";
     }
 
     @Override

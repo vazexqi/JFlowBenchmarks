@@ -33,27 +33,32 @@ package net.semanticmetadata.lire.imageanalysis.mser;
 /**
  * Created by IntelliJ IDEA.
  * <p/>
- * User: Shotty
- * Date: 28.06.2010
- * Time: 23:53:21
+ * User: Shotty Date: 28.06.2010 Time: 23:53:21
  */
 public class BoundaryPixel {
-    public static final int RIGHT_EDGE = 0;
-    public static final int BOTTOM_EDGE = 2;
-    public static final int LEFT_EDGE = 4;
-    public static final int TOP_EDGE = 6;
-    public static final int NO_EDGE = 8;
+    public static final int RIGHT_EDGE= 0;
+
+    public static final int BOTTOM_EDGE= 2;
+
+    public static final int LEFT_EDGE= 4;
+
+    public static final int TOP_EDGE= 6;
+
+    public static final int NO_EDGE= 8;
 
     protected int imageWidth;
+
     protected int imageHeight;
+
     protected ImagePoint point;
+
     protected int nextEdge;
 
     public BoundaryPixel(ImagePoint point, int imageWidth, int imageHeight) {
-        this.imageWidth = imageWidth;
-        this.imageHeight = imageHeight;
-        this.point = point;
-        this.nextEdge = RIGHT_EDGE;
+        this.imageWidth= imageWidth;
+        this.imageHeight= imageHeight;
+        this.point= point;
+        this.nextEdge= RIGHT_EDGE;
     }
 
     public ImagePoint getPoint() {
@@ -73,10 +78,9 @@ public class BoundaryPixel {
     }
 
     /**
-     * Calculate the next Edge from the current pixel.
-     * Starts from RIGHT --> BOTTOM --> LEFT --> TOP Neighbour Pixel
-     * returns NULL if all edges where explored-
-     *
+     * Calculate the next Edge from the current pixel. Starts from RIGHT --> BOTTOM --> LEFT --> TOP
+     * Neighbour Pixel returns NULL if all edges where explored-
+     * 
      * @return an ImagePoint object or null if there is no edge left
      */
     public ImagePoint calcNextEdge() {
@@ -84,50 +88,50 @@ public class BoundaryPixel {
         switch (nextEdge) {
             case RIGHT_EDGE:
                 // try the get the right edge of the current pixel
-                nextEdgePoint = getRightNeighbor();
+                nextEdgePoint= getRightNeighbor();
                 if (nextEdgePoint != null) // in boundary
                 {
-                    nextEdge = BOTTOM_EDGE;
+                    nextEdge= BOTTOM_EDGE;
                     return nextEdgePoint;
                 }
             case BOTTOM_EDGE:
                 // try the get the bottom edge of the current pixel
-                nextEdgePoint = getBottomNeighbor();
+                nextEdgePoint= getBottomNeighbor();
                 if (nextEdgePoint != null) // in boundary
                 {
-                    nextEdge = LEFT_EDGE;
+                    nextEdge= LEFT_EDGE;
                     return nextEdgePoint;
                 }
             case LEFT_EDGE:
                 // try to get the left edge of the current pixel
-                nextEdgePoint = getLeftNeighbor();
+                nextEdgePoint= getLeftNeighbor();
                 if (nextEdgePoint != null) // in boundary
                 {
-                    nextEdge = TOP_EDGE;
+                    nextEdge= TOP_EDGE;
                     return nextEdgePoint;
                 }
             case TOP_EDGE:
                 // try to get the top edge of the current pixel
-                nextEdgePoint = getTopNeighbor();
+                nextEdgePoint= getTopNeighbor();
                 if (nextEdgePoint != null) // in boundary
                 {
-                    nextEdge = NO_EDGE;
+                    nextEdge= NO_EDGE;
                     return nextEdgePoint;
                 }
             default:
-                nextEdge = NO_EDGE;
+                nextEdge= NO_EDGE;
                 return null; // all edges done
         }
     }
 
     /**
-     * Explore the next Edge of the Pixel.
-     * Returns null if all edges have been explored for this pixel
-     *
+     * Explore the next Edge of the Pixel. Returns null if all edges have been explored for this
+     * pixel
+     * 
      * @return the BoundaryPixel of the next Neighbour
      */
     public BoundaryPixel getNextBoundary() {
-        ImagePoint nextEdge = calcNextEdge();
+        ImagePoint nextEdge= calcNextEdge();
         if (nextEdge != null) {
             return new BoundaryPixel(nextEdge, imageWidth, imageHeight);
         } else {

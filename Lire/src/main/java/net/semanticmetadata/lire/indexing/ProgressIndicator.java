@@ -32,17 +32,18 @@ package net.semanticmetadata.lire.indexing;
 
 public class ProgressIndicator {
 
-    int numDocsAll = 0;
-    int numDocsProcessed = 0;
+    int numDocsAll= 0;
 
-    MetricSpacesInvertedListIndexing.State currentState = MetricSpacesInvertedListIndexing.State.Idle;
+    int numDocsProcessed= 0;
+
+    MetricSpacesInvertedListIndexing.State currentState= MetricSpacesInvertedListIndexing.State.Idle;
 
     public int getNumDocsAll() {
         return numDocsAll;
     }
 
     public void setNumDocsAll(int numDocsAll) {
-        this.numDocsAll = numDocsAll;
+        this.numDocsAll= numDocsAll;
     }
 
     public int getNumDocsProcessed() {
@@ -50,7 +51,7 @@ public class ProgressIndicator {
     }
 
     public void setNumDocsProcessed(int numDocsProcessed) {
-        this.numDocsProcessed = numDocsProcessed;
+        this.numDocsProcessed= numDocsProcessed;
     }
 
     public MetricSpacesInvertedListIndexing.State getCurrentState() {
@@ -58,6 +59,6 @@ public class ProgressIndicator {
     }
 
     public void setCurrentState(MetricSpacesInvertedListIndexing.State currentState) {
-        this.currentState = currentState;
+        this.currentState= currentState;
     }
 }

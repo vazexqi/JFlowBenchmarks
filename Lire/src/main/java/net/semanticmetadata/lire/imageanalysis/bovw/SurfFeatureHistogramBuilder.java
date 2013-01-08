@@ -35,10 +35,8 @@ import net.semanticmetadata.lire.imageanalysis.SurfFeature;
 import org.apache.lucene.index.IndexReader;
 
 /**
- * ...
- * Date: 24.09.2008
- * Time: 09:38:53
- *
+ * ... Date: 24.09.2008 Time: 09:38:53
+ * 
  * @author Mathias Lux, mathias@juggle.at
  */
 public class SurfFeatureHistogramBuilder extends LocalFeatureHistogramBuilder {
@@ -63,9 +61,9 @@ public class SurfFeatureHistogramBuilder extends LocalFeatureHistogramBuilder {
     }
 
     private void init() {
-        localFeatureFieldName = DocumentBuilder.FIELD_NAME_SURF;
-        visualWordsFieldName = DocumentBuilder.FIELD_NAME_SURF_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS;
-        localFeatureHistFieldName = DocumentBuilder.FIELD_NAME_SURF_LOCAL_FEATURE_HISTOGRAM;
-        clusterFile = "./clusters-surf.dat";
+        localFeatureFieldName= DocumentBuilder.FIELD_NAME_SURF;
+        visualWordsFieldName= DocumentBuilder.FIELD_NAME_SURF_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS;
+        localFeatureHistFieldName= DocumentBuilder.FIELD_NAME_SURF_LOCAL_FEATURE_HISTOGRAM;
+        clusterFile= "./clusters-surf.dat";
     }
 }

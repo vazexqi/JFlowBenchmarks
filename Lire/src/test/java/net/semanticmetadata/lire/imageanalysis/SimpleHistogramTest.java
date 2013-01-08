@@ -40,65 +40,66 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 public class SimpleHistogramTest extends TestCase {
-    private String[] testFiles = new String[]{"img01.jpg", "img02.jpg", "img03.jpg", "img04.jpg", "img05.jpg", "img06.jpg", "img07.jpg", "img08.jpg", "img09.jpg", "img10.jpg"};
-    private String testFilesPath = "./src/test/resources/small/";
+    private String[] testFiles= new String[] { "img01.jpg", "img02.jpg", "img03.jpg", "img04.jpg", "img05.jpg", "img06.jpg", "img07.jpg", "img08.jpg", "img09.jpg", "img10.jpg" };
+
+    private String testFilesPath= "./src/test/resources/small/";
 
     public void testExtraction() throws IOException {
-        SimpleColorHistogram sch = new SimpleColorHistogram();
-        BufferedImage image = ImageIO.read(new FileInputStream(testFilesPath + testFiles[0]));
+        SimpleColorHistogram sch= new SimpleColorHistogram();
+        BufferedImage image= ImageIO.read(new FileInputStream(testFilesPath + testFiles[0]));
         System.out.println("image = " + image.getWidth() + " x " + image.getHeight());
         sch.extract(image);
         System.out.println("sch = " + sch.getStringRepresentation());
     }
 
     public void testRetrieval() throws Exception {
-        SimpleColorHistogram[] acc = new SimpleColorHistogram[testFiles.length];
-        LinkedList<String> vds = new LinkedList<String>();
-        for (int i = 0; i < acc.length; i++) {
+        SimpleColorHistogram[] acc= new SimpleColorHistogram[testFiles.length];
+        LinkedList<String> vds= new LinkedList<String>();
+        for (int i= 0; i < acc.length; i++) {
             System.out.println("Extracting from number " + i);
-            acc[i] = new SimpleColorHistogram();
+            acc[i]= new SimpleColorHistogram();
             acc[i].extract(ImageIO.read(new FileInputStream(testFilesPath + testFiles[i])));
             vds.add(acc[i].getStringRepresentation());
         }
 
         System.out.println("Calculating distance for " + testFiles[5]);
-        for (int i = 0; i < acc.length; i++) {
-            float distance = acc[i].getDistance(acc[5]);
+        for (int i= 0; i < acc.length; i++) {
+            float distance= acc[i].getDistance(acc[5]);
             System.out.println(testFiles[i] + " distance = " + distance);
         }
-        int count = 0;
-        for (Iterator<String> iterator = vds.iterator(); iterator.hasNext(); ) {
-            String s = iterator.next();
-            SimpleColorHistogram a = new SimpleColorHistogram();
+        int count= 0;
+        for (Iterator<String> iterator= vds.iterator(); iterator.hasNext();) {
+            String s= iterator.next();
+            SimpleColorHistogram a= new SimpleColorHistogram();
             a.setStringRepresentation(s);
-            float distance = acc[count].getDistance(a);
+            float distance= acc[count].getDistance(a);
             System.out.println(testFiles[count] + " distance = " + distance);
             count++;
         }
     }
 
     public void testHmmdRetrieval() throws Exception {
-        SimpleColorHistogram[] acc = new SimpleColorHistogram[testFiles.length];
-        LinkedList<String> vds = new LinkedList<String>();
-        for (int i = 0; i < acc.length; i++) {
+        SimpleColorHistogram[] acc= new SimpleColorHistogram[testFiles.length];
+        LinkedList<String> vds= new LinkedList<String>();
+        for (int i= 0; i < acc.length; i++) {
             System.out.println("Extracting from number " + i);
-            acc[i] = new SimpleColorHistogram(SimpleColorHistogram.HistogramType.HMMD, SimpleColorHistogram.DistanceFunction.JSD);
+            acc[i]= new SimpleColorHistogram(SimpleColorHistogram.HistogramType.HMMD, SimpleColorHistogram.DistanceFunction.JSD);
             acc[i].extract(ImageIO.read(new FileInputStream(testFilesPath + testFiles[i])));
             vds.add(acc[i].getStringRepresentation());
             System.out.println("acc = " + acc[i].getStringRepresentation());
         }
 
         System.out.println("Calculating distance for " + testFiles[5]);
-        for (int i = 0; i < acc.length; i++) {
-            float distance = acc[i].getDistance(acc[5]);
+        for (int i= 0; i < acc.length; i++) {
+            float distance= acc[i].getDistance(acc[5]);
             System.out.println(testFiles[i] + " distance = " + distance);
         }
-        int count = 0;
-        for (Iterator<String> iterator = vds.iterator(); iterator.hasNext(); ) {
-            String s = iterator.next();
-            SimpleColorHistogram a = new SimpleColorHistogram(SimpleColorHistogram.HistogramType.HMMD, SimpleColorHistogram.DistanceFunction.JSD);
+        int count= 0;
+        for (Iterator<String> iterator= vds.iterator(); iterator.hasNext();) {
+            String s= iterator.next();
+            SimpleColorHistogram a= new SimpleColorHistogram(SimpleColorHistogram.HistogramType.HMMD, SimpleColorHistogram.DistanceFunction.JSD);
             a.setStringRepresentation(s);
-            float distance = acc[count].getDistance(a);
+            float distance= acc[count].getDistance(a);
             System.out.println(testFiles[count] + " distance = " + distance);
             count++;
         }

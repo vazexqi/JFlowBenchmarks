@@ -37,25 +37,31 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Date: 13.01.2005
- * Time: 22:36:39
- *
+ * Date: 13.01.2005 Time: 22:36:39
+ * 
  * @author Mathias Lux, mathias@juggle.at
  */
 public class ArrayFastmapDistanceMatrix implements FastmapDistanceMatrix {
     private double[][] distance;
+
     private ArrayList<?> objects;
+
     private HashMap<Object, Integer> objects2position;
+
     private DistanceCalculator distanceFct;
+
     private int dimension;
-    private boolean distributeObjects = false;
+
+    private boolean distributeObjects= false;
 
     /**
-     * Creates a new distance matrix. Please note that the distance matrix uses storage in quadratic size of
-     * the user object count. The DistanceCalculator has to be able to work on those userObjects.
-     *
-     * @param userObjects      gives the collection of object to be processed
-     * @param distanceFunction allows the distance calculation  or -1 if objects distance cannot be computes, has to be a metric
+     * Creates a new distance matrix. Please note that the distance matrix uses storage in quadratic
+     * size of the user object count. The DistanceCalculator has to be able to work on those
+     * userObjects.
+     * 
+     * @param userObjects gives the collection of object to be processed
+     * @param distanceFunction allows the distance calculation or -1 if objects distance cannot be
+     *            computes, has to be a metric
      */
     @SuppressWarnings("unchecked")
     public ArrayFastmapDistanceMatrix(List userObjects, DistanceCalculator distanceFunction) {
@@ -63,62 +69,64 @@ public class ArrayFastmapDistanceMatrix implements FastmapDistanceMatrix {
     }
 
     /**
-     * Creates a new distance matrix. Please note that the distance matrix uses storage in quadratic size of
-     * the user object count. The DistanceCalculator has to be able to work on those userObjects.
-     *
-     * @param userObjects      gives the collection of object to be processed
-     * @param distanceFunction allows the distance calculation  or -1 if objects distance cannot be computes, has to be a metric
-     * @param userObjects      select true if you want to distribute not equal but zero distance objects.
+     * Creates a new distance matrix. Please note that the distance matrix uses storage in quadratic
+     * size of the user object count. The DistanceCalculator has to be able to work on those
+     * userObjects.
+     * 
+     * @param userObjects gives the collection of object to be processed
+     * @param distanceFunction allows the distance calculation or -1 if objects distance cannot be
+     *            computes, has to be a metric
+     * @param userObjects select true if you want to distribute not equal but zero distance objects.
      */
     public ArrayFastmapDistanceMatrix(List<?> userObjects, DistanceCalculator distanceFunction, boolean distributeObjects) {
         init(distanceFunction, userObjects);
-        this.distributeObjects = distributeObjects;
+        this.distributeObjects= distributeObjects;
     }
 
     @SuppressWarnings("unchecked")
     private void init(DistanceCalculator distanceFunction, List userObjects) {
-        distanceFct = distanceFunction;
+        distanceFct= distanceFunction;
         // this might be a problem for collections > INT_MAXSIZE
-        this.objects = new ArrayList(userObjects.size());
+        this.objects= new ArrayList(userObjects.size());
         this.objects.addAll(userObjects);
-        dimension = objects.size();
-        distance = new double[dimension][dimension];
-        for (int i = 0; i < distance.length; i++) {
-            double[] floats = distance[i];
-            for (int j = 0; j < floats.length; j++) {
-                floats[j] = -1f;
+        dimension= objects.size();
+        distance= new double[dimension][dimension];
+        for (int i= 0; i < distance.length; i++) {
+            double[] floats= distance[i];
+            for (int j= 0; j < floats.length; j++) {
+                floats[j]= -1f;
             }
         }
-        objects2position = new HashMap<Object, Integer>(dimension);
-        int count = 0;
-        for (Iterator iterator = objects.iterator(); iterator.hasNext(); ) {
-            Object o = iterator.next();
+        objects2position= new HashMap<Object, Integer>(dimension);
+        int count= 0;
+        for (Iterator iterator= objects.iterator(); iterator.hasNext();) {
+            Object o= iterator.next();
             objects2position.put(o, count);
             count++;
         }
     }
 
     /**
-     * Calculates the distance between objects using the distance function for k = 0,
-     * using {@link DistanceCalculator#getDistance(Object, Object)}. If it has not
-     * been computed previously it is computed and stored now.
-     *
+     * Calculates the distance between objects using the distance function for k = 0, using
+     * {@link DistanceCalculator#getDistance(Object, Object)}. If it has not been computed
+     * previously it is computed and stored now.
+     * 
      * @param o1 Object 1 to compute
      * @param o2 Object 2 to compute
      * @return the distance as float from [0, infinite)
      */
     public double getDistance(Object o1, Object o2) {
         int num1, num2;
-        num1 = objects2position.get(o1);
-        num2 = objects2position.get(o2);
+        num1= objects2position.get(o1);
+        num2= objects2position.get(o2);
         return getDistance(num1, num2);
     }
 
     /**
-     * Calculates the distance between objects using the distance function for k = 0,
-     * using {@link DistanceCalculator#getDistance(Object, Object)}. If it has not
-     * been computed previously it is computed and stored now.
-     *
+     * Calculates the distance between objects using the distance function for k = 0, using
+     * {@link DistanceCalculator#getDistance(Object, Object)}. If it has not been computed
+     * previously it is computed and stored now.
+     * 
      * @param index1 index of first object to compute
      * @param index2 index of second object to compute
      * @return the distance as float from [0, infinite)
@@ -127,80 +135,85 @@ public class ArrayFastmapDistanceMatrix implements FastmapDistanceMatrix {
         int tmp;
 
         // well that's easy ...
-        if (index1 == index2) return 0f;
+        if (index1 == index2)
+            return 0f;
 
         // switch ...
         if (index1 > index2) {
-            tmp = index1;
-            index1 = index2;
-            index2 = tmp;
+            tmp= index1;
+            index1= index2;
+            index2= tmp;
         }
 
         // compute if not already there ...
         if (distance[index1][index2] < 0) {
-            double distance = distanceFct.getDistance(objects.get(index1), objects.get(index2));
+            double distance= distanceFct.getDistance(objects.get(index1), objects.get(index2));
             if (distributeObjects && distance == 0) {
-                distance = 0.2f;
+                distance= 0.2f;
             }
-            this.distance[index1][index2] = distance;
+            this.distance[index1][index2]= distance;
         }
 
         return distance[index1][index2];
     }
 
     /**
-     * Calculates and returns the distance between two objects. Please note that the
-     * distance function has to be symmetric and must obey the triangle inequality.
-     * distance in k is: d[k+1](o1,o2)^2 = d[k](o1,o2)^2 - (x1[k]-x2[k])^2 .
-     *
+     * Calculates and returns the distance between two objects. Please note that the distance
+     * function has to be symmetric and must obey the triangle inequality. distance in k is:
+     * d[k+1](o1,o2)^2 = d[k](o1,o2)^2 - (x1[k]-x2[k])^2 .
+     * 
      * @param index1 index of first object to compute
      * @param index2 index of second object to compute
-     * @param k      defines the dimension of current fastmap operation
-     * @param x1     is needed when k > 0 (see documentation above), all x1[l] with l &lt; k have to be present.
-     * @param x2     is needed when k > 0 (see documentation above), all x2[l] with l &lt; k have to be present.
+     * @param k defines the dimension of current fastmap operation
+     * @param x1 is needed when k > 0 (see documentation above), all x1[l] with l &lt; k have to be
+     *            present.
+     * @param x2 is needed when k > 0 (see documentation above), all x2[l] with l &lt; k have to be
+     *            present.
      * @return the distance as float from [0, infinite)
      */
     public double getDistance(int index1, int index2, int k, double[] x1, double[] x2) {
         // kind of speed up ...
-        if (index1 == index2) return 0f;
+        if (index1 == index2)
+            return 0f;
 
-        double originalDistance = getDistance(index1, index2);
+        double originalDistance= getDistance(index1, index2);
         if (k == 0) {
             return originalDistance;
         } else {
-            double distance = originalDistance * originalDistance;
-            for (int i = 0; i < k; i++) {
-                double xDifference = x1[i] - x2[i];
-                distance = distance - xDifference * xDifference;
+            double distance= originalDistance * originalDistance;
+            for (int i= 0; i < k; i++) {
+                double xDifference= x1[i] - x2[i];
+                distance= distance - xDifference * xDifference;
             }
             // fixed based on the comments of Benjamin Sznajder & Michal Shmueli-Scheuer
             // Can get <0 according to http://www.cs.umd.edu/~hjs/pubs/hjaltasonpami03.pdf (section 2.2 )
-            return (float) Math.sqrt(Math.abs(distance));
+            return (float)Math.sqrt(Math.abs(distance));
         }
     }
 
     /**
      * Used for the heuristic for getting the pivots as described in the paper.
-     *
-     * @param row    defines the row where we want to find the maximum
-     * @param k      defines the dimension of current fastmap operation
-     * @param points is needed when k > 0 (see documentation above), all x1[l] with l &lt; k have to be present.
+     * 
+     * @param row defines the row where we want to find the maximum
+     * @param k defines the dimension of current fastmap operation
+     * @param points is needed when k > 0 (see documentation above), all x1[l] with l &lt; k have to
+     *            be present.
      * @return the index of the object with maximum distance to the row object.
      */
     public int getMaximumDistance(int row, int k, double[][] points) {
-        double max = 0f;
-        int result = 0;
-        for (int i = 0; i < dimension; i++) {
-            double[] point1 = null;
-            double[] point2 = null;
+        double max= 0f;
+        int result= 0;
+        for (int i= 0; i < dimension; i++) {
+            double[] point1= null;
+            double[] point2= null;
             if (points != null) {
-                point1 = points[row];
-                point2 = points[i];
+                point1= points[row];
+                point2= points[i];
             }
-            double currentDistance = getDistance(row, i, k, point1, point2);
+            double currentDistance= getDistance(row, i, k, point1, point2);
             if (currentDistance > max) {
-                max = currentDistance;
-                result = i;
+                max= currentDistance;
+                result= i;
             }
         }
         return result;
@@ -208,8 +221,9 @@ public class ArrayFastmapDistanceMatrix implements FastmapDistanceMatrix {
 
     /**
      * Used for the heuristic for getting the pivots as described in the paper. This method calls
-     * {@link FastmapDistanceMatrix#getMaximumDistance(int, int, double[][])} with parameters (row, 0, null, null).
-     *
+     * {@link FastmapDistanceMatrix#getMaximumDistance(int, int, double[][])} with parameters (row,
+     * 0, null, null).
+     * 
      * @param row defines the row where we want to find the maximum
      * @return the index of the object with maximum distance to the row object.
      * @see FastmapDistanceMatrix#getMaximumDistance(int, int, double[][])
@@ -224,7 +238,7 @@ public class ArrayFastmapDistanceMatrix implements FastmapDistanceMatrix {
 
     /**
      * Returns the user object for given index number
-     *
+     * 
      * @param rowNumber
      * @return
      * @see #getIndexOfObject(Object)
@@ -235,13 +249,13 @@ public class ArrayFastmapDistanceMatrix implements FastmapDistanceMatrix {
 
     /**
      * Returns the index in the matrix of the given user object or -1 if not found
-     *
+     * 
      * @param o the object to search for
      * @return the index number of the object or -1 if not found
      * @see #getUserObject(int)
      */
     public int getIndexOfObject(Object o) {
-        Integer index = objects2position.get(o);
+        Integer index= objects2position.get(o);
         if (index == null)
             return -1;
         else
@@ -249,9 +263,8 @@ public class ArrayFastmapDistanceMatrix implements FastmapDistanceMatrix {
     }
 
     /**
-     * Creates and returns a newly created similarity Matrix from the given
-     * distance Matrix
-     *
+     * Creates and returns a newly created similarity Matrix from the given distance Matrix
+     * 
      * @return the similarityMatrix or null if not implemented or possible
      */
     public SimilarityMatrix getSimilarityMatrix() {
@@ -262,19 +275,20 @@ public class ArrayFastmapDistanceMatrix implements FastmapDistanceMatrix {
      * Normalizes the matrix for all values to [0,1]
      */
     public void normalize() {
-        double maximumDistance = 0f;
-        for (int i = 0; i < getDimension(); i++) {
-            int maxDist = getMaximumDistance(i);
-            double distance = getDistance(i, maxDist);
-            if (distance > maximumDistance) maximumDistance = distance;
+        double maximumDistance= 0f;
+        for (int i= 0; i < getDimension(); i++) {
+            int maxDist= getMaximumDistance(i);
+            double distance= getDistance(i, maxDist);
+            if (distance > maximumDistance)
+                maximumDistance= distance;
         }
-        double[][] newDistances = new double[dimension][dimension];
-        for (int i = 0; i < newDistances.length; i++) {
-            for (int j = 0; j < newDistances[i].length; j++) {
-                newDistances[i][j] = (getDistance(i, j) / maximumDistance);
+        double[][] newDistances= new double[dimension][dimension];
+        for (int i= 0; i < newDistances.length; i++) {
+            for (int j= 0; j < newDistances[i].length; j++) {
+                newDistances[i][j]= (getDistance(i, j) / maximumDistance);
             }
         }
-        distance = newDistances;
+        distance= newDistances;
     }
 
 }

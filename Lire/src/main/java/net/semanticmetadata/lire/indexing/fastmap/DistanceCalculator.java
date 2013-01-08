@@ -30,45 +30,45 @@
 package net.semanticmetadata.lire.indexing.fastmap;
 
 /**
- * Date: 13.01.2005
- * Time: 22:37:22
- *
+ * Date: 13.01.2005 Time: 22:37:22
+ * 
  * @author Mathias Lux, mathias@juggle.at
  */
 public abstract class DistanceCalculator {
     /**
-     * Calculates and returns the distance between two objects. Please note that the
-     * distance function has to be symmetric and must obey the triangle inequality.
-     * This method is the same as {@link #getDistance(Object, Object, int, double[], double[])}
-     * with a k=0.
-     *
+     * Calculates and returns the distance between two objects. Please note that the distance
+     * function has to be symmetric and must obey the triangle inequality. This method is the same
+     * as {@link #getDistance(Object, Object, int, double[], double[])} with a k=0.
+     * 
      * @param o1 Object 1 to compute
      * @param o2 Object 2 to compute
-     * @return the distance as float from [0, infinite)  or -1 if objects distance cannot be computed
+     * @return the distance as float from [0, infinite) or -1 if objects distance cannot be computed
      */
     abstract public double getDistance(Object o1, Object o2);
 
     /**
-     * Calculates and returns the distance between two objects. Please note that the
-     * distance function has to be symmetric and must obey the triangle inequality.
-     * distance in k is: d[k+1](o1,o2)^2 = d[k](o1,o2)^2 - (x1[k]-x2[k])^2 .
-     *
+     * Calculates and returns the distance between two objects. Please note that the distance
+     * function has to be symmetric and must obey the triangle inequality. distance in k is:
+     * d[k+1](o1,o2)^2 = d[k](o1,o2)^2 - (x1[k]-x2[k])^2 .
+     * 
      * @param o1 Object 1 to compute
      * @param o2 Object 2 to compute
-     * @param k  defines the dimension of current fastmap operation
-     * @param x1 is needed when k > 0 (see documentation above), all x1[l] with l &lt; k have to be present.
-     * @param x2 is needed when k > 0 (see documentation above), all x2[l] with l &lt; k have to be present.
-     * @return the distance as float from [0, infinite)  or -1 if objects distance cannot be computes
+     * @param k defines the dimension of current fastmap operation
+     * @param x1 is needed when k > 0 (see documentation above), all x1[l] with l &lt; k have to be
+     *            present.
+     * @param x2 is needed when k > 0 (see documentation above), all x2[l] with l &lt; k have to be
+     *            present.
+     * @return the distance as float from [0, infinite) or -1 if objects distance cannot be computes
      */
     public double getDistance(Object o1, Object o2, int k, double[] x1, double[] x2) {
-        double originalDistance = getDistance(o1, o2);
+        double originalDistance= getDistance(o1, o2);
         if (k == 0) {
             return originalDistance;
         } else {
-            double distance = originalDistance * originalDistance;
-            for (int i = 0; i < k; i++) {
-                double xDifference = x1[i] - x2[i];
-                distance = distance - xDifference * xDifference;
+            double distance= originalDistance * originalDistance;
+            for (int i= 0; i < k; i++) {
+                double xDifference= x1[i] - x2[i];
+                distance= distance - xDifference * xDifference;
             }
             return Math.sqrt(distance);
         }

@@ -41,35 +41,49 @@ import java.awt.image.Raster;
 import java.util.StringTokenizer;
 
 /**
- * <p>Feature for the AutoCorrelogram based on color as described in
- * Huang, J.; Kumar, S. R.; Mitra, M.; Zhu, W. & Zabih, R. (2007) "Image
- * Indexing Using Color Correlograms", IEEE Computer Society</p>
- * <p>see also DOI <a href="http://doi.ieeecomputersociety.org/10.1109/CVPR.1997.609412">10.1109/CVPR.1997.609412</a></p>
+ * <p>
+ * Feature for the AutoCorrelogram based on color as described in Huang, J.; Kumar, S. R.; Mitra,
+ * M.; Zhu, W. & Zabih, R. (2007) "Image Indexing Using Color Correlograms", IEEE Computer Society
+ * </p>
+ * <p>
+ * see also DOI <a
+ * href="http://doi.ieeecomputersociety.org/10.1109/CVPR.1997.609412">10.1109/CVPR.1997.609412</a>
+ * </p>
  * <p/>
  * Todo: Change the 2-dim array to a one dim array, as this is much faster in Java.
  */
 public class AutoColorCorrelogram implements LireFeature {
-    private static final int DEFAULT_NUMBER_COLORS = 256;
+    private static final int DEFAULT_NUMBER_COLORS= 256;
 
     private float quantH;
+
     private float quantV;
+
     private float quantS;
+
     //    private int[][][] quantTable;
     private float[][] correlogram;
+
     private int[] distanceSet;
+
     private int numBins;
+
     private float quantH_f;
+
     private float quantS_f;
+
     private float quantV_f;
 
 
-    private static final ExtractionMethod DEFAULT_EXTRACTION_METHOD = ExtractionMethod.NaiveHuangAlgorithm;
+    private static final ExtractionMethod DEFAULT_EXTRACTION_METHOD= ExtractionMethod.NaiveHuangAlgorithm;
+
     private IAutoCorrelogramFeatureExtractor extractionAlgorithm;
 
     /**
-     * Defines the available analysis modes: Superfast uses the approach described in the paper, Quarterneighbourhood
-     * investigates the pixels in down and to the right of the respective pixel and FullNeighbourhood investigates
-     * the whole lot of pixels within maximumDistance of the respective pixel.
+     * Defines the available analysis modes: Superfast uses the approach described in the paper,
+     * Quarterneighbourhood investigates the pixels in down and to the right of the respective pixel
+     * and FullNeighbourhood investigates the whole lot of pixels within maximumDistance of the
+     * respective pixel.
      */
     public enum Mode {
         FullNeighbourhood,
@@ -87,13 +101,13 @@ public class AutoColorCorrelogram implements LireFeature {
     }
 
     public AutoColorCorrelogram() {
-        this(DEFAULT_NUMBER_COLORS, new int[]{1, 2, 3, 4}, null);
+        this(DEFAULT_NUMBER_COLORS, new int[] { 1, 2, 3, 4 }, null);
     }
 
     /**
      * Creates a new AutoColorCorrelogram, where the distance k is limited to a maximum of
      * maxDistance (see publication mentioned above)
-     *
+     * 
      * @param maxDistance upper limit of k
      */
     public AutoColorCorrelogram(int maxDistance) {
@@ -101,21 +115,23 @@ public class AutoColorCorrelogram implements LireFeature {
     }
 
     /**
-     * Creates a new AutoColorCorrelogram using a maximum L_inf pixel distance for analysis and given mode
-     *
+     * Creates a new AutoColorCorrelogram using a maximum L_inf pixel distance for analysis and
+     * given mode
+     * 
      * @param maxDistance maximum L_inf pixel distance for analysis
-     * @param mode        the mode of calculation (determines the speed of extraction)
+     * @param mode the mode of calculation (determines the speed of extraction)
      */
     public AutoColorCorrelogram(int maxDistance, Mode mode) {
         this(DEFAULT_NUMBER_COLORS, null, new MLuxAutoCorrelogramExtraction(mode));
-        int[] D = new int[maxDistance];
-        for (int i = 0; i < maxDistance; i++) D[i] = i + 1;
-        this.distanceSet = D;
+        int[] D= new int[maxDistance];
+        for (int i= 0; i < maxDistance; i++)
+            D[i]= i + 1;
+        this.distanceSet= D;
     }
 
     /**
      * Creates a new AutoColorCorrelogram, where the distance k is in distance set
-     *
+     * 
      * @param distanceSet distance set
      */
     public AutoColorCorrelogram(int[] distanceSet) {
@@ -124,8 +140,8 @@ public class AutoColorCorrelogram implements LireFeature {
 
     /**
      * Creates a new AutoCorrelogram with specified algorithm of extraction and distance set
-     *
-     * @param distanceSet        distance set
+     * 
+     * @param distanceSet distance set
      * @param extractionAlgorith the algorithm to extract
      */
     public AutoColorCorrelogram(int[] distanceSet, IAutoCorrelogramFeatureExtractor extractionAlgorith) {
@@ -133,65 +149,67 @@ public class AutoColorCorrelogram implements LireFeature {
     }
 
     /**
-     * Creates a new AutoCorrelogram with specified algorithm of extraction
-     * Uses distance set {1,2,3,4} which is chosen to be compatible with legacy code
-     *
+     * Creates a new AutoCorrelogram with specified algorithm of extraction Uses distance set
+     * {1,2,3,4} which is chosen to be compatible with legacy code
+     * 
      * @param extractionAlgorith the algorithm to extract
      */
     public AutoColorCorrelogram(IAutoCorrelogramFeatureExtractor extractionAlgorith) {
-        this(DEFAULT_NUMBER_COLORS, new int[]{1, 2, 3, 4}, extractionAlgorith);
+        this(DEFAULT_NUMBER_COLORS, new int[] { 1, 2, 3, 4 }, extractionAlgorith);
     }
 
     /**
-     * Creates a new AutoColorCorrelogram using a maximum L_inf pixel distance for analysis and given mode
+     * Creates a new AutoColorCorrelogram using a maximum L_inf pixel distance for analysis and
+     * given mode
      */
     public AutoColorCorrelogram(int numBins, int[] distanceSet, IAutoCorrelogramFeatureExtractor extractionAlgorith) {
-        this.numBins = numBins;
-        this.distanceSet = distanceSet;
+        this.numBins= numBins;
+        this.distanceSet= distanceSet;
 
         if (extractionAlgorith == null) {
             switch (DEFAULT_EXTRACTION_METHOD) {
                 case LireAlgorithm:
-                    this.extractionAlgorithm = new MLuxAutoCorrelogramExtraction();
+                    this.extractionAlgorithm= new MLuxAutoCorrelogramExtraction();
                     break;
                 case NaiveHuangAlgorithm:
-                    this.extractionAlgorithm = new NaiveAutoCorrelogramExtraction();
+                    this.extractionAlgorithm= new NaiveAutoCorrelogramExtraction();
                     break;
                 case DynamicProgrammingHuangAlgorithm:
-                    this.extractionAlgorithm = DynamicProgrammingAutoCorrelogramExtraction.getInstance();
+                    this.extractionAlgorithm= DynamicProgrammingAutoCorrelogramExtraction.getInstance();
                     break;
             }
-        } else this.extractionAlgorithm = extractionAlgorith;
+        } else
+            this.extractionAlgorithm= extractionAlgorith;
 
         if (numBins < 17) {
-            quantH_f = 4f;
-            quantS_f = 2f;
-            quantV_f = 2f;
-            this.numBins = 16;
+            quantH_f= 4f;
+            quantS_f= 2f;
+            quantV_f= 2f;
+            this.numBins= 16;
         } else if (numBins < 33) {
-            quantH_f = 8f;
-            quantS_f = 2f;
-            quantV_f = 2f;
-            this.numBins = 32;
+            quantH_f= 8f;
+            quantS_f= 2f;
+            quantV_f= 2f;
+            this.numBins= 32;
         } else if (numBins < 65) {
-            quantH_f = 8f;
-            quantS_f = 4f;
-            quantV_f = 2f;
-            this.numBins = 64;
+            quantH_f= 8f;
+            quantS_f= 4f;
+            quantV_f= 2f;
+            this.numBins= 64;
         } else if (numBins < 129) {
-            quantH_f = 8f;
-            quantS_f = 4f;
-            quantV_f = 4f;
-            this.numBins = 128;
+            quantH_f= 8f;
+            quantS_f= 4f;
+            quantV_f= 4f;
+            this.numBins= 128;
         } else {
-            quantH_f = 16f;
-            quantS_f = 4f;
-            quantV_f = 4f;
-            this.numBins = 256;
+            quantH_f= 16f;
+            quantS_f= 4f;
+            quantV_f= 4f;
+            this.numBins= 256;
         }
-        quantH = 360f / quantH_f;
-        quantS = 256f / quantS_f;
-        quantV = 256f / quantV_f;
+        quantH= 360f / quantH_f;
+        quantS= 256f / quantS_f;
+        quantV= 256f / quantV_f;
 
         // init quantization table:
 //        int count = 0;
@@ -208,16 +226,16 @@ public class AutoColorCorrelogram implements LireFeature {
     }
 
     private static int[][][] hsvImage(Raster r) {
-        int[][][] pixels = new int[r.getWidth()][r.getHeight()][3];
+        int[][][] pixels= new int[r.getWidth()][r.getHeight()][3];
         // quantize colors for each pixel (done in HSV color space):
-        int[] pixel = new int[3];
-        for (int x = 0; x < r.getWidth(); x++) {
-            for (int y = 0; y < r.getHeight(); y++) {
+        int[] pixel= new int[3];
+        for (int x= 0; x < r.getWidth(); x++) {
+            for (int y= 0; y < r.getHeight(); y++) {
                 // converting to HSV:
-                int[] hsv = new int[3];
+                int[] hsv= new int[3];
                 convertRgbToHsv(r.getPixel(x, y, pixel), hsv);
                 // quantize the actual pixel:
-                pixels[x][y] = hsv;
+                pixels[x][y]= hsv;
             }
         }
         return pixels;
@@ -225,37 +243,37 @@ public class AutoColorCorrelogram implements LireFeature {
     }
 
     public void extract(BufferedImage bi) {
-        final Raster r = bi.getRaster();
-        int[][][] hsvImage = hsvImage(r);
+        final Raster r= bi.getRaster();
+        int[][][] hsvImage= hsvImage(r);
         extract(hsvImage);
     }
 
     public byte[] getByteArrayRepresentation() {
-        byte[] result = new byte[correlogram.length * correlogram[0].length * 4 + 5];
-        for (int i = 0; i < correlogram.length; i++) {
+        byte[] result= new byte[correlogram.length * correlogram[0].length * 4 + 5];
+        for (int i= 0; i < correlogram.length; i++) {
             System.arraycopy(SerializationUtils.toByteArray(correlogram[i]), 0, result, i * correlogram[i].length * 4, correlogram[i].length * 4);
         }
         System.arraycopy(SerializationUtils.toBytes(numBins), 0, result, result.length - 5, 4);
-        result[result.length - 1] = (byte) distanceSet.length;
+        result[result.length - 1]= (byte)distanceSet.length;
         return result;
     }
 
     public void setByteArrayRepresentation(byte[] in) {
-        byte[] numBinsBytes = new byte[4];
-        numBinsBytes[0] = in[in.length - 5];
-        numBinsBytes[1] = in[in.length - 4];
-        numBinsBytes[2] = in[in.length - 3];
-        numBinsBytes[3] = in[in.length - 2];
-        int maxDistance = (int) in[in.length - 1];
-        numBins = SerializationUtils.toInt(numBinsBytes);
-        correlogram = new float[numBins][maxDistance];
-        float[] temp = SerializationUtils.toFloatArray(in);
-        for (int i = 0; i < correlogram.length; i++) {
+        byte[] numBinsBytes= new byte[4];
+        numBinsBytes[0]= in[in.length - 5];
+        numBinsBytes[1]= in[in.length - 4];
+        numBinsBytes[2]= in[in.length - 3];
+        numBinsBytes[3]= in[in.length - 2];
+        int maxDistance= (int)in[in.length - 1];
+        numBins= SerializationUtils.toInt(numBinsBytes);
+        correlogram= new float[numBins][maxDistance];
+        float[] temp= SerializationUtils.toFloatArray(in);
+        for (int i= 0; i < correlogram.length; i++) {
             System.arraycopy(temp, i * maxDistance, correlogram[i], 0, maxDistance);
         }
-        distanceSet = new int[maxDistance];
-        for (int i = 0; i < distanceSet.length; i++) {
-            distanceSet[i] = i + 1;
+        distanceSet= new int[maxDistance];
+        for (int i= 0; i < distanceSet.length; i++) {
+            distanceSet[i]= i + 1;
         }
     }
 
@@ -264,36 +282,36 @@ public class AutoColorCorrelogram implements LireFeature {
     }
 
     private float[] getFloatHistogram() {
-        float[] result = new float[correlogram.length * correlogram[0].length];
-        for (int i = 0; i < correlogram.length; i++) {
+        float[] result= new float[correlogram.length * correlogram[0].length];
+        for (int i= 0; i < correlogram.length; i++) {
             System.arraycopy(correlogram[i], 0, result, i * correlogram[0].length, correlogram[0].length);
         }
         return result;
     }
 
     public void extract(int[][][] img) {
-        final int W = img.length;
-        final int H = img[0].length;
-        int[][] quantPixels = new int[W][H];
+        final int W= img.length;
+        final int H= img[0].length;
+        int[][] quantPixels= new int[W][H];
 
         // quantize colors for each pixel (done in HSV color space):
-        for (int x = 0; x < W; x++)
-            for (int y = 0; y < H; y++)
-                quantPixels[x][y] = quantize(img[x][y]);
+        for (int x= 0; x < W; x++)
+            for (int y= 0; y < H; y++)
+                quantPixels[x][y]= quantize(img[x][y]);
 
-        this.correlogram = this.extractionAlgorithm.extract(this.numBins, this.distanceSet, quantPixels);
+        this.correlogram= this.extractionAlgorithm.extract(this.numBins, this.distanceSet, quantPixels);
     }
 
     /**
      * Quantizes a pixel according to numBins number of bins and a respective algorithm.
-     *
+     * 
      * @param pixel the pixel to quantize.
      * @return the quantized value ...
      */
     private int quantize(int[] pixel) {
-        return (int) ((int) (pixel[0] / quantH) * (quantV_f) * (quantS_f)
-                + (int) (pixel[1] / quantS) * (quantV_f)
-                + (int) (pixel[2] / quantV));
+        return (int)((int)(pixel[0] / quantH) * (quantV_f) * (quantS_f)
+                + (int)(pixel[1] / quantS) * (quantV_f)
+                + (int)(pixel[2] / quantV));
     }
 
     /**
@@ -304,101 +322,102 @@ public class AutoColorCorrelogram implements LireFeature {
         if (hsv.length < 3) {
             throw new IndexOutOfBoundsException("HSV array too small, a minim of three elements is required.");
         }
-        int R = rgb[0];
-        int G = rgb[1];
-        int B = rgb[2];
+        int R= rgb[0];
+        int G= rgb[1];
+        int B= rgb[2];
         int max, min;
-        float hue = 0f;
+        float hue= 0f;
 
-        max = Math.max(R, G);     //calculation of max(R,G,B)
-        max = Math.max(max, B);
+        max= Math.max(R, G); //calculation of max(R,G,B)
+        max= Math.max(max, B);
 
-        min = Math.min(R, G);     //calculation of min(R,G,B)
-        min = Math.min(min, B);
+        min= Math.min(R, G); //calculation of min(R,G,B)
+        min= Math.min(min, B);
 
         if (max == 0)
-            hsv[1] = 0;
+            hsv[1]= 0;
         else {
             // Saturation in [0,255]
-            hsv[1] = (int) (((max - min) / (float) max) * 255f);
+            hsv[1]= (int)(((max - min) / (float)max) * 255f);
         }
 
         if (max == min) {
-            hue = 0;     // (max - min) = 0
+            hue= 0; // (max - min) = 0
         } else {
-            float maxMinusMin = (float) (max - min);
+            float maxMinusMin= (float)(max - min);
             if (R == max)
-                hue = ((G - B) / maxMinusMin);
+                hue= ((G - B) / maxMinusMin);
 
             else if (G == max)
-                hue = (2 + (B - R) / maxMinusMin);
+                hue= (2 + (B - R) / maxMinusMin);
 
             else if (B == max)
-                hue = (4 + (R - G) / maxMinusMin);
+                hue= (4 + (R - G) / maxMinusMin);
 
-            hue *= 60f;
+            hue*= 60f;
 
             if (hue < 0f)
-                hue += 360f;
+                hue+= 360f;
         }
         // hue in [0,359]
-        hsv[0] = (int) (hue);
+        hsv[0]= (int)(hue);
         // value in [0,255]
-        hsv[2] = max;
+        hsv[2]= max;
     }
 
     public float getDistance(LireFeature vd) {
-        if (!(vd instanceof AutoColorCorrelogram)) return -1;
+        if (!(vd instanceof AutoColorCorrelogram))
+            return -1;
         float result;
-        float[][] vdCorrelogram = ((AutoColorCorrelogram) vd).correlogram;
-        result = l1(vdCorrelogram);
+        float[][] vdCorrelogram= ((AutoColorCorrelogram)vd).correlogram;
+        result= l1(vdCorrelogram);
         return result;
     }
 
     private float l2(float[][] vdCorrelogram) {
-        float result = 0;
-        for (int i = 0; i < correlogram.length; i++) {
-            float[] ints = correlogram[i];
-            for (int j = 0; j < ints.length; j++) {
-                float v = correlogram[i][j] - vdCorrelogram[i][j];
-                result += v * v;
+        float result= 0;
+        for (int i= 0; i < correlogram.length; i++) {
+            float[] ints= correlogram[i];
+            for (int j= 0; j < ints.length; j++) {
+                float v= correlogram[i][j] - vdCorrelogram[i][j];
+                result+= v * v;
             }
         }
-        return (float) Math.sqrt(result);
+        return (float)Math.sqrt(result);
     }
 
     private float cosineCoeff(float[][] vdCorrelogram) {
-        float dot = 0, c1 = 0, c2 = 0;
-        for (int i = 0; i < correlogram.length; i++) {
-            float[] ints = correlogram[i];
-            for (int j = 0; j < ints.length; j++) {
-                dot += correlogram[i][j] * vdCorrelogram[i][j];
-                c1 += correlogram[i][j] * correlogram[i][j];
-                c2 += vdCorrelogram[i][j] * vdCorrelogram[i][j];
+        float dot= 0, c1= 0, c2= 0;
+        for (int i= 0; i < correlogram.length; i++) {
+            float[] ints= correlogram[i];
+            for (int j= 0; j < ints.length; j++) {
+                dot+= correlogram[i][j] * vdCorrelogram[i][j];
+                c1+= correlogram[i][j] * correlogram[i][j];
+                c2+= vdCorrelogram[i][j] * vdCorrelogram[i][j];
             }
         }
-        return 1 - (float) (dot / (Math.sqrt(c1) * Math.sqrt(c2)));
+        return 1 - (float)(dot / (Math.sqrt(c1) * Math.sqrt(c2)));
     }
 
     private float jsd(float[][] vdCorrelogram) {
-        double sum = 0d;
-        for (int i = 0; i < correlogram.length; i++) {
-            float[] ints = correlogram[i];
-            for (int j = 0; j < ints.length; j++) {
-                sum += correlogram[i][j] > 0 ? correlogram[i][j] * Math.log(2d * correlogram[i][j] / (correlogram[i][j] + vdCorrelogram[i][j])) : 0 +
+        double sum= 0d;
+        for (int i= 0; i < correlogram.length; i++) {
+            float[] ints= correlogram[i];
+            for (int j= 0; j < ints.length; j++) {
+                sum+= correlogram[i][j] > 0 ? correlogram[i][j] * Math.log(2d * correlogram[i][j] / (correlogram[i][j] + vdCorrelogram[i][j])) : 0 +
                         vdCorrelogram[i][j] > 0 ? vdCorrelogram[i][j] * Math.log(2d * vdCorrelogram[i][j] / (correlogram[i][j] + vdCorrelogram[i][j])) : 0;
             }
         }
-        return (float) sum;
+        return (float)sum;
     }
 
     private float l1(float[][] vdCorrelogram) {
-        float result = 0;
-        for (int i = 0; i < correlogram.length; i++) {
-            float[] ints = correlogram[i];
-            for (int j = 0; j < ints.length; j++) {
-                float v = Math.abs(correlogram[i][j] - vdCorrelogram[i][j]);
-                result += v;
+        float result= 0;
+        for (int i= 0; i < correlogram.length; i++) {
+            float[] ints= correlogram[i];
+            for (int j= 0; j < ints.length; j++) {
+                float v= Math.abs(correlogram[i][j] - vdCorrelogram[i][j]);
+                result+= v;
             }
         }
         return result;
@@ -406,46 +425,48 @@ public class AutoColorCorrelogram implements LireFeature {
 
     private float tanimoto(float[][] vdCorrelogram) {
         // Tanimoto coefficient
-        double Result = 0;
-        double Temp1 = 0;
-        double Temp2 = 0;
+        double Result= 0;
+        double Temp1= 0;
+        double Temp2= 0;
 
-        double TempCount1 = 0, TempCount2 = 0, TempCount3 = 0;
+        double TempCount1= 0, TempCount2= 0, TempCount3= 0;
 
-        for (int i = 0; i < correlogram.length; i++) {
-            float[] ints = correlogram[i];
-            for (int j = 0; j < ints.length; j++) {
-                Temp1 += correlogram[i][j];
-                Temp2 += vdCorrelogram[i][j];
+        for (int i= 0; i < correlogram.length; i++) {
+            float[] ints= correlogram[i];
+            for (int j= 0; j < ints.length; j++) {
+                Temp1+= correlogram[i][j];
+                Temp2+= vdCorrelogram[i][j];
             }
         }
 
-        if (Temp1 == 0 || Temp2 == 0) Result = 100;
-        if (Temp1 == 0 && Temp2 == 0) Result = 0;
+        if (Temp1 == 0 || Temp2 == 0)
+            Result= 100;
+        if (Temp1 == 0 && Temp2 == 0)
+            Result= 0;
 
         if (Temp1 > 0 && Temp2 > 0) {
-            for (int i = 0; i < correlogram.length; i++) {
-                float[] ints = correlogram[i];
-                for (int j = 0; j < ints.length; j++) {
-                    TempCount1 += (correlogram[i][j] / Temp1) * (vdCorrelogram[i][j] / Temp2);
-                    TempCount2 += (vdCorrelogram[i][j] / Temp2) * (vdCorrelogram[i][j] / Temp2);
-                    TempCount3 += (correlogram[i][j] / Temp1) * (correlogram[i][j] / Temp1);
+            for (int i= 0; i < correlogram.length; i++) {
+                float[] ints= correlogram[i];
+                for (int j= 0; j < ints.length; j++) {
+                    TempCount1+= (correlogram[i][j] / Temp1) * (vdCorrelogram[i][j] / Temp2);
+                    TempCount2+= (vdCorrelogram[i][j] / Temp2) * (vdCorrelogram[i][j] / Temp2);
+                    TempCount3+= (correlogram[i][j] / Temp1) * (correlogram[i][j] / Temp1);
 
                 }
             }
-            Result = (100 - 100 * (TempCount1 / (TempCount2 + TempCount3
+            Result= (100 - 100 * (TempCount1 / (TempCount2 + TempCount3
                     - TempCount1))); //Tanimoto
         }
-        return (float) Result;
+        return (float)Result;
     }
 
     public String getStringRepresentation() {
-        int maxDistance = this.distanceSet.length;
-        StringBuilder sb = new StringBuilder(numBins * maxDistance);
+        int maxDistance= this.distanceSet.length;
+        StringBuilder sb= new StringBuilder(numBins * maxDistance);
         sb.append(maxDistance);
         sb.append(' ');
-        for (int i = 0; i < correlogram.length; i++) {
-            for (int j = 0; j < correlogram[i].length; j++) {
+        for (int i= 0; i < correlogram.length; i++) {
+            for (int j= 0; j < correlogram[i].length; j++) {
                 sb.append(correlogram[i][j]);
                 sb.append(' ');
             }
@@ -454,13 +475,13 @@ public class AutoColorCorrelogram implements LireFeature {
     }
 
     public void setStringRepresentation(String string) {
-        StringTokenizer st = new StringTokenizer(string);
-        correlogram = new float[numBins][Integer.parseInt(st.nextToken())];
-        for (int i = 0; i < correlogram.length; i++) {
-            for (int j = 0; j < correlogram[i].length; j++) {
+        StringTokenizer st= new StringTokenizer(string);
+        correlogram= new float[numBins][Integer.parseInt(st.nextToken())];
+        for (int i= 0; i < correlogram.length; i++) {
+            for (int j= 0; j < correlogram[i].length; j++) {
                 if (!st.hasMoreTokens())
                     throw new IndexOutOfBoundsException("Too few numbers in string representation!");
-                correlogram[i][j] = Float.parseFloat(st.nextToken());
+                correlogram[i][j]= Float.parseFloat(st.nextToken());
             }
         }
     }

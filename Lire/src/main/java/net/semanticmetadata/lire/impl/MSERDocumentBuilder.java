@@ -45,61 +45,64 @@ import java.util.List;
 import java.util.logging.Logger;
 
 /**
- * Creates a Document out of the given image with MSER Features
- * Date: 27.03.2011
- * Time: 10:00:08
- *
+ * Creates a Document out of the given image with MSER Features Date: 27.03.2011 Time: 10:00:08
+ * 
  * @author Christine Keim, christine.keim@inode.at
  */
 public class MSERDocumentBuilder extends AbstractDocumentBuilder {
     static ColorSpace cs;
+
     static ColorConvertOp op;
+
     static RescaleOp rop;
 
     static {
-        cs = ColorSpace.getInstance(ColorSpace.CS_GRAY);
-        op = new ColorConvertOp(cs, null);
-        rop = new RescaleOp(-1.0f, 255f, null);
+        cs= ColorSpace.getInstance(ColorSpace.CS_GRAY);
+        op= new ColorConvertOp(cs, null);
+        rop= new RescaleOp(-1.0f, 255f, null);
     }
 
-    private Logger logger = Logger.getLogger(getClass().getName());
+    private Logger logger= Logger.getLogger(getClass().getName());
+
     private MSER extractor;
 
     public MSERDocumentBuilder() {
-        extractor = new MSER();
+        extractor= new MSER();
     }
 
     public Document createDocument(BufferedImage image, String identifier) {
-        Document doc = null;
+        Document doc= null;
         try {
             // convert to grey ...
-            ColorConvertOp toGreyscale = new ColorConvertOp(ColorSpace.getInstance(ColorSpace.CS_GRAY), null);
-            BufferedImage image1 = toGreyscale.filter(image, null);
+            ColorConvertOp toGreyscale= new ColorConvertOp(ColorSpace.getInstance(ColorSpace.CS_GRAY), null);
+            BufferedImage image1= toGreyscale.filter(image, null);
             // extract features from image:
-            List<MSERFeature> features = extractor.computeMSERFeatures(image1);
+            List<MSERFeature> features= extractor.computeMSERFeatures(image1);
 
             // invert grey
             features.addAll(extractor.computeMSERFeatures(rop.filter(image1, null)));
 
 
             // create new document:
-            doc = new Document();
+            doc= new Document();
             if (features.size() < 1) {
                 System.err.println("No MSER features found for " + identifier);
             }
-            for (Iterator<MSERFeature> fit = features.iterator(); fit.hasNext(); ) {
-                MSERFeature f = fit.next();
-                boolean skip = false;
+            for (Iterator<MSERFeature> fit= features.iterator(); fit.hasNext();) {
+                MSERFeature f= fit.next();
+                boolean skip= false;
                 // add each feature to the document:
                 // check first if NaN!!
-                for (int j = 0; j < f.descriptor.length; j++) {
-                    if (Float.isNaN(f.descriptor[j])) skip = true;
+                for (int j= 0; j < f.descriptor.length; j++) {
+                    if (Float.isNaN(f.descriptor[j]))
+                        skip= true;
                     break;
                 }
 
                 if (!skip)
                     doc.add(new Field(DocumentBuilder.FIELD_NAME_MSER, f.getByteArrayRepresentation()));
-                else System.err.println("Found NaN in features in file " + identifier + ". ");
+                else
+                    System.err.println("Found NaN in features in file " + identifier + ". ");
             }
             if (identifier != null) {
                 doc.add(new Field(DocumentBuilder.FIELD_NAME_IDENTIFIER, identifier, Field.Store.YES, Field.Index.NOT_ANALYZED));

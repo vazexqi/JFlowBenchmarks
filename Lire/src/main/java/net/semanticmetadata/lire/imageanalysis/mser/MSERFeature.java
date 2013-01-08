@@ -41,21 +41,20 @@ import java.awt.image.BufferedImage;
 /**
  * Feature describing an MSER
  * <p/>
- * Date: 27.03.2011
- * Time: 10:00:08
- *
+ * Date: 27.03.2011 Time: 10:00:08
+ * 
  * @author Christine Keim, christine.keim@inode.at
  */
 public class MSERFeature extends Histogram implements LireFeature {
     MSERGrowthHistory mser;
 
     public MSERFeature(MSERGrowthHistory maxStableExtremalRegion, float[] invariants) {
-        this.mser = maxStableExtremalRegion;
-        descriptor = invariants;
+        this.mser= maxStableExtremalRegion;
+        descriptor= invariants;
     }
 
     public MSERFeature() {
-        mser = null;
+        mser= null;
     }
 
     public void extract(BufferedImage bimg) {
@@ -64,8 +63,9 @@ public class MSERFeature extends Histogram implements LireFeature {
     }
 
     public float getDistance(LireFeature feature) {
-        if (!(feature instanceof MSERFeature)) return -1;
-        return MetricsUtils.distL2(descriptor, ((MSERFeature) feature).descriptor);
+        if (!(feature instanceof MSERFeature))
+            return -1;
+        return MetricsUtils.distL2(descriptor, ((MSERFeature)feature).descriptor);
     }
 
     public String getStringRepresentation() {
@@ -78,7 +78,7 @@ public class MSERFeature extends Histogram implements LireFeature {
 
     /**
      * Provides a much faster way of serialization.
-     *
+     * 
      * @return a byte array that can be read with the corresponding method.
      * @see net.semanticmetadata.lire.imageanalysis.CEDD#setByteArrayRepresentation(byte[])
      */
@@ -88,12 +88,12 @@ public class MSERFeature extends Histogram implements LireFeature {
 
     /**
      * Reads descriptor from a byte array. Much faster than the String based method.
-     *
+     * 
      * @param in byte array from corresponding method
      * @see net.semanticmetadata.lire.imageanalysis.CEDD#getByteArrayRepresentation
      */
     public void setByteArrayRepresentation(byte[] in) {
-        descriptor = SerializationUtils.toFloatArray(in);
+        descriptor= SerializationUtils.toFloatArray(in);
     }
 
     public double[] getDoubleHistogram() {
@@ -102,9 +102,9 @@ public class MSERFeature extends Histogram implements LireFeature {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < descriptor.length; i++) {
-            float v = descriptor[i];
+        StringBuilder sb= new StringBuilder();
+        for (int i= 0; i < descriptor.length; i++) {
+            float v= descriptor[i];
             sb.append(v);
             sb.append(' ');
 

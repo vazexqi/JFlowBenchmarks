@@ -49,29 +49,34 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * This file is part of the Caliph and Emir project: http://www.SemanticMetadata.net
- * <br>Date: 01.02.2006
- * <br>Time: 00:17:02
- *
+ * This file is part of the Caliph and Emir project: http://www.SemanticMetadata.net <br>
+ * Date: 01.02.2006 <br>
+ * Time: 00:17:02
+ * 
  * @author Mathias Lux, mathias@juggle.at
  */
 public class GenericFastImageSearcher extends AbstractImageSearcher {
-    protected Logger logger = Logger.getLogger(getClass().getName());
-    Class<?> descriptorClass;
-    String fieldName;
-    private LireFeature cachedInstance = null;
+    protected Logger logger= Logger.getLogger(getClass().getName());
 
-    private int maxHits = 10;
+    Class<?> descriptorClass;
+
+    String fieldName;
+
+    private LireFeature cachedInstance= null;
+
+    private int maxHits= 10;
+
     protected TreeSet<SimpleResult> docs;
+
     private byte[] tempBinaryValue;
 
     public GenericFastImageSearcher(int maxHits, Class<?> descriptorClass, String fieldName) {
-        this.maxHits = maxHits;
-        docs = new TreeSet<SimpleResult>();
-        this.descriptorClass = descriptorClass;
-        this.fieldName = fieldName;
+        this.maxHits= maxHits;
+        docs= new TreeSet<SimpleResult>();
+        this.descriptorClass= descriptorClass;
+        this.fieldName= fieldName;
         try {
-            this.cachedInstance = (LireFeature) this.descriptorClass.newInstance();
+            this.cachedInstance= (LireFeature)this.descriptorClass.newInstance();
         } catch (InstantiationException e) {
             logger.log(Level.SEVERE, "Error instantiating class for generic image searcher (" + descriptorClass.getName() + "): " + e.getMessage());
         } catch (IllegalAccessException e) {
@@ -81,20 +86,20 @@ public class GenericFastImageSearcher extends AbstractImageSearcher {
 
     public ImageSearchHits search(BufferedImage image, IndexReader reader) throws IOException {
         logger.finer("Starting extraction.");
-        LireFeature lireFeature = null;
-        SimpleImageSearchHits searchHits = null;
+        LireFeature lireFeature= null;
+        SimpleImageSearchHits searchHits= null;
         try {
-            lireFeature = (LireFeature) descriptorClass.newInstance();
+            lireFeature= (LireFeature)descriptorClass.newInstance();
             // Scaling image is especially with the correlogram features very important!
-            BufferedImage bimg = image;
+            BufferedImage bimg= image;
             if (Math.max(image.getHeight(), image.getWidth()) > GenericDocumentBuilder.MAX_IMAGE_DIMENSION) {
-                bimg = ImageUtils.scaleImage(image, GenericDocumentBuilder.MAX_IMAGE_DIMENSION);
+                bimg= ImageUtils.scaleImage(image, GenericDocumentBuilder.MAX_IMAGE_DIMENSION);
             }
             lireFeature.extract(bimg);
             logger.fine("Extraction from image finished");
 
-            float maxDistance = findSimilar(reader, lireFeature);
-            searchHits = new SimpleImageSearchHits(this.docs, maxDistance);
+            float maxDistance= findSimilar(reader, lireFeature);
+            searchHits= new SimpleImageSearchHits(this.docs, maxDistance);
         } catch (InstantiationException e) {
             logger.log(Level.SEVERE, "Error instantiating class for generic image searcher: " + e.getMessage());
         } catch (IllegalAccessException e) {
@@ -110,34 +115,35 @@ public class GenericFastImageSearcher extends AbstractImageSearcher {
      * @throws java.io.IOException
      */
     protected float findSimilar(IndexReader reader, LireFeature lireFeature) throws IOException {
-        float maxDistance = -1f, overallMaxDistance = -1f;
-        boolean hasDeletions = reader.hasDeletions();
+        float maxDistance= -1f, overallMaxDistance= -1f;
+        boolean hasDeletions= reader.hasDeletions();
 
         // clear result set ...
         docs.clear();
 
-        int docs = reader.numDocs();
-        for (int i = 0; i < docs; i++) {
+        int docs= reader.numDocs();
+        for (int i= 0; i < docs; i++) {
             // bugfix by Roman Kern
             if (hasDeletions && reader.isDeleted(i)) {
                 continue;
             }
 
-            Document d = reader.document(i);
-            float distance = getDistance(d, lireFeature);
+            Document d= reader.document(i);
+            float distance= getDistance(d, lireFeature);
             assert (distance >= 0);
             // calculate the overall max distance to normalize score afterwards
             if (overallMaxDistance < distance) {
-                overallMaxDistance = distance;
+                overallMaxDistance= distance;
             }
             // if it is the first document:
             if (maxDistance < 0) {
-                maxDistance = distance;
+                maxDistance= distance;
             }
             // if the array is not full yet:
             if (this.docs.size() < maxHits) {
                 this.docs.add(new SimpleResult(distance, d));
-                if (distance > maxDistance) maxDistance = distance;
+                if (distance > maxDistance)
+                    maxDistance= distance;
             } else if (distance < maxDistance) {
                 // if it is nearer to the sample than at least on of the current set:
                 // remove the last one ...
@@ -145,7 +151,7 @@ public class GenericFastImageSearcher extends AbstractImageSearcher {
                 // add the new one ...
                 this.docs.add(new SimpleResult(distance, d));
                 // and set our new distance border ...
-                maxDistance = this.docs.last().getDistance();
+                maxDistance= this.docs.last().getDistance();
             }
         }
         return maxDistance;
@@ -153,13 +159,13 @@ public class GenericFastImageSearcher extends AbstractImageSearcher {
 
     /**
      * Main similarity method called for each and every document in the index.
-     *
+     * 
      * @param document
      * @param lireFeature
      * @return the distance between the given feature and the feature stored in the document.
      */
     protected float getDistance(Document document, LireFeature lireFeature) {
-        tempBinaryValue = document.getBinaryValue(fieldName);
+        tempBinaryValue= document.getBinaryValue(fieldName);
         if (tempBinaryValue != null && tempBinaryValue.length > 0) {
             cachedInstance.setByteArrayRepresentation(tempBinaryValue);
             return lireFeature.getDistance(cachedInstance);
@@ -170,16 +176,16 @@ public class GenericFastImageSearcher extends AbstractImageSearcher {
     }
 
     public ImageSearchHits search(Document doc, IndexReader reader) throws IOException {
-        SimpleImageSearchHits searchHits = null;
+        SimpleImageSearchHits searchHits= null;
         try {
-            LireFeature lireFeature = (LireFeature) descriptorClass.newInstance();
+            LireFeature lireFeature= (LireFeature)descriptorClass.newInstance();
 
-            byte[] cls = doc.getBinaryValue(fieldName);
+            byte[] cls= doc.getBinaryValue(fieldName);
             if (cls != null && cls.length > 0)
                 lireFeature.setByteArrayRepresentation(cls);
-            float maxDistance = findSimilar(reader, lireFeature);
+            float maxDistance= findSimilar(reader, lireFeature);
 
-            searchHits = new SimpleImageSearchHits(this.docs, maxDistance);
+            searchHits= new SimpleImageSearchHits(this.docs, maxDistance);
         } catch (InstantiationException e) {
             logger.log(Level.SEVERE, "Error instantiating class for generic image searcher: " + e.getMessage());
         } catch (IllegalAccessException e) {
@@ -190,30 +196,30 @@ public class GenericFastImageSearcher extends AbstractImageSearcher {
 
     public ImageDuplicates findDuplicates(IndexReader reader) throws IOException {
         // get the first document:
-        SimpleImageDuplicates simpleImageDuplicates = null;
+        SimpleImageDuplicates simpleImageDuplicates= null;
         try {
             if (!IndexReader.indexExists(reader.directory()))
                 throw new FileNotFoundException("No index found at this specific location.");
-            Document doc = reader.document(0);
+            Document doc= reader.document(0);
 
-            LireFeature lireFeature = (LireFeature) descriptorClass.newInstance();
-            byte[] cls = doc.getBinaryValue(fieldName);
+            LireFeature lireFeature= (LireFeature)descriptorClass.newInstance();
+            byte[] cls= doc.getBinaryValue(fieldName);
             if (cls != null && cls.length > 0)
                 lireFeature.setByteArrayRepresentation(cls);
 
-            HashMap<Float, List<String>> duplicates = new HashMap<Float, List<String>>();
+            HashMap<Float, List<String>> duplicates= new HashMap<Float, List<String>>();
 
             // find duplicates ...
-            boolean hasDeletions = reader.hasDeletions();
+            boolean hasDeletions= reader.hasDeletions();
 
-            int docs = reader.numDocs();
-            int numDuplicates = 0;
-            for (int i = 0; i < docs; i++) {
+            int docs= reader.numDocs();
+            int numDuplicates= 0;
+            for (int i= 0; i < docs; i++) {
                 if (hasDeletions && reader.isDeleted(i)) {
                     continue;
                 }
-                Document d = reader.document(i);
-                float distance = getDistance(d, lireFeature);
+                Document d= reader.document(i);
+                float distance= getDistance(d, lireFeature);
 
                 if (!duplicates.containsKey(distance)) {
                     duplicates.put(distance, new LinkedList<String>());
@@ -223,15 +229,16 @@ public class GenericFastImageSearcher extends AbstractImageSearcher {
                 duplicates.get(distance).add(d.getFieldable(DocumentBuilder.FIELD_NAME_IDENTIFIER).stringValue());
             }
 
-            if (numDuplicates == 0) return null;
+            if (numDuplicates == 0)
+                return null;
 
-            LinkedList<List<String>> results = new LinkedList<List<String>>();
+            LinkedList<List<String>> results= new LinkedList<List<String>>();
             for (float f : duplicates.keySet()) {
                 if (duplicates.get(f).size() > 1) {
                     results.add(duplicates.get(f));
                 }
             }
-            simpleImageDuplicates = new SimpleImageDuplicates(results);
+            simpleImageDuplicates= new SimpleImageDuplicates(results);
         } catch (InstantiationException e) {
             logger.log(Level.SEVERE, "Error instantiating class for generic image searcher: " + e.getMessage());
         } catch (IllegalAccessException e) {

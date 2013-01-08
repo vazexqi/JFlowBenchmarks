@@ -59,33 +59,32 @@ import java.util.Arrays;
 import java.util.HashSet;
 
 /**
- * Provides a simple implementation for a cluster used with the visual bag of words approach.
- * User: Mathias Lux, mathias@juggle.at
- * Date: 26.03.2010
- * Time: 12:10:19
+ * Provides a simple implementation for a cluster used with the visual bag of words approach. User:
+ * Mathias Lux, mathias@juggle.at Date: 26.03.2010 Time: 12:10:19
  */
 public class Cluster implements Comparable<Object> {
     float[] mean;
-    HashSet<Integer> members = new HashSet<Integer>();
 
-    private double stress = 0;
+    HashSet<Integer> members= new HashSet<Integer>();
+
+    private double stress= 0;
 
     public Cluster() {
-        this.mean = new float[4 * 4 * 8];
+        this.mean= new float[4 * 4 * 8];
         Arrays.fill(mean, 0f);
     }
 
     public Cluster(float[] mean) {
-        this.mean = mean;
+        this.mean= mean;
     }
 
     public String toString() {
-        StringBuilder sb = new StringBuilder(512);
+        StringBuilder sb= new StringBuilder(512);
         for (Integer integer : members) {
             sb.append(integer);
             sb.append(", ");
         }
-        for (int i = 0; i < mean.length; i++) {
+        for (int i= 0; i < mean.length; i++) {
             sb.append(mean[i]);
             sb.append(';');
         }
@@ -93,21 +92,21 @@ public class Cluster implements Comparable<Object> {
     }
 
     public int compareTo(Object o) {
-        return ((Cluster) o).members.size() - members.size();
+        return ((Cluster)o).members.size() - members.size();
     }
 
     public double getDistance(Histogram f) {
-        double d = 0;
+        double d= 0;
         // now using L1 for faster results ...
-        for (int i = 0; i < f.descriptor.length; i++) {
-            d += Math.abs(mean[i] - f.descriptor[i]);
+        for (int i= 0; i < f.descriptor.length; i++) {
+            d+= Math.abs(mean[i] - f.descriptor[i]);
         }
         return d;
     }
 
     /**
      * Creates a byte array representation from the clusters mean.
-     *
+     * 
      * @return the clusters mean as byte array.
      */
     public byte[] getByteRepresentation() {
@@ -115,28 +114,29 @@ public class Cluster implements Comparable<Object> {
     }
 
     public void setByteRepresentation(byte[] data) {
-        mean = SerializationUtils.toFloatArray(data);
+        mean= SerializationUtils.toFloatArray(data);
     }
 
     public static void writeClusters(Cluster[] clusters, String file) throws IOException {
-        FileOutputStream fout = new FileOutputStream(file);
+        FileOutputStream fout= new FileOutputStream(file);
         fout.write(SerializationUtils.toBytes(clusters.length));
-        for (int i = 0; i < clusters.length; i++) {
+        for (int i= 0; i < clusters.length; i++) {
             fout.write(clusters[i].getByteRepresentation());
         }
         fout.close();
     }
 
     public static Cluster[] readClusters(String file) throws IOException {
-        FileInputStream fin = new FileInputStream(file);
-        byte[] tmp = new byte[4];
+        FileInputStream fin= new FileInputStream(file);
+        byte[] tmp= new byte[4];
         fin.read(tmp, 0, 4);
-        Cluster[] result = new Cluster[SerializationUtils.toInt(tmp)];
-        tmp = new byte[128 * 4];
-        for (int i = 0; i < result.length; i++) {
-            int bytesRead = fin.read(tmp, 0, 128 * 4);
-            if (bytesRead != 128 * 4) System.err.println("Didn't read enough bytes ...");
-            result[i] = new Cluster();
+        Cluster[] result= new Cluster[SerializationUtils.toInt(tmp)];
+        tmp= new byte[128 * 4];
+        for (int i= 0; i < result.length; i++) {
+            int bytesRead= fin.read(tmp, 0, 128 * 4);
+            if (bytesRead != 128 * 4)
+                System.err.println("Didn't read enough bytes ...");
+            result[i]= new Cluster();
             result[i].setByteRepresentation(tmp);
         }
         fin.close();
@@ -148,7 +148,7 @@ public class Cluster implements Comparable<Object> {
     }
 
     public void setStress(double stress) {
-        this.stress = stress;
+        this.stress= stress;
     }
 
 

@@ -33,10 +33,8 @@ import net.semanticmetadata.lire.imageanalysis.mpeg7.ColorLayoutImpl;
 import net.semanticmetadata.lire.utils.SerializationUtils;
 
 /**
- * Just a wrapper for the use of LireFeature.
- * Date: 27.08.2008
- * Time: 12:07:38
- *
+ * Just a wrapper for the use of LireFeature. Date: 27.08.2008 Time: 12:07:38
+ * 
  * @author Mathias Lux, mathias@juggle.at
  */
 public class ColorLayout extends ColorLayoutImpl implements LireFeature {
@@ -87,12 +85,12 @@ public class ColorLayout extends ColorLayoutImpl implements LireFeature {
 
     /**
      * Provides a much faster way of serialization.
-     *
+     * 
      * @return a byte array that can be read with the corresponding method.
      * @see net.semanticmetadata.lire.imageanalysis.CEDD#setByteArrayRepresentation(byte[])
      */
     public byte[] getByteArrayRepresentation() {
-        byte[] result = new byte[2 * 4 + numYCoeff * 4 + 2 * numCCoeff * 4];
+        byte[] result= new byte[2 * 4 + numYCoeff * 4 + 2 * numCCoeff * 4];
         System.arraycopy(SerializationUtils.toBytes(numYCoeff), 0, result, 0, 4);
         System.arraycopy(SerializationUtils.toBytes(numCCoeff), 0, result, 4, 4);
         System.arraycopy(SerializationUtils.toByteArray(YCoeff), 0, result, 8, numYCoeff * 4);
@@ -103,44 +101,45 @@ public class ColorLayout extends ColorLayoutImpl implements LireFeature {
 
     /**
      * Reads descriptor from a byte array. Much faster than the String based method.
-     *
+     * 
      * @param in byte array from corresponding method
      * @see net.semanticmetadata.lire.imageanalysis.CEDD#getByteArrayRepresentation
      */
     public void setByteArrayRepresentation(byte[] in) {
-        int[] data = SerializationUtils.toIntArray(in);
-        numYCoeff = data[0];
-        numCCoeff = data[1];
-        YCoeff = new int[numYCoeff];
-        CbCoeff = new int[numCCoeff];
-        CrCoeff = new int[numCCoeff];
+        int[] data= SerializationUtils.toIntArray(in);
+        numYCoeff= data[0];
+        numCCoeff= data[1];
+        YCoeff= new int[numYCoeff];
+        CbCoeff= new int[numCCoeff];
+        CrCoeff= new int[numCCoeff];
         System.arraycopy(data, 2, YCoeff, 0, numYCoeff);
         System.arraycopy(data, 2 + numYCoeff, CbCoeff, 0, numCCoeff);
         System.arraycopy(data, 2 + numYCoeff + numCCoeff, CrCoeff, 0, numCCoeff);
     }
 
     public double[] getDoubleHistogram() {
-        double[] result = new double[numYCoeff + numCCoeff * 2];
-        for (int i = 0; i < numYCoeff; i++) {
-            result[i] = YCoeff[i];
+        double[] result= new double[numYCoeff + numCCoeff * 2];
+        for (int i= 0; i < numYCoeff; i++) {
+            result[i]= YCoeff[i];
         }
-        for (int i = 0; i < numCCoeff; i++) {
-            result[i + numYCoeff] = CbCoeff[i];
-            result[i + numCCoeff + numYCoeff] = CrCoeff[i];
+        for (int i= 0; i < numCCoeff; i++) {
+            result[i + numYCoeff]= CbCoeff[i];
+            result[i + numCCoeff + numYCoeff]= CrCoeff[i];
         }
         return result;
     }
 
     /**
      * Compares one descriptor to another.
-     *
+     * 
      * @param descriptor
      * @return the distance from [0,infinite) or -1 if descriptor type does not match
      */
 
     public float getDistance(LireFeature descriptor) {
-        if (!(descriptor instanceof ColorLayoutImpl)) return -1f;
-        ColorLayoutImpl cl = (ColorLayoutImpl) descriptor;
-        return (float) ColorLayoutImpl.getSimilarity(YCoeff, CbCoeff, CrCoeff, cl.YCoeff, cl.CbCoeff, cl.CrCoeff);
+        if (!(descriptor instanceof ColorLayoutImpl))
+            return -1f;
+        ColorLayoutImpl cl= (ColorLayoutImpl)descriptor;
+        return (float)ColorLayoutImpl.getSimilarity(YCoeff, CbCoeff, CrCoeff, cl.YCoeff, cl.CbCoeff, cl.CrCoeff);
     }
 }

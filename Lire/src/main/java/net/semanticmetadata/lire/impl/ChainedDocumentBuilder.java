@@ -41,18 +41,16 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 /**
- * Created by IntelliJ IDEA.
- * User: mlux
- * Date: 20.02.2007
- * Time: 15:11:59
- * To change this template use File | Settings | File Templates.
+ * Created by IntelliJ IDEA. User: mlux Date: 20.02.2007 Time: 15:11:59 To change this template use
+ * File | Settings | File Templates.
  */
 public class ChainedDocumentBuilder extends AbstractDocumentBuilder {
     private LinkedList<DocumentBuilder> builders;
-    private boolean docsCreated = false;
+
+    private boolean docsCreated= false;
 
     public ChainedDocumentBuilder() {
-        builders = new LinkedList<DocumentBuilder>();
+        builders= new LinkedList<DocumentBuilder>();
     }
 
     public void addBuilder(DocumentBuilder builder) {
@@ -62,16 +60,16 @@ public class ChainedDocumentBuilder extends AbstractDocumentBuilder {
     }
 
     public Document createDocument(BufferedImage image, String identifier) {
-        docsCreated = true;
-        Document doc = new Document();
+        docsCreated= true;
+        Document doc= new Document();
         if (identifier != null)
             doc.add(new Field(DocumentBuilder.FIELD_NAME_IDENTIFIER, identifier, Field.Store.YES, Field.Index.NOT_ANALYZED));
         // this is unfortunately rather slow, but however it works :)
         if (builders.size() >= 1) {
             for (DocumentBuilder builder : builders) {
-                Document d = builder.createDocument(image, identifier);
-                for (Iterator<Fieldable> iterator = d.getFields().iterator(); iterator.hasNext(); ) {
-                    Field f = (Field) iterator.next();
+                Document d= builder.createDocument(image, identifier);
+                for (Iterator<Fieldable> iterator= d.getFields().iterator(); iterator.hasNext();) {
+                    Field f= (Field)iterator.next();
                     if (!f.name().equals(DocumentBuilder.FIELD_NAME_IDENTIFIER)) {
                         doc.add(f);
                     }

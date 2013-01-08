@@ -41,19 +41,23 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * This class allows to create a DocumentBuilder based on a class implementing LireFeature.
- * Date: 28.05.2008
- * Time: 14:32:15
- *
+ * This class allows to create a DocumentBuilder based on a class implementing LireFeature. Date:
+ * 28.05.2008 Time: 14:32:15
+ * 
  * @author Mathias Lux, mathias@juggle.at
  */
 public class GenericDocumentBuilder extends AbstractDocumentBuilder {
-    private Logger logger = Logger.getLogger(getClass().getName());
-    public static final int MAX_IMAGE_DIMENSION = 1024;
+    private Logger logger= Logger.getLogger(getClass().getName());
+
+    public static final int MAX_IMAGE_DIMENSION= 1024;
+
     Class<? extends LireFeature> descriptorClass;
+
     String fieldName;
-    final static Mode DEFAULT_MODE = Mode.Slow;
-    Mode currentMode = DEFAULT_MODE;
+
+    final static Mode DEFAULT_MODE= Mode.Slow;
+
+    Mode currentMode= DEFAULT_MODE;
 
     // Decide between byte array version (fast) or string version (slow)
     public enum Mode {
@@ -61,47 +65,52 @@ public class GenericDocumentBuilder extends AbstractDocumentBuilder {
     }
 
     /**
-     * Creating a new DocumentBuilder based on a class based on the interface {@link net.semanticmetadata.lire.imageanalysis.LireFeature}
-     *
-     * @param descriptorClass has to implement {@link net.semanticmetadata.lire.imageanalysis.LireFeature}
-     * @param fieldName       the field name in the index.
+     * Creating a new DocumentBuilder based on a class based on the interface
+     * {@link net.semanticmetadata.lire.imageanalysis.LireFeature}
+     * 
+     * @param descriptorClass has to implement
+     *            {@link net.semanticmetadata.lire.imageanalysis.LireFeature}
+     * @param fieldName the field name in the index.
      */
     public GenericDocumentBuilder(Class<? extends LireFeature> descriptorClass, String fieldName) {
-        this.descriptorClass = descriptorClass;
-        this.fieldName = fieldName;
+        this.descriptorClass= descriptorClass;
+        this.fieldName= fieldName;
     }
 
     /**
-     * Creating a new DocumentBuilder based on a class based on the interface {@link net.semanticmetadata.lire.imageanalysis.LireFeature}
-     *
-     * @param descriptorClass has to implement {@link net.semanticmetadata.lire.imageanalysis.LireFeature}
-     * @param fieldName       the field name in the index.
-     * @param mode            the mode the GenericDocumentBuilder should work in, byte[] (== Mode.Fast) or string (==Mode.Slow) storage in Lucene.
+     * Creating a new DocumentBuilder based on a class based on the interface
+     * {@link net.semanticmetadata.lire.imageanalysis.LireFeature}
+     * 
+     * @param descriptorClass has to implement
+     *            {@link net.semanticmetadata.lire.imageanalysis.LireFeature}
+     * @param fieldName the field name in the index.
+     * @param mode the mode the GenericDocumentBuilder should work in, byte[] (== Mode.Fast) or
+     *            string (==Mode.Slow) storage in Lucene.
      */
     public GenericDocumentBuilder(Class<? extends LireFeature> descriptorClass, String fieldName, Mode mode) {
-        this.descriptorClass = descriptorClass;
-        this.fieldName = fieldName;
-        this.currentMode = mode;
+        this.descriptorClass= descriptorClass;
+        this.fieldName= fieldName;
+        this.currentMode= mode;
     }
 
     public Document createDocument(BufferedImage image, String identifier) {
-        String featureString = "";
+        String featureString= "";
         assert (image != null);
-        BufferedImage bimg = image;
+        BufferedImage bimg= image;
         // Scaling image is especially with the correlogram features very important!
         // All images are scaled to guarantee a certain upper limit for indexing.
         if (Math.max(image.getHeight(), image.getWidth()) > MAX_IMAGE_DIMENSION) {
-            bimg = ImageUtils.scaleImage(image, MAX_IMAGE_DIMENSION);
+            bimg= ImageUtils.scaleImage(image, MAX_IMAGE_DIMENSION);
         }
-        Document doc = null;
+        Document doc= null;
         logger.finer("Starting extraction from image [" + descriptorClass.getName() + "].");
         try {
-            LireFeature vd = (LireFeature) descriptorClass.newInstance();
+            LireFeature vd= (LireFeature)descriptorClass.newInstance();
             vd.extract(bimg);
 //            featureString = vd.getStringRepresentation();
             logger.fine("Extraction finished [" + descriptorClass.getName() + "].");
 
-            doc = new Document();
+            doc= new Document();
             if (currentMode == Mode.Slow)
                 doc.add(new Field(fieldName, vd.getStringRepresentation(), Field.Store.YES, Field.Index.NO));
             else

@@ -35,34 +35,34 @@ import java.awt.image.BufferedImage;
 
 /**
  * Some little helper methods.<br>
- * This file is part of the Caliph and Emir project: http://www.SemanticMetadata.net
- * <br>Date: 02.02.2006
- * <br>Time: 23:33:36
- *
+ * This file is part of the Caliph and Emir project: http://www.SemanticMetadata.net <br>
+ * Date: 02.02.2006 <br>
+ * Time: 23:33:36
+ * 
  * @author Mathias Lux, mathias@juggle.at
  */
 public class ImageUtils {
     /**
      * Scales down an image into a box of maxSideLenght x maxSideLength.
-     *
-     * @param image         the image to scale down. It remains untouched.
+     * 
+     * @param image the image to scale down. It remains untouched.
      * @param maxSideLength the maximum side length of the scaled down instance. Has to be > 0.
      * @return the scaled image, the
      */
     public static BufferedImage scaleImage(BufferedImage image, int maxSideLength) {
         assert (maxSideLength > 0);
-        double originalWidth = image.getWidth();
-        double originalHeight = image.getHeight();
-        double scaleFactor = 0.0;
+        double originalWidth= image.getWidth();
+        double originalHeight= image.getHeight();
+        double scaleFactor= 0.0;
         if (originalWidth > originalHeight) {
-            scaleFactor = ((double) maxSideLength / originalWidth);
+            scaleFactor= ((double)maxSideLength / originalWidth);
         } else {
-            scaleFactor = ((double) maxSideLength / originalHeight);
+            scaleFactor= ((double)maxSideLength / originalHeight);
         }
         // create smaller image
-        BufferedImage img = new BufferedImage((int) (originalWidth * scaleFactor), (int) (originalHeight * scaleFactor), BufferedImage.TYPE_INT_RGB);
+        BufferedImage img= new BufferedImage((int)(originalWidth * scaleFactor), (int)(originalHeight * scaleFactor), BufferedImage.TYPE_INT_RGB);
         // fast scale (Java 1.4 & 1.5)
-        Graphics g = img.getGraphics();
+        Graphics g= img.getGraphics();
         // ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
         g.drawImage(image, 0, 0, img.getWidth(), img.getHeight(), null);
         return img;
@@ -70,7 +70,7 @@ public class ImageUtils {
 
     /**
      * Scale image to an arbitrary shape not retaining proportions and aspect ratio.
-     *
+     * 
      * @param image
      * @param width
      * @param height
@@ -79,9 +79,9 @@ public class ImageUtils {
     public static BufferedImage scaleImage(BufferedImage image, int width, int height) {
         assert (width > 0 && height > 0);
         // create smaller image
-        BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        BufferedImage img= new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         // fast scale (Java 1.4 & 1.5)
-        Graphics g = img.getGraphics();
+        Graphics g= img.getGraphics();
         g.drawImage(image, 0, 0, img.getWidth(), img.getHeight(), null);
         return img;
     }
@@ -89,9 +89,9 @@ public class ImageUtils {
     public static BufferedImage cropImage(BufferedImage image, int fromX, int fromY, int width, int height) {
         assert (width > 0 && height > 0);
         // create smaller image
-        BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        BufferedImage img= new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         // fast scale (Java 1.4 & 1.5)
-        Graphics g = img.getGraphics();
+        Graphics g= img.getGraphics();
         g.drawImage(image, fromX, fromY, img.getWidth(), img.getHeight(), null);
         return img;
     }

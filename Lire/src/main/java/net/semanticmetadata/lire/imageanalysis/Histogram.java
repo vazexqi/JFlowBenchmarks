@@ -31,11 +31,8 @@
 package net.semanticmetadata.lire.imageanalysis;
 
 /**
- * Created by IntelliJ IDEA.
- * User: mlux
- * Date: 29.09.2010
- * Time: 16:02:24
+ * Created by IntelliJ IDEA. User: mlux Date: 29.09.2010 Time: 16:02:24
  */
 public class Histogram {
-    public float[] descriptor = null;
+    public float[] descriptor= null;
 }

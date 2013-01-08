@@ -50,20 +50,21 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * User: mlux
- * Date: 03.05.2011
- * Time: 10:28:16
+ * User: mlux Date: 03.05.2011 Time: 10:28:16
  */
 public class IndexVisualWordsTest extends TestCase {
-    String directory = "./imageCLEF2011"; // Where are the photos?
-    String index = "./imageClefIndex"; // Where is the index?
-    int clusters = 2000; // number of visual words
-    int numSamples = 2000; // number of samples used for visual words vocabulary building
+    String directory= "./imageCLEF2011"; // Where are the photos?
+
+    String index= "./imageClefIndex"; // Where is the index?
+
+    int clusters= 2000; // number of visual words
+
+    int numSamples= 2000; // number of samples used for visual words vocabulary building
 
     public void testIndexSurfHistogram() throws IOException {
         // index all files
         System.out.println("-< Getting files to index >--------------");
-        List<String> images = FileUtils.getAllImages(new File(directory), true);
+        List<String> images= FileUtils.getAllImages(new File(directory), true);
         System.out.println("-< Indexing " + images.size() + " files >--------------");
         indexFiles(images, index);
 
@@ -72,7 +73,7 @@ public class IndexVisualWordsTest extends TestCase {
 //        SiftFeatureHistogramBuilder siftFeatureHistogramBuilder = new SiftFeatureHistogramBuilder(IndexReader.open(FSDirectory.open(new File(index))), numSamples, clusters);
 //        siftFeatureHistogramBuilder.index();
         System.out.println("-< Creating SURF based histograms >--------------");
-        SurfFeatureHistogramBuilder surfFeatureHistogramBuilder = new SurfFeatureHistogramBuilder(IndexReader.open(FSDirectory.open(new File(index))), numSamples, clusters);
+        SurfFeatureHistogramBuilder surfFeatureHistogramBuilder= new SurfFeatureHistogramBuilder(IndexReader.open(FSDirectory.open(new File(index))), numSamples, clusters);
         surfFeatureHistogramBuilder.index();
 //        System.out.println("-< Creating MSER based histograms >--------------");
 //        MSERFeatureHistogramBuilder mserFeatureHistogramBuilder = new MSERFeatureHistogramBuilder(IndexReader.open(FSDirectory.open(new File(index))), numSamples, clusters);
@@ -82,7 +83,7 @@ public class IndexVisualWordsTest extends TestCase {
     }
 
     private void indexFiles(List<String> images, String index) throws IOException {
-        ChainedDocumentBuilder documentBuilder = new ChainedDocumentBuilder();
+        ChainedDocumentBuilder documentBuilder= new ChainedDocumentBuilder();
 //        documentBuilder.addBuilder(new CEDDDocumentBuilder());
         documentBuilder.addBuilder(new SurfDocumentBuilder());
 //        documentBuilder.addBuilder(new MSERDocumentBuilder());
@@ -94,18 +95,20 @@ public class IndexVisualWordsTest extends TestCase {
 //        documentBuilder.addBuilder(DocumentBuilderFactory.getColorHistogramDocumentBuilder());
 //        documentBuilder.addBuilder(DocumentBuilderFactory.getAutoColorCorrelogramDocumentBuilder());
 
-        IndexWriter iw = LuceneUtils.createIndexWriter(index, true);
-        int count = 0;
-        long time = System.currentTimeMillis();
+        IndexWriter iw= LuceneUtils.createIndexWriter(index, true);
+        int count= 0;
+        long time= System.currentTimeMillis();
         for (String identifier : images) {
-            Document doc = documentBuilder.createDocument(new FileInputStream(identifier), identifier);
+            Document doc= documentBuilder.createDocument(new FileInputStream(identifier), identifier);
             iw.addDocument(doc);
             count++;
-            if (count % 500 == 0) System.out.println(count + " files indexed.");
-            if (count == 500) break;
+            if (count % 500 == 0)
+                System.out.println(count + " files indexed.");
+            if (count == 500)
+                break;
         }
-        long timeTaken = (System.currentTimeMillis() - time);
-        float sec = ((float) timeTaken) / 1000f;
+        long timeTaken= (System.currentTimeMillis() - time);
+        float sec= ((float)timeTaken) / 1000f;
 
         System.out.println(sec + " seconds taken, " + (timeTaken / count) + " ms per image.");
         iw.optimize();
@@ -116,29 +119,29 @@ public class IndexVisualWordsTest extends TestCase {
     public void testIndexMissingFiles() throws IOException {
         // first delete some of the existing ones ...
         System.out.println("Deleting visual words from docs ...");
-        IndexReader ir = IndexReader.open(FSDirectory.open(new File(index)));
-        IndexWriter iw = LuceneUtils.createIndexWriter(index, false);
-        int maxDocs = ir.maxDoc();
-        for (int i = 0; i< maxDocs/10; i++) {
-            Document d = ir.document(i);
+        IndexReader ir= IndexReader.open(FSDirectory.open(new File(index)));
+        IndexWriter iw= LuceneUtils.createIndexWriter(index, false);
+        int maxDocs= ir.maxDoc();
+        for (int i= 0; i < maxDocs / 10; i++) {
+            Document d= ir.document(i);
             d.removeFields(DocumentBuilder.FIELD_NAME_SURF_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS);
             d.removeFields(DocumentBuilder.FIELD_NAME_SURF_LOCAL_FEATURE_HISTOGRAM);
 //            d.removeFields(DocumentBuilder.FIELD_NAME_SURF);
             iw.updateDocument(new Term(DocumentBuilder.FIELD_NAME_IDENTIFIER, d.getValues(DocumentBuilder.FIELD_NAME_IDENTIFIER)[0]), d);
         }
-        System.out.println("# of deleted docs:  " + maxDocs/10);
+        System.out.println("# of deleted docs:  " + maxDocs / 10);
         System.out.println("Optimizing and closing ...");
         iw.optimize();
         iw.close();
         ir.close();
         System.out.println("Creating new visual words ...");
-        SurfFeatureHistogramBuilder surfFeatureHistogramBuilder = new SurfFeatureHistogramBuilder(IndexReader.open(FSDirectory.open(new File(index))), numSamples, clusters);
+        SurfFeatureHistogramBuilder surfFeatureHistogramBuilder= new SurfFeatureHistogramBuilder(IndexReader.open(FSDirectory.open(new File(index))), numSamples, clusters);
         surfFeatureHistogramBuilder.indexMissing();
         System.out.println("Finished.");
     }
 
     public void testStrings() {
-        ProgressMonitor pm = new ProgressMonitor(null, "", "", 0, 100);
+        ProgressMonitor pm= new ProgressMonitor(null, "", "", 0, 100);
         System.out.println(String.format("%02d:%02d", 3, 5));
     }
 }

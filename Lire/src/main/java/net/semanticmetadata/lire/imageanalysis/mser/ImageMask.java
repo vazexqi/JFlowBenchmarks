@@ -34,37 +34,38 @@ import java.awt.image.BufferedImage;
 import java.awt.image.Raster;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Shotty
- * Date: 28.06.2010
- * Time: 10:09:59
+ * Created by IntelliJ IDEA. User: Shotty Date: 28.06.2010 Time: 10:09:59
  */
 public class ImageMask {
-    protected static int NO_ACCESS = 0;
-    protected static int ACCESS = 1;
-    protected static int VISITED = 2;
+    protected static int NO_ACCESS= 0;
+
+    protected static int ACCESS= 1;
+
+    protected static int VISITED= 2;
 
     int[] pixels;
+
     int[] accessible;
+
     BufferedImage image;
 
     public ImageMask(BufferedImage image) {
-        this.image = image;
-        int[] pixels = new int[image.getHeight() * image.getWidth()];
+        this.image= image;
+        int[] pixels= new int[image.getHeight() * image.getWidth()];
 
-        Raster ip = image.getRaster();
+        Raster ip= image.getRaster();
         // fill all the pixels into the int-Array
-        for (int y = 0; y < image.getHeight(); y++) {
-            for (int x = 0; x < image.getWidth(); x++) {
+        for (int y= 0; y < image.getHeight(); y++) {
+            for (int x= 0; x < image.getWidth(); x++) {
                 // get the value of the Pixel
-                pixels[getIndex(x, y)] = image.getRGB(x, y);
+                pixels[getIndex(x, y)]= image.getRGB(x, y);
             }
         }
 
-        this.pixels = pixels;
-        accessible = new int[pixels.length];
-        for (int i = 0; i < accessible.length; i++) {
-            accessible[i] = NO_ACCESS;
+        this.pixels= pixels;
+        accessible= new int[pixels.length];
+        for (int i= 0; i < accessible.length; i++) {
+            accessible[i]= NO_ACCESS;
         }
     }
 
@@ -74,14 +75,14 @@ public class ImageMask {
 
     /**
      * Set pixel accessible and give back if this was possible
-     *
+     * 
      * @param idx index od the pixel
      * @return the grey value of the pixel
      */
     public boolean getAccess(int idx) {
         if (idx < accessible.length &&
                 accessible[idx] == NO_ACCESS) {
-            accessible[idx] = ACCESS;
+            accessible[idx]= ACCESS;
             return true;
         }
         return false;

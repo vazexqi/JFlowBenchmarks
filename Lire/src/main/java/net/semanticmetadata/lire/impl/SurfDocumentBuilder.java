@@ -43,20 +43,18 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * User: mathias@juggle.at
- * Date: 29.09.2010
- * Time: 15:41:28
+ * User: mathias@juggle.at Date: 29.09.2010 Time: 15:41:28
  */
 public class SurfDocumentBuilder extends AbstractDocumentBuilder {
     public Document createDocument(BufferedImage image, String identifier) {
-        Document doc = null;
+        Document doc= null;
         // test with MSER:
-        Surf s = new Surf(image);
-        List<SURFInterestPoint> interestPoints = s.getFreeOrientedInterestPoints();
-        doc = new Document();
-        for (Iterator<SURFInterestPoint> sipi = interestPoints.iterator(); sipi.hasNext(); ) {
-            SURFInterestPoint sip = sipi.next();
-            SurfFeature sf = new SurfFeature(sip);
+        Surf s= new Surf(image);
+        List<SURFInterestPoint> interestPoints= s.getFreeOrientedInterestPoints();
+        doc= new Document();
+        for (Iterator<SURFInterestPoint> sipi= interestPoints.iterator(); sipi.hasNext();) {
+            SURFInterestPoint sip= sipi.next();
+            SurfFeature sf= new SurfFeature(sip);
             doc.add(new Field(DocumentBuilder.FIELD_NAME_SURF, sf.getByteArrayRepresentation()));
         }
         if (identifier != null)

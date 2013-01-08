@@ -43,61 +43,69 @@ import java.awt.image.BufferedImage;
 import java.util.logging.Logger;
 
 /**
- * This file is part of the Caliph and Emir project: http://www.SemanticMetadata.net
- * <br>Date: 31.01.2006
- * <br>Time: 23:02:52
- *
+ * This file is part of the Caliph and Emir project: http://www.SemanticMetadata.net <br>
+ * Date: 31.01.2006 <br>
+ * Time: 23:02:52
+ * 
  * @author Mathias Lux, mathias@juggle.at
  * @deprecated Use ColorLayout, EdgeHistogram and ScalableColor features instead.
  */
 public class SimpleDocumentBuilder extends AbstractDocumentBuilder {
-    private Logger logger = Logger.getLogger(SimpleDocumentBuilder.class.getName());
+    private Logger logger= Logger.getLogger(SimpleDocumentBuilder.class.getName());
 
-    private boolean scalableColor = false, colorLayout = false, edgeHistogram = false;
+    private boolean scalableColor= false, colorLayout= false, edgeHistogram= false;
 
     /**
      * Creates a new SimpleDocumentBuilder using the defined descriptors. Please note that
-     * {@link net.semanticmetadata.lire.imageanalysis.mpeg7.ColorLayoutImpl} and {@link net.semanticmetadata.lire.imageanalysis.mpeg7.ScalableColorImpl}
-     * are quite <i>fast</i> while {@link net.semanticmetadata.lire.imageanalysis.mpeg7.EdgeHistogramImplementation} is quite
-     * <i>slow</i>.  <p>
-     * Do not use this constructor yourself, use
-     * the {@link net.semanticmetadata.lire.DocumentBuilderFactory} instead.
-     *
-     * @param scalableColor defines if {@link net.semanticmetadata.lire.imageanalysis.mpeg7.ScalableColorImpl} should be used.
-     * @param colorLayout   defines if {@link net.semanticmetadata.lire.imageanalysis.mpeg7.ColorLayoutImpl} should be used.
-     * @param edgeHistogram defines if {@link net.semanticmetadata.lire.imageanalysis.mpeg7.EdgeHistogramImplementation} should be used.
+     * {@link net.semanticmetadata.lire.imageanalysis.mpeg7.ColorLayoutImpl} and
+     * {@link net.semanticmetadata.lire.imageanalysis.mpeg7.ScalableColorImpl} are quite <i>fast</i>
+     * while {@link net.semanticmetadata.lire.imageanalysis.mpeg7.EdgeHistogramImplementation} is
+     * quite <i>slow</i>.
+     * <p>
+     * Do not use this constructor yourself, use the
+     * {@link net.semanticmetadata.lire.DocumentBuilderFactory} instead.
+     * 
+     * @param scalableColor defines if
+     *            {@link net.semanticmetadata.lire.imageanalysis.mpeg7.ScalableColorImpl} should be
+     *            used.
+     * @param colorLayout defines if
+     *            {@link net.semanticmetadata.lire.imageanalysis.mpeg7.ColorLayoutImpl} should be
+     *            used.
+     * @param edgeHistogram defines if
+     *            {@link net.semanticmetadata.lire.imageanalysis.mpeg7.EdgeHistogramImplementation}
+     *            should be used.
      * @see net.semanticmetadata.lire.DocumentBuilderFactory
      */
     public SimpleDocumentBuilder(boolean scalableColor, boolean colorLayout, boolean edgeHistogram) {
-        this.colorLayout = colorLayout;
-        this.edgeHistogram = edgeHistogram;
-        this.scalableColor = scalableColor;
+        this.colorLayout= colorLayout;
+        this.edgeHistogram= edgeHistogram;
+        this.scalableColor= scalableColor;
     }
 
     public Document createDocument(BufferedImage image, String identifier) {
         assert (image != null);
-        BufferedImage bimg = image;
+        BufferedImage bimg= image;
         if (Math.max(image.getHeight(), image.getWidth()) > DocumentBuilder.MAX_IMAGE_SIDE_LENGTH) {
-            bimg = ImageUtils.scaleImage(image, DocumentBuilder.MAX_IMAGE_SIDE_LENGTH);
+            bimg= ImageUtils.scaleImage(image, DocumentBuilder.MAX_IMAGE_SIDE_LENGTH);
         }
-        String sc = null, cl = null, eh = null;
+        String sc= null, cl= null, eh= null;
         if (scalableColor) {
             logger.finer("Starting extraction of ScalableColor from image");
-            ScalableColorImpl scd = new ScalableColorImpl(bimg);
-            sc = scd.getStringRepresentation();
+            ScalableColorImpl scd= new ScalableColorImpl(bimg);
+            sc= scd.getStringRepresentation();
         }
         if (colorLayout) {
             logger.finer("Starting extraction of ColorLayout from image");
-            ColorLayoutImpl cld = new ColorLayoutImpl(bimg);
-            cl = cld.getStringRepresentation();
+            ColorLayoutImpl cld= new ColorLayoutImpl(bimg);
+            cl= cld.getStringRepresentation();
         }
         if (edgeHistogram) {
             logger.finer("Starting extraction of EdgeHistogram from image");
-            EdgeHistogramImplementation ehd = new EdgeHistogramImplementation(bimg);
-            eh = ehd.getStringRepresentation();
+            EdgeHistogramImplementation ehd= new EdgeHistogramImplementation(bimg);
+            eh= ehd.getStringRepresentation();
         }
         logger.fine("Extraction from image finished");
-        Document doc = new Document();
+        Document doc= new Document();
         if (sc != null)
             doc.add(new Field(DocumentBuilder.FIELD_NAME_SCALABLECOLOR, sc, Field.Store.YES, Field.Index.NO));
         if (cl != null)

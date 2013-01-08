@@ -35,13 +35,11 @@ import net.semanticmetadata.lire.imageanalysis.mser.MSERFeature;
 import org.apache.lucene.index.IndexReader;
 
 /**
- * ...
- * Date: 24.09.2008
- * Time: 09:38:53
- *
+ * ... Date: 24.09.2008 Time: 09:38:53
+ * 
  * @author Mathias Lux, mathias@juggle.at
  */
-public class MSERFeatureHistogramBuilder extends LocalFeatureHistogramBuilder{
+public class MSERFeatureHistogramBuilder extends LocalFeatureHistogramBuilder {
     public MSERFeatureHistogramBuilder(IndexReader reader) {
         super(reader);
         init();
@@ -63,9 +61,9 @@ public class MSERFeatureHistogramBuilder extends LocalFeatureHistogramBuilder{
     }
 
     private void init() {
-        localFeatureFieldName = DocumentBuilder.FIELD_NAME_MSER;
-        visualWordsFieldName = DocumentBuilder.FIELD_NAME_MSER_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS;
-        localFeatureHistFieldName = DocumentBuilder.FIELD_NAME_MSER_LOCAL_FEATURE_HISTOGRAM;
-        clusterFile = "./clusters-mser.dat";
+        localFeatureFieldName= DocumentBuilder.FIELD_NAME_MSER;
+        visualWordsFieldName= DocumentBuilder.FIELD_NAME_MSER_LOCAL_FEATURE_HISTOGRAM_VISUAL_WORDS;
+        localFeatureHistFieldName= DocumentBuilder.FIELD_NAME_MSER_LOCAL_FEATURE_HISTOGRAM;
+        clusterFile= "./clusters-mser.dat";
     }
 }

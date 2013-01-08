@@ -32,8 +32,11 @@ package net.semanticmetadata.lire.imageanalysis.cedd;
 
 public class FuzzyRules {
     public int Input1;
+
     public int Input2;
+
     public int Input3;
+
     public int Output;
 
     public FuzzyRules() {

@@ -47,26 +47,27 @@ import java.util.StringTokenizer;
 
 /**
  * Provides a general searcher for visual words implementation. Can be used for SIFT, SURF and MSER.
- * Date: 28.09.2010
- * Time: 13:58:33
- * Mathias Lux, mathias@juggle.at
+ * Date: 28.09.2010 Time: 13:58:33 Mathias Lux, mathias@juggle.at
  */
 public class VisualWordsImageSearcher extends AbstractImageSearcher {
     private int numMaxHits;
+
     private String fieldName;
-    private Similarity similarity = new DefaultSimilarity();
+
+    private Similarity similarity= new DefaultSimilarity();
+
 //    private Similarity similarity = new TfIdfSimilarity();
 
 
     public VisualWordsImageSearcher(int numMaxHits, Similarity similarity, String fieldName) {
-        this.similarity = similarity;
-        this.numMaxHits = numMaxHits;
-        this.fieldName = fieldName;
+        this.similarity= similarity;
+        this.numMaxHits= numMaxHits;
+        this.fieldName= fieldName;
     }
 
     public VisualWordsImageSearcher(int numMaxHits, String fieldName) {
-        this.numMaxHits = numMaxHits;
-        this.fieldName = fieldName;
+        this.numMaxHits= numMaxHits;
+        this.fieldName= fieldName;
     }
 
     public ImageSearchHits search(BufferedImage image, IndexReader reader) throws IOException {
@@ -74,32 +75,32 @@ public class VisualWordsImageSearcher extends AbstractImageSearcher {
     }
 
     public ImageSearchHits search(Document doc, IndexReader reader) throws IOException {
-        SimpleImageSearchHits sh = null;
-        IndexSearcher isearcher = new IndexSearcher(reader);
+        SimpleImageSearchHits sh= null;
+        IndexSearcher isearcher= new IndexSearcher(reader);
         isearcher.setSimilarity(similarity);
-        String queryString = doc.getValues(fieldName)[0];
-        Query tq = createQuery(queryString);
+        String queryString= doc.getValues(fieldName)[0];
+        Query tq= createQuery(queryString);
 
-        TopDocs docs = isearcher.search(tq, numMaxHits);
-        LinkedList<SimpleResult> res = new LinkedList<SimpleResult>();
-        float maxDistance = 0;
-        for (int i = 0; i < docs.scoreDocs.length; i++) {
-            float d = 1f / docs.scoreDocs[i].score;
-            maxDistance = Math.max(d, maxDistance);
-            SimpleResult sr = new SimpleResult(d, reader.document(docs.scoreDocs[i].doc));
+        TopDocs docs= isearcher.search(tq, numMaxHits);
+        LinkedList<SimpleResult> res= new LinkedList<SimpleResult>();
+        float maxDistance= 0;
+        for (int i= 0; i < docs.scoreDocs.length; i++) {
+            float d= 1f / docs.scoreDocs[i].score;
+            maxDistance= Math.max(d, maxDistance);
+            SimpleResult sr= new SimpleResult(d, reader.document(docs.scoreDocs[i].doc));
             res.add(sr);
         }
-        sh = new SimpleImageSearchHits(res, maxDistance);
+        sh= new SimpleImageSearchHits(res, maxDistance);
         return sh;
     }
 
     private Query createQuery(String queryString) {
-        StringTokenizer st = new StringTokenizer(queryString);
-        BooleanQuery query = new BooleanQuery();
-        HashSet<String> terms = new HashSet<String>();
+        StringTokenizer st= new StringTokenizer(queryString);
+        BooleanQuery query= new BooleanQuery();
+        HashSet<String> terms= new HashSet<String>();
         String term;
         while (st.hasMoreTokens()) {
-            term = st.nextToken();
+            term= st.nextToken();
             if (!terms.contains(term)) {
                 query.add(new BooleanClause(new TermQuery(new Term(fieldName, term)), BooleanClause.Occur.SHOULD));
                 terms.add(term);
@@ -131,14 +132,14 @@ public class VisualWordsImageSearcher extends AbstractImageSearcher {
 
         @Override
         public float tf(float v) {
-            return (float) (v);
+            return (float)(v);
 //            return 1;
         }
 
         @Override
         public float idf(int docfreq, int numdocs) {
 //            return 1f;
-            return (float) (Math.log((double) numdocs / ((double) docfreq)));
+            return (float)(Math.log((double)numdocs / ((double)docfreq)));
         }
 
         @Override

@@ -53,15 +53,15 @@ import java.util.Iterator;
 
 /**
  * Created 03.08.11, 11:09 <br/>
- *
+ * 
  * @author Mathias Lux, mathias@juggle.at
  */
 public class FilterTest extends TestCase {
 
-    private String indexPath = "test-filters";
+    private String indexPath= "test-filters";
 
     private DocumentBuilder getDocumentBuilder() {
-        ChainedDocumentBuilder result = new ChainedDocumentBuilder();
+        ChainedDocumentBuilder result= new ChainedDocumentBuilder();
         result.addBuilder(DocumentBuilderFactory.getCEDDDocumentBuilder());
         result.addBuilder(DocumentBuilderFactory.getAutoColorCorrelogramDocumentBuilder());
         result.addBuilder(DocumentBuilderFactory.getColorLayoutBuilder());
@@ -73,14 +73,14 @@ public class FilterTest extends TestCase {
         // indexFiles();
         // search
         System.out.println("---< searching >-------------------------");
-        IndexReader reader = IndexReader.open(FSDirectory.open(new File(indexPath)));
-        Document document = reader.document(0);
-        ImageSearcher searcher = ImageSearcherFactory.createAutoColorCorrelogramImageSearcher(100);
-        ImageSearchHits hits = searcher.search(document, reader);
+        IndexReader reader= IndexReader.open(FSDirectory.open(new File(indexPath)));
+        Document document= reader.document(0);
+        ImageSearcher searcher= ImageSearcherFactory.createAutoColorCorrelogramImageSearcher(100);
+        ImageSearchHits hits= searcher.search(document, reader);
         // rerank
         System.out.println("---< filtering >-------------------------");
-        RerankFilter filter = new RerankFilter(ColorLayout.class, DocumentBuilder.FIELD_NAME_COLORLAYOUT);
-        hits = filter.filter(hits, document);
+        RerankFilter filter= new RerankFilter(ColorLayout.class, DocumentBuilder.FIELD_NAME_COLORLAYOUT);
+        hits= filter.filter(hits, document);
 
         // output
         FileUtils.saveImageResultsToHtml("filtertest", hits, document.getFieldable(DocumentBuilder.FIELD_NAME_IDENTIFIER).stringValue());
@@ -91,14 +91,14 @@ public class FilterTest extends TestCase {
 //        indexFiles();
         // search
         System.out.println("---< searching >-------------------------");
-        IndexReader reader = IndexReader.open(FSDirectory.open(new File(indexPath)));
-        Document document = reader.document(0);
-        ImageSearcher searcher = ImageSearcherFactory.createCEDDImageSearcher(100);
-        ImageSearchHits hits = searcher.search(document, reader);
+        IndexReader reader= IndexReader.open(FSDirectory.open(new File(indexPath)));
+        Document document= reader.document(0);
+        ImageSearcher searcher= ImageSearcherFactory.createCEDDImageSearcher(100);
+        ImageSearchHits hits= searcher.search(document, reader);
         // rerank
         System.out.println("---< filtering >-------------------------");
-        LsaFilter filter = new LsaFilter(CEDD.class, DocumentBuilder.FIELD_NAME_CEDD);
-        hits = filter.filter(hits, document);
+        LsaFilter filter= new LsaFilter(CEDD.class, DocumentBuilder.FIELD_NAME_CEDD);
+        hits= filter.filter(hits, document);
 
         // output
         FileUtils.saveImageResultsToHtml("filtertest", hits, document.getFieldable(DocumentBuilder.FIELD_NAME_IDENTIFIER).stringValue());
@@ -106,15 +106,15 @@ public class FilterTest extends TestCase {
 
     private Document indexFiles() throws IOException {
         System.out.println("---< indexing >-------------------------");
-        int count = 0;
-        DocumentBuilder builder = getDocumentBuilder();
-        ArrayList<String> allImages = FileUtils.getAllImages(new File("wang-1000"), true);
-        IndexWriter iw = LuceneUtils.createIndexWriter(indexPath, true);
-        Document document = null;
-        for (Iterator<String> iterator = allImages.iterator(); iterator.hasNext(); ) {
-            String filename = iterator.next();
-            BufferedImage image = ImageIO.read(new FileInputStream(filename));
-            document = builder.createDocument(image, filename);
+        int count= 0;
+        DocumentBuilder builder= getDocumentBuilder();
+        ArrayList<String> allImages= FileUtils.getAllImages(new File("wang-1000"), true);
+        IndexWriter iw= LuceneUtils.createIndexWriter(indexPath, true);
+        Document document= null;
+        for (Iterator<String> iterator= allImages.iterator(); iterator.hasNext();) {
+            String filename= iterator.next();
+            BufferedImage image= ImageIO.read(new FileInputStream(filename));
+            document= builder.createDocument(image, filename);
             iw.addDocument(document);
             count++;
             if (count % 50 == 0)

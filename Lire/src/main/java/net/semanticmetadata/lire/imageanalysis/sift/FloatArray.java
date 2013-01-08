@@ -30,7 +30,7 @@
 package net.semanticmetadata.lire.imageanalysis.sift;
 
 public abstract class FloatArray {
-    public float data[] = null;
+    public float data[]= null;
 
     public abstract FloatArray clone();
 }

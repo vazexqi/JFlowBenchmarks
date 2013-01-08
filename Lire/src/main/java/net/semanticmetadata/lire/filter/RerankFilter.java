@@ -42,31 +42,32 @@ import java.util.logging.Logger;
 
 /**
  * A result list is re-ranked based on the given query. Example usage is: you first do a search with
- * feature X and then re-rank the results with feature Y.
- * Created 03.08.11, 10:28 <br/>
- *
+ * feature X and then re-rank the results with feature Y. Created 03.08.11, 10:28 <br/>
+ * 
  * @author Mathias Lux, mathias@juggle.at
  */
 public class RerankFilter implements SearchHitsFilter {
-    private Logger logger = Logger.getLogger(getClass().getName());
+    private Logger logger= Logger.getLogger(getClass().getName());
+
     private Class featureClass;
+
     private String fieldName;
 
     public RerankFilter(Class featureClass, String fieldName) {
-        this.featureClass = featureClass;
-        this.fieldName = fieldName;
+        this.featureClass= featureClass;
+        this.fieldName= fieldName;
     }
 
     public ImageSearchHits filter(ImageSearchHits results, Document query) {
-        LireFeature queryFeature = null;
-        LireFeature tempFeature = null;
-        float distance = 0, maxDistance = 0;
-        TreeSet<SimpleResult> resultSet = new TreeSet<SimpleResult>();
+        LireFeature queryFeature= null;
+        LireFeature tempFeature= null;
+        float distance= 0, maxDistance= 0;
+        TreeSet<SimpleResult> resultSet= new TreeSet<SimpleResult>();
 
         // create our feature classes
         try {
-            queryFeature = (LireFeature) featureClass.newInstance();
-            tempFeature = (LireFeature) featureClass.newInstance();
+            queryFeature= (LireFeature)featureClass.newInstance();
+            tempFeature= (LireFeature)featureClass.newInstance();
         } catch (Exception e) {
             logger.severe("Could not instantiate class " + featureClass.getName() + " in " + getClass().getName() + " (" + e.getMessage() + ").");
             return null;
@@ -80,11 +81,11 @@ public class RerankFilter implements SearchHitsFilter {
             return null;
         }
 
-        for (int x = 0; x < results.length(); x++) {
+        for (int x= 0; x < results.length(); x++) {
             if (results.doc(x).getFieldable(fieldName) != null) {
                 tempFeature.setByteArrayRepresentation(results.doc(x).getFieldable(fieldName).getBinaryValue());
-                distance = queryFeature.getDistance(tempFeature);
-                maxDistance = Math.max(maxDistance, distance);
+                distance= queryFeature.getDistance(tempFeature);
+                maxDistance= Math.max(maxDistance, distance);
                 resultSet.add(new SimpleResult(distance, results.doc(x)));
             } else {
                 logger.info("Could not instantiate class " + featureClass.getName() + " from the given result set.");

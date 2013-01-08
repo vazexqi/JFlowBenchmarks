@@ -33,17 +33,17 @@ package net.semanticmetadata.lire.imageanalysis.mser;
 /**
  * ImagePoint (linked List)
  * <p/>
- * User: Shotty
- * Date: 28.06.2010
- * Time: 23:25:19
+ * User: Shotty Date: 28.06.2010 Time: 23:25:19
  */
 public class LinkedImagePoint {
     LinkedImagePoint prev;
+
     LinkedImagePoint next;
+
     ImagePoint point;
 
     public LinkedImagePoint(ImagePoint point) {
-        this.point = point;
+        this.point= point;
     }
 
     public LinkedImagePoint getPrev() {
@@ -59,10 +59,10 @@ public class LinkedImagePoint {
     }
 
     public void setPrev(LinkedImagePoint prev) {
-        this.prev = prev;
+        this.prev= prev;
     }
 
     public void setNext(LinkedImagePoint next) {
-        this.next = next;
+        this.next= next;
     }
 }

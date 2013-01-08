@@ -37,27 +37,30 @@ import java.util.List;
 /**
  * The GrowthHistory holds the information for ONE Extremal Region!!
  * <p/>
- * User: Shotty
- * Date: 28.06.2010
- * Time: 11:04:17
+ * User: Shotty Date: 28.06.2010 Time: 11:04:17
  */
 public class MSERGrowthHistory implements Comparable {
     int index;
+
     int size;
+
     int maxGreyValue;
+
     LinkedImagePoint head;
-    ImagePoint[] points = null;
-    ImagePoint[] borderPoints = null;
+
+    ImagePoint[] points= null;
+
+    ImagePoint[] borderPoints= null;
 
     MSERGrowthHistory parent;
 
 
     public MSERGrowthHistory(int size, int value, LinkedImagePoint head) {
-        this.size = size;
-        this.maxGreyValue = value;
+        this.size= size;
+        this.maxGreyValue= value;
 
-        this.head = head;
-        this.parent = this;
+        this.head= head;
+        this.parent= this;
     }
 
     public int getSize() {
@@ -66,11 +69,11 @@ public class MSERGrowthHistory implements Comparable {
 
     public ImagePoint[] getPoints() {
         if (points == null) {
-            points = new ImagePoint[size];
-            LinkedImagePoint temp = head;
-            for (int i = 0; i < size; i++) {
-                points[i] = temp.getPoint();
-                temp = temp.getNext();
+            points= new ImagePoint[size];
+            LinkedImagePoint temp= head;
+            for (int i= 0; i < size; i++) {
+                points[i]= temp.getPoint();
+                temp= temp.getNext();
 
             }
         }
@@ -79,46 +82,46 @@ public class MSERGrowthHistory implements Comparable {
 
     /**
      * Calculate the border from all the points in the shape
-     *
+     * 
      * @return only the points on the border of the shape
      */
     public ImagePoint[] getBorderPoints(int width, int height) {
         if (borderPoints == null) {
             // point with the smallest index is topLeft
-            ImagePoint topLeft = null;
+            ImagePoint topLeft= null;
 
-            HashMap<String, ImagePoint> imagePoints = new HashMap<String, ImagePoint>();
+            HashMap<String, ImagePoint> imagePoints= new HashMap<String, ImagePoint>();
 
             // fill the hash map
             for (ImagePoint p : getPoints()) {
                 if (topLeft == null || topLeft.getIndex() > p.getIndex()) {
-                    topLeft = p;
+                    topLeft= p;
                 }
                 imagePoints.put(p.getX() + "_" + p.getY(), p);
             }
 
-            List<ImagePoint> boundary = new ArrayList<ImagePoint>();
+            List<ImagePoint> boundary= new ArrayList<ImagePoint>();
 
             // begin with topLeft, which is obviously part of the boundary
             boundary.add(topLeft);
 
             //examine neighbours in a counterclockwise direction
-            BoundaryPixel8Edge currentPoint = new BoundaryPixel8Edge(topLeft, width, height, false, imagePoints);
+            BoundaryPixel8Edge currentPoint= new BoundaryPixel8Edge(topLeft, width, height, false, imagePoints);
 
-            BoundaryPixel8Edge neighbor = currentPoint.getNextBoundary();
+            BoundaryPixel8Edge neighbor= currentPoint.getNextBoundary();
 
             // set the stop conditions
-            ImagePoint stopConditionCurrentPoint = currentPoint.getPoint();
-            ImagePoint stopConditionNeighborPoint = neighbor.getPoint();
+            ImagePoint stopConditionCurrentPoint= currentPoint.getPoint();
+            ImagePoint stopConditionNeighborPoint= neighbor.getPoint();
 
             // add the neighbor to the boundary pixels
             boundary.add(imagePoints.get(neighbor.getX() + "_" + neighbor.getY()));
             // where did the edge come from
             neighbor.setCurrentEdge(currentPoint.getNeighbourEdge());
             // neighbor is now current point
-            currentPoint = neighbor;
+            currentPoint= neighbor;
             // get new neighbor
-            neighbor = currentPoint.getNextBoundary();
+            neighbor= currentPoint.getNextBoundary();
 
             while (stopConditionCurrentPoint.getIndex() != currentPoint.getIndex() ||
                     stopConditionNeighborPoint.getIndex() != neighbor.getIndex()) {
@@ -128,13 +131,13 @@ public class MSERGrowthHistory implements Comparable {
                 // where did the edge come from
                 neighbor.setCurrentEdge(currentPoint.getNeighbourEdge());
                 // neighbor is now current point
-                currentPoint = neighbor;
+                currentPoint= neighbor;
                 // get new neighbor
-                neighbor = currentPoint.getNextBoundary();
+                neighbor= currentPoint.getNextBoundary();
             }
 
             // -1 because start == last
-            borderPoints = new ImagePoint[boundary.size()];
+            borderPoints= new ImagePoint[boundary.size()];
             boundary.toArray(borderPoints);
         }
 
@@ -148,7 +151,7 @@ public class MSERGrowthHistory implements Comparable {
     }
 
     public void setIndex(int index) {
-        this.index = index;
+        this.index= index;
     }
 
     public int getIndex() {
@@ -156,9 +159,9 @@ public class MSERGrowthHistory implements Comparable {
     }
 
     public int compareTo(Object o) {
-        if (maxGreyValue < ((MSERGrowthHistory) o).maxGreyValue) {
+        if (maxGreyValue < ((MSERGrowthHistory)o).maxGreyValue) {
             return -1;
-        } else if (maxGreyValue > ((MSERGrowthHistory) o).maxGreyValue) {
+        } else if (maxGreyValue > ((MSERGrowthHistory)o).maxGreyValue) {
             return 1;
         }
         return 0;
@@ -166,7 +169,7 @@ public class MSERGrowthHistory implements Comparable {
 
 
     public static void main(String[] args) {
-        int[] points = new int[]{12,
+        int[] points= new int[] { 12,
                 21, 22, 23, 25,
                 30, 31, 32, 33, 34, 35, 36, 38, 39,
                 40, 41, 42, 43, 44, 45, 48,
@@ -177,64 +180,64 @@ public class MSERGrowthHistory implements Comparable {
                 91, 92, 93
         };
 
-        int width = 10;
+        int width= 10;
 
-        LinkedImagePoint head = new LinkedImagePoint(new ImagePoint(points[0], width));
-        LinkedImagePoint last = head;
+        LinkedImagePoint head= new LinkedImagePoint(new ImagePoint(points[0], width));
+        LinkedImagePoint last= head;
         LinkedImagePoint current;
 
-        for (int i = 1; i < points.length; i++) {
-            current = new LinkedImagePoint(new ImagePoint(points[i], width));
+        for (int i= 1; i < points.length; i++) {
+            current= new LinkedImagePoint(new ImagePoint(points[i], width));
             last.setNext(current);
             current.setPrev(last);
-            last = current;
+            last= current;
         }
-        MSERGrowthHistory test = new MSERGrowthHistory(49, 36, head);
+        MSERGrowthHistory test= new MSERGrowthHistory(49, 36, head);
 
-        ImagePoint[] border = test.getBorderPoints(10, 10);
+        ImagePoint[] border= test.getBorderPoints(10, 10);
 
-        String borderPoints = "";
+        String borderPoints= "";
         for (ImagePoint p : border) {
-            borderPoints += " " + p.getIndex();
+            borderPoints+= " " + p.getIndex();
         }
 
         System.out.println(borderPoints);
 
         // expected border:
-        String expectedBorderPoints = " 12 21 30 40 50 51 42 53 63 72 71 80 91 92 93 84 75 76 67 68 59 48 39 38 48 58 67 56 45 36 25 34 23 12";
+        String expectedBorderPoints= " 12 21 30 40 50 51 42 53 63 72 71 80 91 92 93 84 75 76 67 68 59 48 39 38 48 58 67 56 45 36 25 34 23 12";
 
         System.out.println(expectedBorderPoints);
 
         System.out.println("SAME =" + ((borderPoints.equals(expectedBorderPoints) ? "true" : "false")));
 
-        points = new int[]
-                {23, 26, 27, 31, 32, 33, 34, 35, 36, 37, 44, 45, 46, 47, 55, 56, 57, 65, 66};
+        points= new int[]
+        { 23, 26, 27, 31, 32, 33, 34, 35, 36, 37, 44, 45, 46, 47, 55, 56, 57, 65, 66 };
 
-        width = 10;
+        width= 10;
 
-        head = new LinkedImagePoint(new ImagePoint(points[0], width));
-        last = head;
+        head= new LinkedImagePoint(new ImagePoint(points[0], width));
+        last= head;
 
-        for (int i = 1; i < points.length; i++) {
-            current = new LinkedImagePoint(new ImagePoint(points[i], width));
+        for (int i= 1; i < points.length; i++) {
+            current= new LinkedImagePoint(new ImagePoint(points[i], width));
             last.setNext(current);
             current.setPrev(last);
-            last = current;
+            last= current;
         }
 
-        test = new MSERGrowthHistory(19, 36, head);
+        test= new MSERGrowthHistory(19, 36, head);
 
-        border = test.getBorderPoints(width, 10);
+        border= test.getBorderPoints(width, 10);
 
-        borderPoints = "";
+        borderPoints= "";
         for (ImagePoint p : border) {
-            borderPoints += " " + p.getIndex();
+            borderPoints+= " " + p.getIndex();
         }
 
         System.out.println(borderPoints);
 
         // expected border:
-        expectedBorderPoints = " 23 32 31 32 33 44 55 65 66 57 47 37 27 26 35 34 23";
+        expectedBorderPoints= " 23 32 31 32 33 44 55 65 66 57 47 37 27 26 35 34 23";
 
         System.out.println(expectedBorderPoints);
 

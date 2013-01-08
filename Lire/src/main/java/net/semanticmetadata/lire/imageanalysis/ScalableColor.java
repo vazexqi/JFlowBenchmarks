@@ -35,10 +35,8 @@ import net.semanticmetadata.lire.utils.ConversionUtils;
 import net.semanticmetadata.lire.utils.SerializationUtils;
 
 /**
- * Just a wrapper for the use of LireFeature.
- * Date: 27.08.2008
- * Time: 12:12:01
- *
+ * Just a wrapper for the use of LireFeature. Date: 27.08.2008 Time: 12:12:01
+ * 
  * @author Mathias Lux, mathias@juggle.at
  */
 public class ScalableColor extends ScalableColorImpl implements LireFeature {
@@ -56,29 +54,29 @@ public class ScalableColor extends ScalableColorImpl implements LireFeature {
         }
         return builder.toString();
         */
-        int[] result = new int[NumberOfCoefficients + 2];
-        result[0] = NumberOfBitplanesDiscarded;
-        result[1] = NumberOfCoefficients;
-        for (int i = 2; i < result.length; i++) {
-            result[i] = haarTransformedHistogram[i - 2];
+        int[] result= new int[NumberOfCoefficients + 2];
+        result[0]= NumberOfBitplanesDiscarded;
+        result[1]= NumberOfCoefficients;
+        for (int i= 2; i < result.length; i++) {
+            result[i]= haarTransformedHistogram[i - 2];
         }
         return SerializationUtils.toByteArray(result);
     }
 
     public void setByteArrayRepresentation(byte[] in) {
-        int[] result = SerializationUtils.toIntArray(in);
-        NumberOfBitplanesDiscarded = result[0];
-        NumberOfCoefficients = result[1];
-        haarTransformedHistogram = new int[result.length - 2];
-        for (int i = 2; i < result.length; i++) {
-            haarTransformedHistogram[i - 2] = result[i];
+        int[] result= SerializationUtils.toIntArray(in);
+        NumberOfBitplanesDiscarded= result[0];
+        NumberOfCoefficients= result[1];
+        haarTransformedHistogram= new int[result.length - 2];
+        for (int i= 2; i < result.length; i++) {
+            haarTransformedHistogram[i - 2]= result[i];
         }
     }
 
     public double[] getDoubleHistogram() {
-        int[] result = new int[NumberOfCoefficients];
-        for (int i = 2; i < result.length; i++) {
-            result[i] = haarTransformedHistogram[i];
+        int[] result= new int[NumberOfCoefficients];
+        for (int i= 2; i < result.length; i++) {
+            result[i]= haarTransformedHistogram[i];
         }
         return ConversionUtils.toDouble(result);
     }

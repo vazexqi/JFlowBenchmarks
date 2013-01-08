@@ -31,32 +31,29 @@
 package net.semanticmetadata.lire.utils;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Mathias Lux, mathias@juggle.at
- * Date: 28.07.11
- * Time: 10:48
+ * Created by IntelliJ IDEA. User: Mathias Lux, mathias@juggle.at Date: 28.07.11 Time: 10:48
  */
 public class ConversionUtils {
     /**
-     * Converts a float array to a double array the "bad way".
-     * However, it's sufficient for tests right now.
-     *
+     * Converts a float array to a double array the "bad way". However, it's sufficient for tests
+     * right now.
+     * 
      * @param in
      * @return
      */
     public static double[] toDouble(float[] in) {
-        double[] result = new double[in.length];
-        for (int i = 0; i < in.length; i++) {
-            result[i] = (double) in[i];
+        double[] result= new double[in.length];
+        for (int i= 0; i < in.length; i++) {
+            result[i]= (double)in[i];
 
         }
         return result;
     }
 
     public static double[] toDouble(int[] in) {
-        double[] result = new double[in.length];
-        for (int i = 0; i < in.length; i++) {
-            result[i] = (double) in[i];
+        double[] result= new double[in.length];
+        for (int i= 0; i < in.length; i++) {
+            result[i]= (double)in[i];
 
         }
         return result;

@@ -47,11 +47,16 @@ public class Feature extends Histogram implements Comparable<Feature>, Serializa
     /**
      *
      */
-    private static final long serialVersionUID = 1L;
-    private Logger logger = Logger.getLogger(getClass().getName());
+    private static final long serialVersionUID= 1L;
+
+    private Logger logger= Logger.getLogger(getClass().getName());
+
     public float scale;
+
     public float orientation;
+
     public float[] location;
+
 //    public float[] descriptor;
 
     /**
@@ -61,15 +66,14 @@ public class Feature extends Histogram implements Comparable<Feature>, Serializa
     }
 
     public Feature(float s, float o, float[] l, float[] d) {
-        scale = s;
-        orientation = o;
-        location = l;
-        descriptor = d;
+        scale= s;
+        orientation= o;
+        location= l;
+        descriptor= d;
     }
 
     /**
-     * comparator for making Features sortable
-     * please note, that the comparator returns -1 for
+     * comparator for making Features sortable please note, that the comparator returns -1 for
      * this.scale &gt; o.scale, to sort the features in a descending order
      */
     public int compareTo(Feature f) {
@@ -77,17 +81,17 @@ public class Feature extends Histogram implements Comparable<Feature>, Serializa
     }
 
     public float descriptorDistance(Feature f) {
-        float d = 0;
-        for (int i = 0; i < descriptor.length; ++i) {
-            float a = descriptor[i] - f.descriptor[i];
-            d += a * a;
+        float d= 0;
+        for (int i= 0; i < descriptor.length; ++i) {
+            float a= descriptor[i] - f.descriptor[i];
+            d+= a * a;
         }
-        return (float) Math.sqrt(d);
+        return (float)Math.sqrt(d);
     }
 
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < descriptor.length; i++) {
+        StringBuilder sb= new StringBuilder();
+        for (int i= 0; i < descriptor.length; i++) {
             sb.append(descriptor[i]);
             sb.append(' ');
         }
@@ -95,12 +99,14 @@ public class Feature extends Histogram implements Comparable<Feature>, Serializa
     }
 
     public float getDistance(LireFeature feature) {
-        if (feature instanceof Feature) return descriptorDistance((Feature) feature);
-        else return -1f;
+        if (feature instanceof Feature)
+            return descriptorDistance((Feature)feature);
+        else
+            return -1f;
     }
 
     public String getStringRepresentation() {
-        StringBuilder sb = new StringBuilder(512);
+        StringBuilder sb= new StringBuilder(512);
         sb.append("sift");
         sb.append(' ');
         sb.append(scale);
@@ -114,7 +120,7 @@ public class Feature extends Histogram implements Comparable<Feature>, Serializa
         sb.append(location[1]);
         sb.append(' ');
         // we add the descriptor: (default size == 4*4*8
-        for (int i = 0; i < descriptor.length; i++) {
+        for (int i= 0; i < descriptor.length; i++) {
             sb.append(descriptor[i]);
             sb.append(' ');
         }
@@ -122,25 +128,26 @@ public class Feature extends Histogram implements Comparable<Feature>, Serializa
     }
 
     public void setStringRepresentation(String s) {
-        StringTokenizer st = new StringTokenizer(s, " ");
+        StringTokenizer st= new StringTokenizer(s, " ");
         if (!st.nextToken().equals("sift")) {
             logger.warning("This is not a SIFT feature.");
             return;
         }
-        scale = Float.parseFloat(st.nextToken());
-        orientation = Float.parseFloat(st.nextToken());
-        location = new float[2];
-        location[0] = Float.parseFloat(st.nextToken());
-        location[1] = Float.parseFloat(st.nextToken());
+        scale= Float.parseFloat(st.nextToken());
+        orientation= Float.parseFloat(st.nextToken());
+        location= new float[2];
+        location[0]= Float.parseFloat(st.nextToken());
+        location[1]= Float.parseFloat(st.nextToken());
 
         // parse descriptor:
-        LinkedList<Float> descVals = new LinkedList<Float>();
-        while (st.hasMoreTokens()) descVals.add(Float.parseFloat(st.nextToken()));
+        LinkedList<Float> descVals= new LinkedList<Float>();
+        while (st.hasMoreTokens())
+            descVals.add(Float.parseFloat(st.nextToken()));
 
         // set descriptor:
-        descriptor = new float[descVals.size()];
-        for (int i = 0; i < descriptor.length; i++) {
-            descriptor[i] = descVals.get(i);
+        descriptor= new float[descVals.size()];
+        for (int i= 0; i < descriptor.length; i++) {
+            descriptor[i]= descVals.get(i);
         }
     }
 
@@ -150,26 +157,30 @@ public class Feature extends Histogram implements Comparable<Feature>, Serializa
 
     /**
      * Writing out to bytes ... just to save some time and space.
-     *
+     * 
      * @return
      */
     public byte[] getByteArrayRepresentation() {
-        byte[] result = new byte[descriptor.length * 4 + 4 * 4];
+        byte[] result= new byte[descriptor.length * 4 + 4 * 4];
         byte[] tmp;
 
-        tmp = SerializationUtils.toBytes(scale);
-        for (int j = 0; j < 4; j++) result[j] = tmp[j];
-        tmp = SerializationUtils.toBytes(orientation);
-        for (int j = 0; j < 4; j++) result[4 + j] = tmp[j];
-        tmp = SerializationUtils.toBytes(location[0]);
-        for (int j = 0; j < 4; j++) result[8 + j] = tmp[j];
-        tmp = SerializationUtils.toBytes(location[1]);
-        for (int j = 0; j < 4; j++) result[12 + j] = tmp[j];
+        tmp= SerializationUtils.toBytes(scale);
+        for (int j= 0; j < 4; j++)
+            result[j]= tmp[j];
+        tmp= SerializationUtils.toBytes(orientation);
+        for (int j= 0; j < 4; j++)
+            result[4 + j]= tmp[j];
+        tmp= SerializationUtils.toBytes(location[0]);
+        for (int j= 0; j < 4; j++)
+            result[8 + j]= tmp[j];
+        tmp= SerializationUtils.toBytes(location[1]);
+        for (int j= 0; j < 4; j++)
+            result[12 + j]= tmp[j];
 
-        for (int i = 16; i < result.length; i += 4) {
-            tmp = SerializationUtils.toBytes(descriptor[(i - 16) / 4]);
-            for (int j = 0; j < 4; j++) {
-                result[i + j] = tmp[j];
+        for (int i= 16; i < result.length; i+= 4) {
+            tmp= SerializationUtils.toBytes(descriptor[(i - 16) / 4]);
+            for (int j= 0; j < 4; j++) {
+                result[i + j]= tmp[j];
             }
         }
         return result;
@@ -177,36 +188,35 @@ public class Feature extends Histogram implements Comparable<Feature>, Serializa
 
     /**
      * Reads descriptor from a byte array. Much faster than the String based method.
-     *
+     * 
      * @param in byte array from corresponding method
      * @see net.semanticmetadata.lire.imageanalysis.CEDD#getByteArrayRepresentation
      */
     public void setByteArrayRepresentation(byte[] in) {
-        byte[] tmp = new byte[4];
-        descriptor = new float[in.length / 4 - 4];
-        location = new float[2];
+        byte[] tmp= new byte[4];
+        descriptor= new float[in.length / 4 - 4];
+        location= new float[2];
 
         System.arraycopy(in, 0, tmp, 0, 4);
-        scale = SerializationUtils.toFloat(tmp);
+        scale= SerializationUtils.toFloat(tmp);
         System.arraycopy(in, 4, tmp, 0, 4);
-        orientation = SerializationUtils.toFloat(tmp);
+        orientation= SerializationUtils.toFloat(tmp);
         System.arraycopy(in, 8, tmp, 0, 4);
-        location[0] = SerializationUtils.toFloat(tmp);
+        location[0]= SerializationUtils.toFloat(tmp);
         System.arraycopy(in, 12, tmp, 0, 4);
-        location[1] = SerializationUtils.toFloat(tmp);
+        location[1]= SerializationUtils.toFloat(tmp);
 
-        for (int i = 0; i < descriptor.length; i++) {
+        for (int i= 0; i < descriptor.length; i++) {
             System.arraycopy(in, 16 + i * 4, tmp, 0, 4);
-            descriptor[i] = SerializationUtils.toFloat(tmp);
+            descriptor[i]= SerializationUtils.toFloat(tmp);
         }
     }
 
     public double[] getDoubleHistogram() {
-        double[] result = new double[descriptor.length];
-        for (int i = 0; i < descriptor.length; i++) {
-            result[i] = descriptor[i];
+        double[] result= new double[descriptor.length];
+        for (int i= 0; i < descriptor.length; i++) {
+            result[i]= descriptor[i];
         }
         return result;
     }
 }
-

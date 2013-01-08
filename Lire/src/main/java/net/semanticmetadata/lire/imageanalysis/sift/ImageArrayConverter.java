@@ -33,8 +33,9 @@ import java.awt.image.BufferedImage;
 import java.awt.image.Raster;
 
 public class ImageArrayConverter {
-    public static boolean CUTOFF_VALUES = true;
-    public static boolean NORM_VALUES = false;
+    public static boolean CUTOFF_VALUES= true;
+
+    public static boolean NORM_VALUES= false;
 
 //    public static ImagePlus FloatArrayToImagePlus(FloatArray2D image, String name, float min, float max)
 //    {
@@ -54,17 +55,17 @@ public class ImageArrayConverter {
 
     public static FloatArray2D ImageToFloatArray2D(BufferedImage ip) {
         FloatArray2D image;
-        Raster pixelArray = ip.getRaster();
-        int count = 0;
-        int[] rgb = new int[3];
-        image = new FloatArray2D(ip.getWidth(), ip.getHeight());
-        for (int y = 0; y < ip.getHeight(); y++) {
-            for (int x = 0; x < ip.getWidth(); x++) {
-                rgb = pixelArray.getPixel(x, y, rgb);
-                int b = rgb[2];
-                int g = rgb[1];
-                int r = rgb[0];
-                image.data[count] = 0.3f * r + 0.6f * g + 0.1f * b;
+        Raster pixelArray= ip.getRaster();
+        int count= 0;
+        int[] rgb= new int[3];
+        image= new FloatArray2D(ip.getWidth(), ip.getHeight());
+        for (int y= 0; y < ip.getHeight(); y++) {
+            for (int x= 0; x < ip.getWidth(); x++) {
+                rgb= pixelArray.getPixel(x, y, rgb);
+                int b= rgb[2];
+                int g= rgb[1];
+                int r= rgb[0];
+                image.data[count]= 0.3f * r + 0.6f * g + 0.1f * b;
                 count++;
             }
         }

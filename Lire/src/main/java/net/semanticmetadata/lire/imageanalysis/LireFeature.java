@@ -34,10 +34,9 @@ package net.semanticmetadata.lire.imageanalysis;
 import java.awt.image.BufferedImage;
 
 /**
- * This is the basic interface for all content based features. It is needed for GenericDocumentBuilder etc.
- * Date: 28.05.2008
- * Time: 14:44:16
- *
+ * This is the basic interface for all content based features. It is needed for
+ * GenericDocumentBuilder etc. Date: 28.05.2008 Time: 14:44:16
+ * 
  * @author Mathias Lux, mathias@juggle.at
  */
 public interface LireFeature {

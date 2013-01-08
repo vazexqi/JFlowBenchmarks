@@ -48,21 +48,24 @@ import java.util.TreeSet;
 import java.util.logging.Logger;
 
 /**
- * Filtering results based on LSA.
- * Created 05.08.11, 08:41 <br/>
- *
+ * Filtering results based on LSA. Created 05.08.11, 08:41 <br/>
+ * 
  * @author Mathias Lux, mathias@juggle.at
  */
 public class LsaFilter implements SearchHitsFilter {
-    private Logger logger = Logger.getLogger(getClass().getName());
+    private Logger logger= Logger.getLogger(getClass().getName());
+
     private Class featureClass;
+
     private String fieldName;
-    private LireFeature tempFeature = null;
-    private int numberOfDimensions = -1;
+
+    private LireFeature tempFeature= null;
+
+    private int numberOfDimensions= -1;
 
     public LsaFilter(Class featureClass, String fieldName) {
-        this.featureClass = featureClass;
-        this.fieldName = fieldName;
+        this.featureClass= featureClass;
+        this.fieldName= fieldName;
     }
 
     /**
@@ -72,17 +75,17 @@ public class LsaFilter implements SearchHitsFilter {
      */
     public ImageSearchHits filter(ImageSearchHits results, Document query) {
         // create a double[items][histogram]
-        tempFeature = null;
-        LinkedList<double[]> features = new LinkedList<double[]>();
+        tempFeature= null;
+        LinkedList<double[]> features= new LinkedList<double[]>();
         try {
-            tempFeature = (LireFeature) featureClass.newInstance();
+            tempFeature= (LireFeature)featureClass.newInstance();
         } catch (Exception e) {
             logger.severe("Could not create feature " + featureClass.getName() + " (" + e.getMessage() + ").");
             return null;
         }
         // get all features from the result set, take care of those that do not have the respective field.
-        for (int i = 0; i < results.length(); i++) {
-            Document d = results.doc(i);
+        for (int i= 0; i < results.length(); i++) {
+            Document d= results.doc(i);
             if (d.getFieldable(fieldName) != null) {
                 tempFeature.setByteArrayRepresentation(d.getFieldable(fieldName).getBinaryValue());
                 features.add(tempFeature.getDoubleHistogram());
@@ -95,40 +98,41 @@ public class LsaFilter implements SearchHitsFilter {
             logger.severe("Query document is missing the given feature " + featureClass.getName() + ".");
             return null;
         }
-        double[][] matrixData = new double[features.size() + 1][tempFeature.getDoubleHistogram().length];
+        double[][] matrixData= new double[features.size() + 1][tempFeature.getDoubleHistogram().length];
         System.arraycopy(tempFeature.getDoubleHistogram(), 0, matrixData[0], 0, tempFeature.getDoubleHistogram().length);
-        int count = 1;
-        for (Iterator<double[]> iterator = features.iterator(); iterator.hasNext(); ) {
-            double[] next = iterator.next();
+        int count= 1;
+        for (Iterator<double[]> iterator= features.iterator(); iterator.hasNext();) {
+            double[] next= iterator.next();
             System.arraycopy(next, 0, matrixData[count], 0, next.length);
             count++;
         }
         // create a matrix object and do the magic
-        Array2DRowRealMatrix m = new Array2DRowRealMatrix(matrixData);
-        long ms = System.currentTimeMillis();
-        SingularValueDecompositionImpl svd = new SingularValueDecompositionImpl(m);
-        ms = System.currentTimeMillis() - ms;
-        double[] singularValues = svd.getSingularValues();
-        RealMatrix s = svd.getS();
-        if (numberOfDimensions < 1) numberOfDimensions = singularValues.length / 10;
-        for (int i = numberOfDimensions; i < singularValues.length; i++) {
+        Array2DRowRealMatrix m= new Array2DRowRealMatrix(matrixData);
+        long ms= System.currentTimeMillis();
+        SingularValueDecompositionImpl svd= new SingularValueDecompositionImpl(m);
+        ms= System.currentTimeMillis() - ms;
+        double[] singularValues= svd.getSingularValues();
+        RealMatrix s= svd.getS();
+        if (numberOfDimensions < 1)
+            numberOfDimensions= singularValues.length / 10;
+        for (int i= numberOfDimensions; i < singularValues.length; i++) {
             s.setEntry(i, i, 0);
         }
-        RealMatrix mNew = svd.getU().multiply(s).multiply(svd.getVT());
-        double[][] data = mNew.getData();
+        RealMatrix mNew= svd.getU().multiply(s).multiply(svd.getVT());
+        double[][] data= mNew.getData();
 
         // create the new result set
-        TreeSet<SimpleResult> result = new TreeSet<SimpleResult>();
-        double maxDistance = 0;
-        double[] queryData = data[0];
-        for (int i = 1; i < data.length; i++) {
-            double[] doubles = data[i];
-            double distance = MetricsUtils.distL1(doubles, queryData);
-            result.add(new SimpleResult((float) distance, results.doc(i - 1)));
-            maxDistance = Math.max(maxDistance, distance);
+        TreeSet<SimpleResult> result= new TreeSet<SimpleResult>();
+        double maxDistance= 0;
+        double[] queryData= data[0];
+        for (int i= 1; i < data.length; i++) {
+            double[] doubles= data[i];
+            double distance= MetricsUtils.distL1(doubles, queryData);
+            result.add(new SimpleResult((float)distance, results.doc(i - 1)));
+            maxDistance= Math.max(maxDistance, distance);
         }
         ImageSearchHits hits;
-        hits = new SimpleImageSearchHits(result, (float) maxDistance);
+        hits= new SimpleImageSearchHits(result, (float)maxDistance);
         return hits;
     }
 }

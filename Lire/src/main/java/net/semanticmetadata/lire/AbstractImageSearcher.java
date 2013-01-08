@@ -40,28 +40,28 @@ import java.util.Set;
 
 
 /**
- * Abstract ImageSearcher, which uses javax.imageio.ImageIO to create a BufferedImage
- * from an InputStream.
+ * Abstract ImageSearcher, which uses javax.imageio.ImageIO to create a BufferedImage from an
+ * InputStream.
  * <p/>
- * This file is part of the Caliph and Emir project: http://www.SemanticMetadata.net
- * <br>Date: 01.02.2006
- * <br>Time: 00:13:16
- *
+ * This file is part of the Caliph and Emir project: http://www.SemanticMetadata.net <br>
+ * Date: 01.02.2006 <br>
+ * Time: 00:13:16
+ * 
  * @author Mathias Lux, mathias@juggle.at
  */
 public abstract class AbstractImageSearcher implements ImageSearcher {
     /**
      * Searches for images similar to the given image. This simple implementation uses
-     * {@link ImageSearcher#search(java.awt.image.BufferedImage, org.apache.lucene.index.IndexReader)},
-     * the image is read using javax.imageio.ImageIO.
-     *
-     * @param image  the example image to search for.
+     * {@link ImageSearcher#search(java.awt.image.BufferedImage, org.apache.lucene.index.IndexReader)}
+     * , the image is read using javax.imageio.ImageIO.
+     * 
+     * @param image the example image to search for.
      * @param reader the IndexReader which is used to dsearch through the images.
      * @return a sorted list of hits.
      * @throws IOException in case the image could not be read from stream.
      */
     public ImageSearchHits search(InputStream image, IndexReader reader) throws IOException {
-        BufferedImage bufferedImage = ImageIO.read(image);
+        BufferedImage bufferedImage= ImageIO.read(image);
         return search(bufferedImage, reader);
     }
 

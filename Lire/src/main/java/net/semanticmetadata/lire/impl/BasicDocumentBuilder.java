@@ -42,9 +42,9 @@ public class BasicDocumentBuilder extends AbstractDocumentBuilder {
 
 
     public Document createDocument(BufferedImage image, String identifier) {
-        BasicFeatures classifier = new BasicFeatures();
+        BasicFeatures classifier= new BasicFeatures();
         classifier.extract(image);
-        Document doc = new Document();
+        Document doc= new Document();
 
         doc.add(new Field(DocumentBuilder.FIELD_NAME_BASIC_FEATURES, classifier.getStringRepresentation(), Field.Store.YES, Field.Index.NO));
 

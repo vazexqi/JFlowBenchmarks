@@ -46,15 +46,13 @@ import java.util.logging.Level;
 
 /**
  * Provides a faster way of searching based on byte arrays instead of Strings. The method
- * {@link net.semanticmetadata.lire.imageanalysis.CEDD#getByteArrayRepresentation()} is used
- * to generate the signature of the descriptor much faster. First tests have shown that this
- * implementation is up to 4 times faster than the implementation based on strings
- * (for 120,000 images)
+ * {@link net.semanticmetadata.lire.imageanalysis.CEDD#getByteArrayRepresentation()} is used to
+ * generate the signature of the descriptor much faster. First tests have shown that this
+ * implementation is up to 4 times faster than the implementation based on strings (for 120,000
+ * images)
  * <p/>
- * User: Mathias Lux, mathias@juggle.at
- * Date: 12.03.2010
- * Time: 13:21:50
- *
+ * User: Mathias Lux, mathias@juggle.at Date: 12.03.2010 Time: 13:21:50
+ * 
  * @see GenericFastImageSearcher
  * @deprecated use GenericFastImageSearcher instead
  */
@@ -64,14 +62,14 @@ public class CEDDImageSearcher extends GenericImageSearcher {
     }
 
     protected float getDistance(Document d, LireFeature lireFeature) {
-        float distance = 0f;
+        float distance= 0f;
         CEDD lf;
         try {
-            lf = (CEDD) descriptorClass.newInstance();
-            byte[] cls = d.getBinaryValue(fieldName);
+            lf= (CEDD)descriptorClass.newInstance();
+            byte[] cls= d.getBinaryValue(fieldName);
             if (cls != null && cls.length > 0) {
                 lf.setByteArrayRepresentation(cls);
-                distance = lireFeature.getDistance(lf);
+                distance= lireFeature.getDistance(lf);
             } else {
                 logger.warning("No feature stored in this document ...");
             }
@@ -85,16 +83,16 @@ public class CEDDImageSearcher extends GenericImageSearcher {
     }
 
     public ImageSearchHits search(Document doc, IndexReader reader) throws IOException {
-        SimpleImageSearchHits searchHits = null;
+        SimpleImageSearchHits searchHits= null;
         try {
-            CEDD lireFeature = (CEDD) descriptorClass.newInstance();
+            CEDD lireFeature= (CEDD)descriptorClass.newInstance();
 
-            byte[] cls = doc.getBinaryValue(fieldName);
+            byte[] cls= doc.getBinaryValue(fieldName);
             if (cls != null && cls.length > 0)
                 lireFeature.setByteArrayRepresentation(cls);
-            float maxDistance = findSimilar(reader, lireFeature);
+            float maxDistance= findSimilar(reader, lireFeature);
 
-            searchHits = new SimpleImageSearchHits(this.docs, maxDistance);
+            searchHits= new SimpleImageSearchHits(this.docs, maxDistance);
         } catch (InstantiationException e) {
             logger.log(Level.SEVERE, "Error instantiating class for generic image searcher: " + e.getMessage());
         } catch (IllegalAccessException e) {
@@ -105,30 +103,30 @@ public class CEDDImageSearcher extends GenericImageSearcher {
 
     public ImageDuplicates findDuplicates(IndexReader reader) throws IOException {
         // get the first document:
-        SimpleImageDuplicates simpleImageDuplicates = null;
+        SimpleImageDuplicates simpleImageDuplicates= null;
         try {
             if (!IndexReader.indexExists(reader.directory()))
                 throw new FileNotFoundException("No index found at this specific location.");
-            Document doc = reader.document(0);
+            Document doc= reader.document(0);
 
-            CEDD lireFeature = (CEDD) descriptorClass.newInstance();
-            byte[] cls = doc.getBinaryValue(fieldName);
+            CEDD lireFeature= (CEDD)descriptorClass.newInstance();
+            byte[] cls= doc.getBinaryValue(fieldName);
             if (cls != null && cls.length > 0)
                 lireFeature.setByteArrayRepresentation(cls);
 
-            HashMap<Float, List<String>> duplicates = new HashMap<Float, List<String>>();
+            HashMap<Float, List<String>> duplicates= new HashMap<Float, List<String>>();
 
             // find duplicates ...
-            boolean hasDeletions = reader.hasDeletions();
+            boolean hasDeletions= reader.hasDeletions();
 
-            int docs = reader.numDocs();
-            int numDuplicates = 0;
-            for (int i = 0; i < docs; i++) {
+            int docs= reader.numDocs();
+            int numDuplicates= 0;
+            for (int i= 0; i < docs; i++) {
                 if (hasDeletions && reader.isDeleted(i)) {
                     continue;
                 }
-                Document d = reader.document(i);
-                float distance = getDistance(d, lireFeature);
+                Document d= reader.document(i);
+                float distance= getDistance(d, lireFeature);
 
                 if (!duplicates.containsKey(distance)) {
                     duplicates.put(distance, new LinkedList<String>());
@@ -138,15 +136,16 @@ public class CEDDImageSearcher extends GenericImageSearcher {
                 duplicates.get(distance).add(d.getFieldable(DocumentBuilder.FIELD_NAME_IDENTIFIER).stringValue());
             }
 
-            if (numDuplicates == 0) return null;
+            if (numDuplicates == 0)
+                return null;
 
-            LinkedList<List<String>> results = new LinkedList<List<String>>();
+            LinkedList<List<String>> results= new LinkedList<List<String>>();
             for (float f : duplicates.keySet()) {
                 if (duplicates.get(f).size() > 1) {
                     results.add(duplicates.get(f));
                 }
             }
-            simpleImageDuplicates = new SimpleImageDuplicates(results);
+            simpleImageDuplicates= new SimpleImageDuplicates(results);
         } catch (InstantiationException e) {
             logger.log(Level.SEVERE, "Error instantiating class for generic image searcher: " + e.getMessage());
         } catch (IllegalAccessException e) {

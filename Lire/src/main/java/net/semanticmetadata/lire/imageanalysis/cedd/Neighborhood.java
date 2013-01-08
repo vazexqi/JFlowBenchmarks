@@ -32,8 +32,11 @@ package net.semanticmetadata.lire.imageanalysis.cedd;
 
 public class Neighborhood {
     public double Area1;
+
     public double Area2;
+
     public double Area3;
+
     public double Area4;
 
     // Area 1       Area2

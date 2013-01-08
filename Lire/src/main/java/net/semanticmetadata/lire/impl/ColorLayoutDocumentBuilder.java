@@ -42,29 +42,29 @@ import java.util.logging.Logger;
 /**
  * Provides a faster way of searching based on byte arrays instead of Strings. The method
  * {@link net.semanticmetadata.lire.imageanalysis.ColorLayout#getByteArrayRepresentation()} is used
- * to generate the signature of the descriptor much faster.
- * User: Mathias Lux, mathias@juggle.at
+ * to generate the signature of the descriptor much faster. User: Mathias Lux, mathias@juggle.at
  * Date: 30.06.2011
  */
 public class ColorLayoutDocumentBuilder extends AbstractDocumentBuilder {
-    private Logger logger = Logger.getLogger(getClass().getName());
-    public static final int MAX_IMAGE_DIMENSION = 1024;
+    private Logger logger= Logger.getLogger(getClass().getName());
+
+    public static final int MAX_IMAGE_DIMENSION= 1024;
 
     public Document createDocument(BufferedImage image, String identifier) {
         assert (image != null);
-        BufferedImage bimg = image;
+        BufferedImage bimg= image;
         // Scaling image is especially with the correlogram features very important!
         // All images are scaled to guarantee a certain upper limit for indexing.
         if (Math.max(image.getHeight(), image.getWidth()) > MAX_IMAGE_DIMENSION) {
-            bimg = ImageUtils.scaleImage(image, MAX_IMAGE_DIMENSION);
+            bimg= ImageUtils.scaleImage(image, MAX_IMAGE_DIMENSION);
         }
-        Document doc = null;
+        Document doc= null;
         logger.finer("Starting extraction from image [ColorLayout - fast].");
-        ColorLayout vd = new ColorLayout();
+        ColorLayout vd= new ColorLayout();
         vd.extract(bimg);
         logger.fine("Extraction finished [ColorLayout - fast].");
 
-        doc = new Document();
+        doc= new Document();
         doc.add(new Field(DocumentBuilder.FIELD_NAME_COLORLAYOUT_FAST, vd.getByteArrayRepresentation()));
         if (identifier != null)
             doc.add(new Field(DocumentBuilder.FIELD_NAME_IDENTIFIER, identifier, Field.Store.YES, Field.Index.NOT_ANALYZED));

@@ -37,51 +37,50 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * ...
- * Date: 13.08.2008
- * Time: 14:42:16
- *
+ * ... Date: 13.08.2008 Time: 14:42:16
+ * 
  * @author Mathias Lux, mathias@juggle.at
  */
 public class SavedPivots implements Serializable {
     /**
      *
      */
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID= 1L;
+
     String[][] pivots;
 
     public SavedPivots(int[][] piv, List<LireFeature> objs) {
         // create a String array holding the two pivots per dimension.
-        this.pivots = new String[2][piv[0].length];
+        this.pivots= new String[2][piv[0].length];
         // save string representations for pivots:
-        for (int i = 0; i < piv[0].length; i++) {
-            pivots[0][i] = objs.get(piv[0][i]).getStringRepresentation();
-            pivots[1][i] = objs.get(piv[1][i]).getStringRepresentation();
+        for (int i= 0; i < piv[0].length; i++) {
+            pivots[0][i]= objs.get(piv[0][i]).getStringRepresentation();
+            pivots[1][i]= objs.get(piv[1][i]).getStringRepresentation();
         }
     }
 
     /**
-     * Create the pivots index array from the stored pivots and add them
-     * to the list of objects to fastmap.
-     *
-     * @param objs       the list of objects to fastmap
+     * Create the pivots index array from the stored pivots and add them to the list of objects to
+     * fastmap.
+     * 
+     * @param objs the list of objects to fastmap
      * @param descriptor the actual descriptor class of the LireFeature
      * @return
      */
     public int[][] getPivots(List<LireFeature> objs, Class<? extends LireFeature> descriptor) throws IllegalAccessException, InstantiationException {
-        int[][] retVal = new int[2][pivots[0].length];
-        List<LireFeature> pivs = new LinkedList<LireFeature>();
-        int countIndex = 0;
-        for (int i = 0; i < pivots[0].length; i++) {
-            LireFeature vd1 = (LireFeature) descriptor.newInstance();
+        int[][] retVal= new int[2][pivots[0].length];
+        List<LireFeature> pivs= new LinkedList<LireFeature>();
+        int countIndex= 0;
+        for (int i= 0; i < pivots[0].length; i++) {
+            LireFeature vd1= (LireFeature)descriptor.newInstance();
             vd1.setStringRepresentation(pivots[0][i]);
             pivs.add(vd1);
-            retVal[0][i] = countIndex;
+            retVal[0][i]= countIndex;
             countIndex++;
-            LireFeature vd2 = (LireFeature) descriptor.newInstance();
+            LireFeature vd2= (LireFeature)descriptor.newInstance();
             vd2.setStringRepresentation(pivots[1][i]);
             pivs.add(vd2);
-            retVal[1][i] = countIndex;
+            retVal[1][i]= countIndex;
             countIndex++;
         }
         objs.addAll(0, pivs);

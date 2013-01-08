@@ -40,41 +40,40 @@ import java.awt.image.BufferedImage;
 import java.util.logging.Logger;
 
 /**
- * Factory for creating documents for one color images in a fast and efficient way.
- * This file is part of the Caliph and Emir project: http://www.SemanticMetadata.net
- * <br>Date: 14.12.2006
- * <br>Time: 13:03:30
- *
+ * Factory for creating documents for one color images in a fast and efficient way. This file is
+ * part of the Caliph and Emir project: http://www.SemanticMetadata.net <br>
+ * Date: 14.12.2006 <br>
+ * Time: 13:03:30
+ * 
  * @author Mathias Lux, mathias@juggle.at
  */
 public class DocumentFactory {
     // create the logger for this factory:
-    static Logger logger = Logger.getLogger(DocumentFactory.class.getName());
+    static Logger logger= Logger.getLogger(DocumentFactory.class.getName());
 
     /**
-     * Creates a document from a (non existent) one color image. Can be used for
-     * color search.
-     *
+     * Creates a document from a (non existent) one color image. Can be used for color search.
+     * 
      * @param color the color for the image
      * @return the document for searching.
      */
     public static Document createColorOnlyDocument(Color color) {
         assert (color != null);
         // Create a one pixel image
-        int imgWidth = 64;
-        BufferedImage img = new BufferedImage(imgWidth, imgWidth, BufferedImage.TYPE_INT_RGB);
-        Graphics2D g = (Graphics2D) img.getGraphics();
+        int imgWidth= 64;
+        BufferedImage img= new BufferedImage(imgWidth, imgWidth, BufferedImage.TYPE_INT_RGB);
+        Graphics2D g= (Graphics2D)img.getGraphics();
         g.setColor(color);
         g.fillRect(0, 0, imgWidth, imgWidth);
         // Hand it over to ScalableColor to create a descriptor:
-        ColorLayout scd = new ColorLayout();
+        ColorLayout scd= new ColorLayout();
         scd.extract(img);
         // create the string representation
-        String sc = scd.getStringRepresentation();
+        String sc= scd.getStringRepresentation();
 //        System.out.println("sc = " + sc);
 //        System.out.println("color = " + color);
         logger.fine("Extraction from image finished");
-        Document doc = new Document();
+        Document doc= new Document();
         if (sc != null)
             doc.add(new Field(DocumentBuilder.FIELD_NAME_COLORLAYOUT, sc, Field.Store.YES, Field.Index.NO));
         return doc;
