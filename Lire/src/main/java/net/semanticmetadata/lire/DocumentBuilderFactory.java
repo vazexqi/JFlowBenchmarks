@@ -33,6 +33,7 @@ package net.semanticmetadata.lire;
 import net.semanticmetadata.lire.imageanalysis.*;
 import net.semanticmetadata.lire.impl.ChainedDocumentBuilder;
 import net.semanticmetadata.lire.impl.CorrelogramDocumentBuilder;
+import net.semanticmetadata.lire.impl.ExplodedChainedDocumentBuilder;
 import net.semanticmetadata.lire.impl.GenericDocumentBuilder;
 import net.semanticmetadata.lire.impl.GenericFastDocumentBuilder;
 
@@ -251,7 +252,9 @@ public class DocumentBuilderFactory {
      */
     public static DocumentBuilder getFullDocumentBuilder() {
         ChainedDocumentBuilder cdb= new ChainedDocumentBuilder();
-        cdb.addBuilder(DocumentBuilderFactory.getExtensiveDocumentBuilder());
+        cdb.addBuilder(DocumentBuilderFactory.getColorLayoutBuilder());
+        cdb.addBuilder(DocumentBuilderFactory.getEdgeHistogramBuilder());
+        cdb.addBuilder(DocumentBuilderFactory.getScalableColorBuilder());
         cdb.addBuilder(DocumentBuilderFactory.getAutoColorCorrelogramDocumentBuilder());
         cdb.addBuilder(DocumentBuilderFactory.getCEDDDocumentBuilder());
         cdb.addBuilder(DocumentBuilderFactory.getFCTHDocumentBuilder());
@@ -259,5 +262,26 @@ public class DocumentBuilderFactory {
         cdb.addBuilder(DocumentBuilderFactory.getTamuraDocumentBuilder());
         cdb.addBuilder(DocumentBuilderFactory.getGaborDocumentBuilder());
         return cdb;
+    }
+
+    /**
+     * Creates and returns a DocumentBuilder, which contains all available features. For
+     * AutoColorCorrelogram the getAutoColorCorrelogramDocumentBuilder() is used. Therefore it is
+     * compatible with the respective Searcher.
+     * 
+     * @return a combination of all available features.
+     */
+    public static DocumentBuilder getExplodedFullDocumentBuilder() {
+        ExplodedChainedDocumentBuilder ecdb= new ExplodedChainedDocumentBuilder();
+        ecdb.addBuilder(DocumentBuilderFactory.getColorLayoutBuilder());
+        ecdb.addBuilder(DocumentBuilderFactory.getEdgeHistogramBuilder());
+        ecdb.addBuilder(DocumentBuilderFactory.getScalableColorBuilder());
+        ecdb.addBuilder(DocumentBuilderFactory.getAutoColorCorrelogramDocumentBuilder());
+        ecdb.addBuilder(DocumentBuilderFactory.getCEDDDocumentBuilder());
+        ecdb.addBuilder(DocumentBuilderFactory.getFCTHDocumentBuilder());
+        ecdb.addBuilder(DocumentBuilderFactory.getColorHistogramDocumentBuilder());
+        ecdb.addBuilder(DocumentBuilderFactory.getTamuraDocumentBuilder());
+        ecdb.addBuilder(DocumentBuilderFactory.getGaborDocumentBuilder());
+        return ecdb;
     }
 }

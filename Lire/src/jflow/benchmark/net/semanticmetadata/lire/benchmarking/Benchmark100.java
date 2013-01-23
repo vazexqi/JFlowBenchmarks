@@ -19,7 +19,7 @@ public class Benchmark100 {
     private static final String INDEXPATH_SERIAL= "./wang-benchmark-index-serial";
 
     DocumentBuilder createDocumentBuilder() {
-        return DocumentBuilderFactory.getFullDocumentBuilder();
+        return DocumentBuilderFactory.getExplodedFullDocumentBuilder();
     }
 
     void execute() throws IOException, InterruptedException {
