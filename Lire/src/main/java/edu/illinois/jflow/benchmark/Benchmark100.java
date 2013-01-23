@@ -1,4 +1,4 @@
-package net.semanticmetadata.lire.benchmarking;
+package edu.illinois.jflow.benchmark;
 
 import net.semanticmetadata.lire.DocumentBuilder;
 import net.semanticmetadata.lire.DocumentBuilderFactory;
