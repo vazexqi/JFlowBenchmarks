@@ -30,12 +30,11 @@ public class Benchmark {
             compressorStream.write(buffer, 0, bytesRead);
         }
 
-        long stopCompressed= System.currentTimeMillis();
-        System.out.println((stopCompressed - startCompressed) + "ms");
-
         fileInputStream.close();
         compressorStream.close();
-
+        
+        long stopCompressed= System.currentTimeMillis();
+        System.out.println((stopCompressed - startCompressed) + "ms");
     }
 
     static File mkdir(String name) throws IOException {
