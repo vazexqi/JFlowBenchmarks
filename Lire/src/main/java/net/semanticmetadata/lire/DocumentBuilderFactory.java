@@ -273,15 +273,15 @@ public class DocumentBuilderFactory {
      */
     public static DocumentBuilder getExplodedFullDocumentBuilder() {
         ExplodedChainedDocumentBuilder ecdb= new ExplodedChainedDocumentBuilder();
-        ecdb.addBuilder(DocumentBuilderFactory.getColorLayoutBuilder());
-        ecdb.addBuilder(DocumentBuilderFactory.getEdgeHistogramBuilder());
-        ecdb.addBuilder(DocumentBuilderFactory.getScalableColorBuilder());
-        ecdb.addBuilder(DocumentBuilderFactory.getAutoColorCorrelogramDocumentBuilder());
-        ecdb.addBuilder(DocumentBuilderFactory.getCEDDDocumentBuilder());
-        ecdb.addBuilder(DocumentBuilderFactory.getFCTHDocumentBuilder());
-        ecdb.addBuilder(DocumentBuilderFactory.getColorHistogramDocumentBuilder());
-        ecdb.addBuilder(DocumentBuilderFactory.getTamuraDocumentBuilder());
-        ecdb.addBuilder(DocumentBuilderFactory.getGaborDocumentBuilder());
+        ecdb.addColorLayoutBuilder(DocumentBuilderFactory.getColorLayoutBuilder());
+        ecdb.addEdgeBuilder(DocumentBuilderFactory.getEdgeHistogramBuilder());
+        ecdb.addColorBuilder(DocumentBuilderFactory.getScalableColorBuilder());
+        ecdb.addAutoBuilder(DocumentBuilderFactory.getAutoColorCorrelogramDocumentBuilder());
+        ecdb.addCEDDBuilder(DocumentBuilderFactory.getCEDDDocumentBuilder());
+        ecdb.addFCTHBuilder(DocumentBuilderFactory.getFCTHDocumentBuilder());
+        ecdb.addHistogramBuilder(DocumentBuilderFactory.getColorHistogramDocumentBuilder());
+        ecdb.addTamuraBuilder(DocumentBuilderFactory.getTamuraDocumentBuilder());
+        ecdb.addGaborBuilder(DocumentBuilderFactory.getGaborDocumentBuilder());
         return ecdb;
     }
 }
