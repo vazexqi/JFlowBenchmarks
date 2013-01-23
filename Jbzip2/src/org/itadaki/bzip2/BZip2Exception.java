@@ -7,18 +7,18 @@ import java.io.IOException;
  */
 public class BZip2Exception extends IOException {
 
-	/**
-	 * Serial version UID
-	 */
-	private static final long serialVersionUID = -8931219115669559570L;
+    /**
+     * Serial version UID
+     */
+    private static final long serialVersionUID= -8931219115669559570L;
 
-	/**
-	 * @param reason The exception's reason string
-	 */
-	public BZip2Exception (String reason) {
+    /**
+     * @param reason The exception's reason string
+     */
+    public BZip2Exception(String reason) {
 
-		super (reason);
+        super(reason);
 
-	}
+    }
 
 }

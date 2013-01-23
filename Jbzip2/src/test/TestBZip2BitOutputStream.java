@@ -13,249 +13,261 @@ import org.junit.Test;
  */
 public class TestBZip2BitOutputStream {
 
-	// Boolean
+    // Boolean
 
-	/**
-	 * Test writing 8 zeroes
-	 * @throws IOException 
-	 */
-	@Test
-	public void testBooleanFalse8() throws IOException {
+    /**
+     * Test writing 8 zeroes
+     * 
+     * @throws IOException
+     */
+    @Test
+    public void testBooleanFalse8() throws IOException {
 
-		byte[] expected = { 0 };
-		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-		BZip2BitOutputStream outputStream = new BZip2BitOutputStream (byteArrayOutputStream);
+        byte[] expected= { 0 };
+        ByteArrayOutputStream byteArrayOutputStream= new ByteArrayOutputStream();
+        BZip2BitOutputStream outputStream= new BZip2BitOutputStream(byteArrayOutputStream);
 
-		for (int i = 0; i < 8; i++) {
-			outputStream.writeBoolean (false);
-		}
+        for (int i= 0; i < 8; i++) {
+            outputStream.writeBoolean(false);
+        }
 
-		outputStream.flush();
-		assertArrayEquals (expected, byteArrayOutputStream.toByteArray());
+        outputStream.flush();
+        assertArrayEquals(expected, byteArrayOutputStream.toByteArray());
 
-	}
+    }
 
 
-	/**
-	 * Test writing 8 ones
-	 * @throws IOException 
-	 */
-	@Test
-	public void testBooleanTrue8() throws IOException {
+    /**
+     * Test writing 8 ones
+     * 
+     * @throws IOException
+     */
+    @Test
+    public void testBooleanTrue8() throws IOException {
 
-		byte[] expected = { (byte)0xff };
-		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-		BZip2BitOutputStream outputStream = new BZip2BitOutputStream (byteArrayOutputStream);
+        byte[] expected= { (byte)0xff };
+        ByteArrayOutputStream byteArrayOutputStream= new ByteArrayOutputStream();
+        BZip2BitOutputStream outputStream= new BZip2BitOutputStream(byteArrayOutputStream);
 
-		for (int i = 0; i < 8; i++) {
-			outputStream.writeBoolean (true);
-		}
+        for (int i= 0; i < 8; i++) {
+            outputStream.writeBoolean(true);
+        }
 
-		outputStream.flush();
-		assertArrayEquals (expected, byteArrayOutputStream.toByteArray());
+        outputStream.flush();
+        assertArrayEquals(expected, byteArrayOutputStream.toByteArray());
 
-	}
+    }
 
 
-	/**
-	 * Test writing a single 1 in any position as a boolean
-	 * @throws IOException 
-	 */
-	@Test
-	public void testBooleanSingleOne() throws IOException {
+    /**
+     * Test writing a single 1 in any position as a boolean
+     * 
+     * @throws IOException
+     */
+    @Test
+    public void testBooleanSingleOne() throws IOException {
 
-		for (int i = 0; i < 8; i++) {
+        for (int i= 0; i < 8; i++) {
 
-			byte[] expected = { (byte)(1 << (7 - i)) };
-			ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-			BZip2BitOutputStream outputStream = new BZip2BitOutputStream (byteArrayOutputStream);
-	
-			for (int j = 0; j < 8; j++) {
-				outputStream.writeBoolean (j == i);
-			}
+            byte[] expected= { (byte)(1 << (7 - i)) };
+            ByteArrayOutputStream byteArrayOutputStream= new ByteArrayOutputStream();
+            BZip2BitOutputStream outputStream= new BZip2BitOutputStream(byteArrayOutputStream);
 
-			outputStream.flush();
-			assertArrayEquals (expected, byteArrayOutputStream.toByteArray());
+            for (int j= 0; j < 8; j++) {
+                outputStream.writeBoolean(j == i);
+            }
 
-		}
+            outputStream.flush();
+            assertArrayEquals(expected, byteArrayOutputStream.toByteArray());
 
-	}
+        }
 
+    }
 
-	// Unary
 
-	/**
-	 * Test writing unary 0
-	 * @throws IOException 
-	 */
-	@Test
-	public void testUnaryZero() throws IOException {
+    // Unary
 
-		byte[] expected = { 0x00 };
-		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-		BZip2BitOutputStream outputStream = new BZip2BitOutputStream (byteArrayOutputStream);
+    /**
+     * Test writing unary 0
+     * 
+     * @throws IOException
+     */
+    @Test
+    public void testUnaryZero() throws IOException {
 
-		outputStream.writeUnary (0);
+        byte[] expected= { 0x00 };
+        ByteArrayOutputStream byteArrayOutputStream= new ByteArrayOutputStream();
+        BZip2BitOutputStream outputStream= new BZip2BitOutputStream(byteArrayOutputStream);
 
-		outputStream.flush();
-		assertArrayEquals (expected, byteArrayOutputStream.toByteArray());
+        outputStream.writeUnary(0);
 
-	}
+        outputStream.flush();
+        assertArrayEquals(expected, byteArrayOutputStream.toByteArray());
 
-	/**
-	 * Test writing unary 0
-	 * @throws IOException 
-	 */
-	@Test
-	public void testUnaryOne() throws IOException {
+    }
 
-		byte[] expected = { (byte)(1 << 7) };
-		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-		BZip2BitOutputStream outputStream = new BZip2BitOutputStream (byteArrayOutputStream);
+    /**
+     * Test writing unary 0
+     * 
+     * @throws IOException
+     */
+    @Test
+    public void testUnaryOne() throws IOException {
 
-		outputStream.writeUnary (1);
+        byte[] expected= { (byte)(1 << 7) };
+        ByteArrayOutputStream byteArrayOutputStream= new ByteArrayOutputStream();
+        BZip2BitOutputStream outputStream= new BZip2BitOutputStream(byteArrayOutputStream);
 
-		outputStream.flush();
-		assertArrayEquals (expected, byteArrayOutputStream.toByteArray());
+        outputStream.writeUnary(1);
 
-	}
+        outputStream.flush();
+        assertArrayEquals(expected, byteArrayOutputStream.toByteArray());
 
+    }
 
-	/**
-	 * Test writing unary 0
-	 * @throws IOException 
-	 */
-	@Test
-	public void testUnary31() throws IOException {
 
-		byte[] expected = { (byte)0xff, (byte)0xff, (byte)0xff, (byte)0xfe };
-		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-		BZip2BitOutputStream outputStream = new BZip2BitOutputStream (byteArrayOutputStream);
+    /**
+     * Test writing unary 0
+     * 
+     * @throws IOException
+     */
+    @Test
+    public void testUnary31() throws IOException {
 
-		outputStream.writeUnary (31);
+        byte[] expected= { (byte)0xff, (byte)0xff, (byte)0xff, (byte)0xfe };
+        ByteArrayOutputStream byteArrayOutputStream= new ByteArrayOutputStream();
+        BZip2BitOutputStream outputStream= new BZip2BitOutputStream(byteArrayOutputStream);
 
-		outputStream.flush();
-		assertArrayEquals (expected, byteArrayOutputStream.toByteArray());
+        outputStream.writeUnary(31);
 
-	}
+        outputStream.flush();
+        assertArrayEquals(expected, byteArrayOutputStream.toByteArray());
 
+    }
 
-	// Bits
 
-	/**
-	 * Test writing a single 0 as bits
-	 * @throws IOException 
-	 */
-	@Test
-	public void testBits1_0() throws IOException {
+    // Bits
 
-		byte[] expected = { (byte)0x00 };
-		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-		BZip2BitOutputStream outputStream = new BZip2BitOutputStream (byteArrayOutputStream);
+    /**
+     * Test writing a single 0 as bits
+     * 
+     * @throws IOException
+     */
+    @Test
+    public void testBits1_0() throws IOException {
 
-		outputStream.writeBits (1, 0);
+        byte[] expected= { (byte)0x00 };
+        ByteArrayOutputStream byteArrayOutputStream= new ByteArrayOutputStream();
+        BZip2BitOutputStream outputStream= new BZip2BitOutputStream(byteArrayOutputStream);
 
-		outputStream.flush();
-		assertArrayEquals (expected, byteArrayOutputStream.toByteArray());
+        outputStream.writeBits(1, 0);
 
-	}
+        outputStream.flush();
+        assertArrayEquals(expected, byteArrayOutputStream.toByteArray());
 
-	/**
-	 * Test writing a single 1 as bits
-	 * @throws IOException 
-	 */
-	@Test
-	public void testBits1_1() throws IOException {
+    }
 
-		byte[] expected = { (byte)(1 << 7) };
-		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-		BZip2BitOutputStream outputStream = new BZip2BitOutputStream (byteArrayOutputStream);
+    /**
+     * Test writing a single 1 as bits
+     * 
+     * @throws IOException
+     */
+    @Test
+    public void testBits1_1() throws IOException {
 
-		outputStream.writeBits (1, 1);
+        byte[] expected= { (byte)(1 << 7) };
+        ByteArrayOutputStream byteArrayOutputStream= new ByteArrayOutputStream();
+        BZip2BitOutputStream outputStream= new BZip2BitOutputStream(byteArrayOutputStream);
 
-		outputStream.flush();
-		assertArrayEquals (expected, byteArrayOutputStream.toByteArray());
+        outputStream.writeBits(1, 1);
 
-	}
+        outputStream.flush();
+        assertArrayEquals(expected, byteArrayOutputStream.toByteArray());
 
+    }
 
-	/**
-	 * Test writing 23 bits
-	 * @throws IOException 
-	 */
-	@Test
-	public void testBits23() throws IOException {
 
-		byte[] expected = { 0x02, 0x03, 0x04 };
-		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-		BZip2BitOutputStream outputStream = new BZip2BitOutputStream (byteArrayOutputStream);
+    /**
+     * Test writing 23 bits
+     * 
+     * @throws IOException
+     */
+    @Test
+    public void testBits23() throws IOException {
 
-		outputStream.writeBits (23, 0x020304 >> 1);
+        byte[] expected= { 0x02, 0x03, 0x04 };
+        ByteArrayOutputStream byteArrayOutputStream= new ByteArrayOutputStream();
+        BZip2BitOutputStream outputStream= new BZip2BitOutputStream(byteArrayOutputStream);
 
-		outputStream.flush();
-		assertArrayEquals (expected, byteArrayOutputStream.toByteArray());
+        outputStream.writeBits(23, 0x020304 >> 1);
 
-	}
+        outputStream.flush();
+        assertArrayEquals(expected, byteArrayOutputStream.toByteArray());
 
+    }
 
-	/**
-	 * Test writing 24 bits
-	 * @throws IOException 
-	 */
-	@Test
-	public void testBits24() throws IOException {
 
-		byte[] expected = { (byte)0xff, (byte)0xff, (byte)0xff };
-		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-		BZip2BitOutputStream outputStream = new BZip2BitOutputStream (byteArrayOutputStream);
+    /**
+     * Test writing 24 bits
+     * 
+     * @throws IOException
+     */
+    @Test
+    public void testBits24() throws IOException {
 
-		outputStream.writeBits (24, 0xffffff);
+        byte[] expected= { (byte)0xff, (byte)0xff, (byte)0xff };
+        ByteArrayOutputStream byteArrayOutputStream= new ByteArrayOutputStream();
+        BZip2BitOutputStream outputStream= new BZip2BitOutputStream(byteArrayOutputStream);
 
-		outputStream.flush();
-		assertArrayEquals (expected, byteArrayOutputStream.toByteArray());
+        outputStream.writeBits(24, 0xffffff);
 
-	}
+        outputStream.flush();
+        assertArrayEquals(expected, byteArrayOutputStream.toByteArray());
 
+    }
 
-	/**
-	 * Test write masking
-	 * @throws IOException 
-	 */
-	@Test
-	public void testBitsWriteMasking() throws IOException {
 
-		byte[] expected = { 0x01, (byte)0xff, (byte)0xff };
-		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-		BZip2BitOutputStream outputStream = new BZip2BitOutputStream (byteArrayOutputStream);
+    /**
+     * Test write masking
+     * 
+     * @throws IOException
+     */
+    @Test
+    public void testBitsWriteMasking() throws IOException {
 
-		outputStream.writeBits (7, 0);
-		outputStream.writeBits (17, 0xfffff);
+        byte[] expected= { 0x01, (byte)0xff, (byte)0xff };
+        ByteArrayOutputStream byteArrayOutputStream= new ByteArrayOutputStream();
+        BZip2BitOutputStream outputStream= new BZip2BitOutputStream(byteArrayOutputStream);
 
-		outputStream.flush();
-		assertArrayEquals (expected, byteArrayOutputStream.toByteArray());
+        outputStream.writeBits(7, 0);
+        outputStream.writeBits(17, 0xfffff);
 
-	}
+        outputStream.flush();
+        assertArrayEquals(expected, byteArrayOutputStream.toByteArray());
 
+    }
 
-	// Integer
 
-	/**
-	 * Test writing an integer
-	 * @throws IOException 
-	 */
-	@Test
-	public void testInteger() throws IOException {
+    // Integer
 
-		byte[] expected = { 0x12, 0x34, 0x56, 0x78 };
-		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-		BZip2BitOutputStream outputStream = new BZip2BitOutputStream (byteArrayOutputStream);
+    /**
+     * Test writing an integer
+     * 
+     * @throws IOException
+     */
+    @Test
+    public void testInteger() throws IOException {
 
-		outputStream.writeInteger(0x12345678);
+        byte[] expected= { 0x12, 0x34, 0x56, 0x78 };
+        ByteArrayOutputStream byteArrayOutputStream= new ByteArrayOutputStream();
+        BZip2BitOutputStream outputStream= new BZip2BitOutputStream(byteArrayOutputStream);
 
-		outputStream.flush();
-		assertArrayEquals (expected, byteArrayOutputStream.toByteArray());
+        outputStream.writeInteger(0x12345678);
 
-	}
+        outputStream.flush();
+        assertArrayEquals(expected, byteArrayOutputStream.toByteArray());
+
+    }
 
 
 }

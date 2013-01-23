@@ -39,40 +39,40 @@ import org.itadaki.bzip2.BZip2InputStream;
  */
 public class Decompress {
 
-	/**
-	 * @param args
-	 * @throws IOException 
-	 */
-	public static void main (String[] args) throws IOException {
+    /**
+     * @param args
+     * @throws IOException
+     */
+    public static void main(String[] args) throws IOException {
 
-		if (args.length == 0) {
-			System.err.println ("Demonstration BZip2 decompressor\n\nUsage:\n  java demo.Decompress <filename>\n");
-			System.exit (1);
-		}
+        if (args.length == 0) {
+            System.err.println("Demonstration BZip2 decompressor\n\nUsage:\n  java demo.Decompress <filename>\n");
+            System.exit(1);
+        }
 
-		File inputFile = new File (args[0]);
-		if (!inputFile.exists() || !inputFile.canRead() || !args[0].endsWith(".bz2")) {
-			System.err.println ("Cannot read file " + inputFile.getPath());
-			System.exit (1);
-		}
+        File inputFile= new File(args[0]);
+        if (!inputFile.exists() || !inputFile.canRead() || !args[0].endsWith(".bz2")) {
+            System.err.println("Cannot read file " + inputFile.getPath());
+            System.exit(1);
+        }
 
-		File outputFile = new File (args[0].substring (0, args[0].length() - 4));
-		if (outputFile.exists()) {
-			System.err.println ("File " + outputFile.getPath() + " already exists");
-			System.exit (1);
-		}
+        File outputFile= new File(args[0].substring(0, args[0].length() - 4));
+        if (outputFile.exists()) {
+            System.err.println("File " + outputFile.getPath() + " already exists");
+            System.exit(1);
+        }
 
-		InputStream fileInputStream = new BufferedInputStream (new FileInputStream (inputFile));
-		BZip2InputStream inputStream = new BZip2InputStream (fileInputStream, false);
-		OutputStream fileOutputStream = new BufferedOutputStream (new FileOutputStream (outputFile), 524288);
+        InputStream fileInputStream= new BufferedInputStream(new FileInputStream(inputFile));
+        BZip2InputStream inputStream= new BZip2InputStream(fileInputStream, false);
+        OutputStream fileOutputStream= new BufferedOutputStream(new FileOutputStream(outputFile), 524288);
 
-		byte[] decoded = new byte [524288];
-		int bytesRead;
-		while ((bytesRead = inputStream.read (decoded)) != -1) {
-			fileOutputStream.write (decoded, 0, bytesRead) ;	
-		}
-		fileOutputStream.close();
+        byte[] decoded= new byte[524288];
+        int bytesRead;
+        while ((bytesRead= inputStream.read(decoded)) != -1) {
+            fileOutputStream.write(decoded, 0, bytesRead);
+        }
+        fileOutputStream.close();
 
-	}
+    }
 
 }
