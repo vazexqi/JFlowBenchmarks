@@ -22,3 +22,8 @@ The LIRE (Lucene Image REtrieval) library provides a simple way to retrieve imag
 
 Original code from "Lire":http://sourceforge.net/projects/caliph-emir/?source=navbar.
 
+h4. Jbzip2
+
+jbzip2 is a Java bzip2 compression/decompression library. It can be used as a replacement for the Apache CBZip2InputStream / CBZip2OutputStream classes.
+
+Original code from "Jbzip2":http://code.google.com/p/jbzip2/.
