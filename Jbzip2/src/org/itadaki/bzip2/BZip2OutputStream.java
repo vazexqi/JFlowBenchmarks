@@ -154,8 +154,38 @@ public class BZip2OutputStream extends OutputStream {
         if (this.blockCompressor.isEmpty()) {
             return;
         }
+        BZip2BlockCompressor r= this.blockCompressor;
 
-        this.blockCompressor.close();
+        // If an RLE run is in progress, write it out
+        if (r.rleLength > 0) {
+            r.writeRun(r.rleCurrentValue & 0xff, r.rleLength);
+        }
+
+        // Apply a one byte block wrap required by the BWT implementation
+        r.block[r.blockLength]= r.block[0];
+
+        // Perform the Burrows Wheeler Transform
+        BZip2DivSufSort divSufSort= new BZip2DivSufSort(r.block, r.bwtBlock, r.blockLength);
+        int bwtStartPointer= divSufSort.bwt();
+
+        // Write out the block header
+        r.bitOutputStream.writeBits(24, BZip2Constants.BLOCK_HEADER_MARKER_1);
+        r.bitOutputStream.writeBits(24, BZip2Constants.BLOCK_HEADER_MARKER_2);
+        r.bitOutputStream.writeInteger(r.crc.getCRC());
+        r.bitOutputStream.writeBoolean(false); // Randomised block flag. We never create randomised blocks
+        r.bitOutputStream.writeBits(24, bwtStartPointer);
+
+        // Write out the symbol map
+        r.writeSymbolMap();
+
+        // Perform the Move To Front Transform and Run-Length Encoding[2] stages 
+        BZip2MTFAndRLE2StageEncoder mtfEncoder= new BZip2MTFAndRLE2StageEncoder(r.bwtBlock, r.blockLength, r.blockValuesPresent);
+        mtfEncoder.encode();
+
+        // Perform the Huffman Encoding stage and write out the encoded data
+        BZip2HuffmanStageEncoder huffmanEncoder= new BZip2HuffmanStageEncoder(r.bitOutputStream, mtfEncoder.getMtfBlock(), mtfEncoder.getMtfLength(), mtfEncoder.getMtfAlphabetSize(),
+                mtfEncoder.getMtfSymbolFrequencies());
+        huffmanEncoder.encode();
         int blockCRC= this.blockCompressor.getCRC();
         this.streamCRC= ((this.streamCRC << 1) | (this.streamCRC >>> 31)) ^ blockCRC;
 

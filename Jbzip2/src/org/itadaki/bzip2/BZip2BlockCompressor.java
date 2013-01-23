@@ -43,22 +43,22 @@ public class BZip2BlockCompressor {
     /**
      * The stream to which compressed BZip2 data is written
      */
-    private final BZip2BitOutputStream bitOutputStream;
+    final BZip2BitOutputStream bitOutputStream;
 
     /**
      * CRC builder for the block
      */
-    private final CRC32 crc= new CRC32();
+    final CRC32 crc= new CRC32();
 
     /**
      * The RLE'd block data
      */
-    private final byte[] block;
+    final byte[] block;
 
     /**
      * Current length of the data within the {@link block} array
      */
-    private int blockLength= 0;
+    int blockLength= 0;
 
     /**
      * A limit beyond which new data will not be accepted into the block
@@ -69,22 +69,22 @@ public class BZip2BlockCompressor {
      * The values that are present within the RLE'd block data. For each index, {@code true} if that
      * value is present within the data, otherwise {@code false}
      */
-    private final boolean[] blockValuesPresent= new boolean[256];
+    final boolean[] blockValuesPresent= new boolean[256];
 
     /**
      * The Burrows Wheeler Transformed block data
      */
-    private final int[] bwtBlock;
+    final int[] bwtBlock;
 
     /**
      * The current RLE value being accumulated (undefined when {@link #rleLength} is 0)
      */
-    private int rleCurrentValue= -1;
+    int rleCurrentValue= -1;
 
     /**
      * The repeat count of the current RLE value
      */
-    private int rleLength= 0;
+    int rleLength= 0;
 
 
     /**
@@ -92,7 +92,7 @@ public class BZip2BlockCompressor {
      * 
      * @throws IOException on any I/O error writing the data
      */
-    private void writeSymbolMap() throws IOException {
+    void writeSymbolMap() throws IOException {
 
         BZip2BitOutputStream bitOutputStream= this.bitOutputStream;
 
@@ -129,7 +129,7 @@ public class BZip2BlockCompressor {
      * @param value The value to write
      * @param runLength The run length of the value to write
      */
-    private void writeRun(final int value, int runLength) {
+    void writeRun(final int value, int runLength) {
 
         final int blockLength= this.blockLength;
         final byte[] block= this.block;
