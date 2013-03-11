@@ -231,31 +231,31 @@ public class DynamicProgrammingAutoCorrelogramExtraction implements IAutoCorrelo
         return A;
     }
 
-    public static void main(String[] args) {
-        int[][] I= new int[384][256];
-        float[][] A= null;
-        long t0, tf;
-        int C= 64;
-        int[] D= { 1, 3, 5, 7 };
-
-        for (int i= 0; i < I.length; i++)
-            for (int j= 0; j < I[i].length; j++)
-                I[i][j]= ((i + 1) * (j * j + 1)) % C;
-
-        tf= System.currentTimeMillis();
-
-        DynamicProgrammingAutoCorrelogramExtraction dynACorrExt= new DynamicProgrammingAutoCorrelogramExtraction();
-        for (int i= 0; i < 10; i++) {
-            t0= tf;
-            A= dynACorrExt.extract(C, D, I);
-            tf= System.currentTimeMillis();
-            System.out.println("Exctraction " + (i + 1) + " time: " + (tf - t0) + "ms");
-        }
-        System.out.println("Please, ignore the first exctraction (buffers initialization)!");
-        print(A);
-
-
-    }
+//    public static void main(String[] args) {
+//        int[][] I= new int[384][256];
+//        float[][] A= null;
+//        long t0, tf;
+//        int C= 64;
+//        int[] D= { 1, 3, 5, 7 };
+//
+//        for (int i= 0; i < I.length; i++)
+//            for (int j= 0; j < I[i].length; j++)
+//                I[i][j]= ((i + 1) * (j * j + 1)) % C;
+//
+//        tf= System.currentTimeMillis();
+//
+//        DynamicProgrammingAutoCorrelogramExtraction dynACorrExt= new DynamicProgrammingAutoCorrelogramExtraction();
+//        for (int i= 0; i < 10; i++) {
+//            t0= tf;
+//            A= dynACorrExt.extract(C, D, I);
+//            tf= System.currentTimeMillis();
+//            System.out.println("Exctraction " + (i + 1) + " time: " + (tf - t0) + "ms");
+//        }
+//        System.out.println("Please, ignore the first exctraction (buffers initialization)!");
+//        print(A);
+//
+//
+//    }
 
 
     static void print(float[][] M) {

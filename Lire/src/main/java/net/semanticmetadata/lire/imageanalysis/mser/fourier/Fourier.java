@@ -178,116 +178,116 @@ public class Fourier {
         return t;
     }
 
-    public static void main(String[] args) {
-
-/*
-        Point2D.Double[] test =
-        {
-            new Point2D.Double(-1, -1),
-            new Point2D.Double(-4, 2),
-            new Point2D.Double(-1, 5),
-            new Point2D.Double(2, 2),
-            new Point2D.Double(-1, -1)  // X(N) == X(0))
-        };
-
-        testFourier(test, 5);
-
-        Point2D.Double[] test2 =
-        {
-            new Point2D.Double(1, 2),
-            new Point2D.Double(4, 2),
-            new Point2D.Double(5, 3),
-            new Point2D.Double(2, 3),
-            new Point2D.Double(1, 2)  // X(N) == X(0))
-        };
-
-        testFourier(test2, 5);
-*/
-        // gerades F
-        Point2D.Double[] EF=
-        {
-                new Point2D.Double(0 / 2., 0 / 2.),
-                new Point2D.Double(2 / 2., 0 / 2.),
-                new Point2D.Double(2 / 2., 5 / 2.),
-                new Point2D.Double(5 / 2., 5 / 2.),
-                new Point2D.Double(5 / 2., 7 / 2.),
-                new Point2D.Double(2 / 2., 7 / 2.),
-                new Point2D.Double(2 / 2., 9 / 2.),
-                new Point2D.Double(7 / 2., 9 / 2.),
-                new Point2D.Double(7 / 2., 11 / 2.),
-                new Point2D.Double(0 / 2., 11 / 2.),
-                new Point2D.Double(0 / 2., 0 / 2.) // X(N) == X(0))
-        };
-
-        testFourier(EF, 5);
-
-        // falsches F
-        Point2D.Double[] EF2=
-        {
-                new Point2D.Double(0 / 2., 0 / 2.),
-                new Point2D.Double(2 / 2., 0 / 2.),
-                new Point2D.Double(2 / 2., 5 / 2.),
-                new Point2D.Double(5 / 2., 5 / 2.),
-                new Point2D.Double(5 / 2., 7 / 2.),
-                new Point2D.Double(2 / 2., 7 / 2.),
-                new Point2D.Double(2 / 2., 9 / 2.),
-                new Point2D.Double(7 / 2., 9 / 2.),
-                new Point2D.Double(5 / 2., 11 / 2.),
-                new Point2D.Double(0 / 2., 11 / 2.),
-                new Point2D.Double(0 / 2., 0 / 2.) // X(N) == X(0))
-        };
-
-        testFourier(EF2, 5);
-
-        // schiefes F
-        EF= new Point2D.Double[]
-        {
-                new Point2D.Double(0 / 2., 0 / 2.),
-                new Point2D.Double(2 / 2., 0 / 2.),
-                new Point2D.Double(2 / 2., 5 / 2.),
-                new Point2D.Double(5 / 2., 5 / 2.),
-                new Point2D.Double(5 / 2., 7 / 2.),
-                new Point2D.Double(2 / 2., 7 / 2.),
-                new Point2D.Double(2 / 2., 9 / 2.),
-                new Point2D.Double(7 / 2., 9 / 2.),
-                new Point2D.Double(7 / 2., 11 / 2.),
-                new Point2D.Double(0 / 2., 11 / 2.),
-                new Point2D.Double(0 / 2., 0 / 2.) // X(N) == X(0))
-        };
-
-        double[][] A=
-        { { 3., 1. }, { 2., 3. }
-                //                        new Point2D.Double(3.,1.),
-//                        new Point2D.Double(2.,3.)
-        };
-        // create new Points with MatrixMultiplication
-
-        Point2D.Double[] EF3= matMult(A, EF);
-
-        testFourier(EF3, 5);
-
-        // schiefes F anderer Aufpunkt
-        EF= new Point2D.Double[]
-        {
-                new Point2D.Double(2 / 2., 5 / 2.),
-                new Point2D.Double(5 / 2., 5 / 2.),
-                new Point2D.Double(5 / 2., 7 / 2.),
-                new Point2D.Double(2 / 2., 7 / 2.),
-                new Point2D.Double(2 / 2., 9 / 2.),
-                new Point2D.Double(7 / 2., 9 / 2.),
-                new Point2D.Double(7 / 2., 11 / 2.),
-                new Point2D.Double(0 / 2., 11 / 2.),
-                new Point2D.Double(0 / 2., 0 / 2.),
-                new Point2D.Double(2 / 2., 0 / 2.),
-                new Point2D.Double(2 / 2., 5 / 2.) // X(N) == X(0))
-        };
-
-        EF3= matMult(A, EF);
-
-        testFourier(EF3, 5);
-
-
-    }
+//    public static void main(String[] args) {
+//
+///*
+//        Point2D.Double[] test =
+//        {
+//            new Point2D.Double(-1, -1),
+//            new Point2D.Double(-4, 2),
+//            new Point2D.Double(-1, 5),
+//            new Point2D.Double(2, 2),
+//            new Point2D.Double(-1, -1)  // X(N) == X(0))
+//        };
+//
+//        testFourier(test, 5);
+//
+//        Point2D.Double[] test2 =
+//        {
+//            new Point2D.Double(1, 2),
+//            new Point2D.Double(4, 2),
+//            new Point2D.Double(5, 3),
+//            new Point2D.Double(2, 3),
+//            new Point2D.Double(1, 2)  // X(N) == X(0))
+//        };
+//
+//        testFourier(test2, 5);
+//*/
+//        // gerades F
+//        Point2D.Double[] EF=
+//        {
+//                new Point2D.Double(0 / 2., 0 / 2.),
+//                new Point2D.Double(2 / 2., 0 / 2.),
+//                new Point2D.Double(2 / 2., 5 / 2.),
+//                new Point2D.Double(5 / 2., 5 / 2.),
+//                new Point2D.Double(5 / 2., 7 / 2.),
+//                new Point2D.Double(2 / 2., 7 / 2.),
+//                new Point2D.Double(2 / 2., 9 / 2.),
+//                new Point2D.Double(7 / 2., 9 / 2.),
+//                new Point2D.Double(7 / 2., 11 / 2.),
+//                new Point2D.Double(0 / 2., 11 / 2.),
+//                new Point2D.Double(0 / 2., 0 / 2.) // X(N) == X(0))
+//        };
+//
+//        testFourier(EF, 5);
+//
+//        // falsches F
+//        Point2D.Double[] EF2=
+//        {
+//                new Point2D.Double(0 / 2., 0 / 2.),
+//                new Point2D.Double(2 / 2., 0 / 2.),
+//                new Point2D.Double(2 / 2., 5 / 2.),
+//                new Point2D.Double(5 / 2., 5 / 2.),
+//                new Point2D.Double(5 / 2., 7 / 2.),
+//                new Point2D.Double(2 / 2., 7 / 2.),
+//                new Point2D.Double(2 / 2., 9 / 2.),
+//                new Point2D.Double(7 / 2., 9 / 2.),
+//                new Point2D.Double(5 / 2., 11 / 2.),
+//                new Point2D.Double(0 / 2., 11 / 2.),
+//                new Point2D.Double(0 / 2., 0 / 2.) // X(N) == X(0))
+//        };
+//
+//        testFourier(EF2, 5);
+//
+//        // schiefes F
+//        EF= new Point2D.Double[]
+//        {
+//                new Point2D.Double(0 / 2., 0 / 2.),
+//                new Point2D.Double(2 / 2., 0 / 2.),
+//                new Point2D.Double(2 / 2., 5 / 2.),
+//                new Point2D.Double(5 / 2., 5 / 2.),
+//                new Point2D.Double(5 / 2., 7 / 2.),
+//                new Point2D.Double(2 / 2., 7 / 2.),
+//                new Point2D.Double(2 / 2., 9 / 2.),
+//                new Point2D.Double(7 / 2., 9 / 2.),
+//                new Point2D.Double(7 / 2., 11 / 2.),
+//                new Point2D.Double(0 / 2., 11 / 2.),
+//                new Point2D.Double(0 / 2., 0 / 2.) // X(N) == X(0))
+//        };
+//
+//        double[][] A=
+//        { { 3., 1. }, { 2., 3. }
+//                //                        new Point2D.Double(3.,1.),
+////                        new Point2D.Double(2.,3.)
+//        };
+//        // create new Points with MatrixMultiplication
+//
+//        Point2D.Double[] EF3= matMult(A, EF);
+//
+//        testFourier(EF3, 5);
+//
+//        // schiefes F anderer Aufpunkt
+//        EF= new Point2D.Double[]
+//        {
+//                new Point2D.Double(2 / 2., 5 / 2.),
+//                new Point2D.Double(5 / 2., 5 / 2.),
+//                new Point2D.Double(5 / 2., 7 / 2.),
+//                new Point2D.Double(2 / 2., 7 / 2.),
+//                new Point2D.Double(2 / 2., 9 / 2.),
+//                new Point2D.Double(7 / 2., 9 / 2.),
+//                new Point2D.Double(7 / 2., 11 / 2.),
+//                new Point2D.Double(0 / 2., 11 / 2.),
+//                new Point2D.Double(0 / 2., 0 / 2.),
+//                new Point2D.Double(2 / 2., 0 / 2.),
+//                new Point2D.Double(2 / 2., 5 / 2.) // X(N) == X(0))
+//        };
+//
+//        EF3= matMult(A, EF);
+//
+//        testFourier(EF3, 5);
+//
+//
+//    }
 
     /*!
     * Multiply a point by a transformation matrix.

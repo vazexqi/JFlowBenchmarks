@@ -121,10 +121,10 @@ public class Extractor {
 //        BufferedImage img = ImageIO.read(new File("test.jpg"));
     }
 
-    public static void main(String[] args) throws IOException {
-        Extractor e= new Extractor();
-        e.align(ImageIO.read(new File("c:/temp/image001.png")), ImageIO.read(new File("c:/temp/image002.png")));
-    }
+//    public static void main(String[] args) throws IOException {
+//        Extractor e= new Extractor();
+//        e.align(ImageIO.read(new File("c:/temp/image001.png")), ImageIO.read(new File("c:/temp/image002.png")));
+//    }
 
     public List<Feature> computeSiftFeatures(BufferedImage img) throws IOException {
         LinkedList<Feature> fs2= new LinkedList<Feature>();

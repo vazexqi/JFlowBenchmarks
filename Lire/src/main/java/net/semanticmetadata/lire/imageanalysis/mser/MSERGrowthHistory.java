@@ -168,79 +168,79 @@ public class MSERGrowthHistory implements Comparable {
     }
 
 
-    public static void main(String[] args) {
-        int[] points= new int[] { 12,
-                21, 22, 23, 25,
-                30, 31, 32, 33, 34, 35, 36, 38, 39,
-                40, 41, 42, 43, 44, 45, 48,
-                50, 51, 53, 54, 55, 56, 58, 59,
-                63, 64, 65, 66, 67, 68,
-                71, 72, 73, 74, 75, 76,
-                80, 81, 82, 83, 84,
-                91, 92, 93
-        };
-
-        int width= 10;
-
-        LinkedImagePoint head= new LinkedImagePoint(new ImagePoint(points[0], width));
-        LinkedImagePoint last= head;
-        LinkedImagePoint current;
-
-        for (int i= 1; i < points.length; i++) {
-            current= new LinkedImagePoint(new ImagePoint(points[i], width));
-            last.setNext(current);
-            current.setPrev(last);
-            last= current;
-        }
-        MSERGrowthHistory test= new MSERGrowthHistory(49, 36, head);
-
-        ImagePoint[] border= test.getBorderPoints(10, 10);
-
-        String borderPoints= "";
-        for (ImagePoint p : border) {
-            borderPoints+= " " + p.getIndex();
-        }
-
-        System.out.println(borderPoints);
-
-        // expected border:
-        String expectedBorderPoints= " 12 21 30 40 50 51 42 53 63 72 71 80 91 92 93 84 75 76 67 68 59 48 39 38 48 58 67 56 45 36 25 34 23 12";
-
-        System.out.println(expectedBorderPoints);
-
-        System.out.println("SAME =" + ((borderPoints.equals(expectedBorderPoints) ? "true" : "false")));
-
-        points= new int[]
-        { 23, 26, 27, 31, 32, 33, 34, 35, 36, 37, 44, 45, 46, 47, 55, 56, 57, 65, 66 };
-
-        width= 10;
-
-        head= new LinkedImagePoint(new ImagePoint(points[0], width));
-        last= head;
-
-        for (int i= 1; i < points.length; i++) {
-            current= new LinkedImagePoint(new ImagePoint(points[i], width));
-            last.setNext(current);
-            current.setPrev(last);
-            last= current;
-        }
-
-        test= new MSERGrowthHistory(19, 36, head);
-
-        border= test.getBorderPoints(width, 10);
-
-        borderPoints= "";
-        for (ImagePoint p : border) {
-            borderPoints+= " " + p.getIndex();
-        }
-
-        System.out.println(borderPoints);
-
-        // expected border:
-        expectedBorderPoints= " 23 32 31 32 33 44 55 65 66 57 47 37 27 26 35 34 23";
-
-        System.out.println(expectedBorderPoints);
-
-        System.out.println("SAME =" + ((borderPoints.equals(expectedBorderPoints) ? "true" : "false")));
-    }
+//    public static void main(String[] args) {
+//        int[] points= new int[] { 12,
+//                21, 22, 23, 25,
+//                30, 31, 32, 33, 34, 35, 36, 38, 39,
+//                40, 41, 42, 43, 44, 45, 48,
+//                50, 51, 53, 54, 55, 56, 58, 59,
+//                63, 64, 65, 66, 67, 68,
+//                71, 72, 73, 74, 75, 76,
+//                80, 81, 82, 83, 84,
+//                91, 92, 93
+//        };
+//
+//        int width= 10;
+//
+//        LinkedImagePoint head= new LinkedImagePoint(new ImagePoint(points[0], width));
+//        LinkedImagePoint last= head;
+//        LinkedImagePoint current;
+//
+//        for (int i= 1; i < points.length; i++) {
+//            current= new LinkedImagePoint(new ImagePoint(points[i], width));
+//            last.setNext(current);
+//            current.setPrev(last);
+//            last= current;
+//        }
+//        MSERGrowthHistory test= new MSERGrowthHistory(49, 36, head);
+//
+//        ImagePoint[] border= test.getBorderPoints(10, 10);
+//
+//        String borderPoints= "";
+//        for (ImagePoint p : border) {
+//            borderPoints+= " " + p.getIndex();
+//        }
+//
+//        System.out.println(borderPoints);
+//
+//        // expected border:
+//        String expectedBorderPoints= " 12 21 30 40 50 51 42 53 63 72 71 80 91 92 93 84 75 76 67 68 59 48 39 38 48 58 67 56 45 36 25 34 23 12";
+//
+//        System.out.println(expectedBorderPoints);
+//
+//        System.out.println("SAME =" + ((borderPoints.equals(expectedBorderPoints) ? "true" : "false")));
+//
+//        points= new int[]
+//        { 23, 26, 27, 31, 32, 33, 34, 35, 36, 37, 44, 45, 46, 47, 55, 56, 57, 65, 66 };
+//
+//        width= 10;
+//
+//        head= new LinkedImagePoint(new ImagePoint(points[0], width));
+//        last= head;
+//
+//        for (int i= 1; i < points.length; i++) {
+//            current= new LinkedImagePoint(new ImagePoint(points[i], width));
+//            last.setNext(current);
+//            current.setPrev(last);
+//            last= current;
+//        }
+//
+//        test= new MSERGrowthHistory(19, 36, head);
+//
+//        border= test.getBorderPoints(width, 10);
+//
+//        borderPoints= "";
+//        for (ImagePoint p : border) {
+//            borderPoints+= " " + p.getIndex();
+//        }
+//
+//        System.out.println(borderPoints);
+//
+//        // expected border:
+//        expectedBorderPoints= " 23 32 31 32 33 44 55 65 66 57 47 37 27 26 35 34 23";
+//
+//        System.out.println(expectedBorderPoints);
+//
+//        System.out.println("SAME =" + ((borderPoints.equals(expectedBorderPoints) ? "true" : "false")));
+//    }
 }

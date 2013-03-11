@@ -101,28 +101,28 @@ public class PolygonUtils {
         }
     }
 
-    public static void main(String[] args) {
-        Point2D.Double[] test=
-        {
-                new Point2D.Double(-1, -4),
-                new Point2D.Double(-4, 2),
-                new Point2D.Double(-1, 5),
-                new Point2D.Double(2, 2)
-        };
-
-        Point2D cog= polygonCenterOfMass(test);
-        System.out.println(cog.getX() + "/" + cog.getY());
-
-        Point.Double[] test2=
-        {
-                new Point2D.Double(1, 2),
-                new Point2D.Double(4, 2),
-                new Point2D.Double(5, 3),
-                new Point2D.Double(2, 3)
-        };
-
-        cog= polygonCenterOfMass(test2);
-        System.out.println(cog.getX() + "/" + cog.getY());
-
-    }
+//    public static void main(String[] args) {
+//        Point2D.Double[] test=
+//        {
+//                new Point2D.Double(-1, -4),
+//                new Point2D.Double(-4, 2),
+//                new Point2D.Double(-1, 5),
+//                new Point2D.Double(2, 2)
+//        };
+//
+//        Point2D cog= polygonCenterOfMass(test);
+//        System.out.println(cog.getX() + "/" + cog.getY());
+//
+//        Point.Double[] test2=
+//        {
+//                new Point2D.Double(1, 2),
+//                new Point2D.Double(4, 2),
+//                new Point2D.Double(5, 3),
+//                new Point2D.Double(2, 3)
+//        };
+//
+//        cog= polygonCenterOfMass(test2);
+//        System.out.println(cog.getX() + "/" + cog.getY());
+//
+//    }
 }
