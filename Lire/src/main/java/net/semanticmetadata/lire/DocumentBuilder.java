@@ -144,4 +144,16 @@ public interface DocumentBuilder {
      */
     public Document createDocument(InputStream image, String identifier) throws IOException;
 
+    /**
+     * Appends the data from this BufferedImage to the parameter. The identifier can be used like an
+     * id (e.g. the file name or the url of the image).
+     * 
+     * @param doc
+     * @param image
+     * @param identifier
+     * @return The doc document after appending the data
+     * @throws Exception
+     */
+    public Document createDocument(Document doc, BufferedImage image, String identifier) throws Exception;
+
 }

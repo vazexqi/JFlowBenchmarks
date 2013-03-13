@@ -31,6 +31,7 @@
 package net.semanticmetadata.lire;
 
 import org.apache.lucene.document.Document;
+import org.apache.lucene.document.Fieldable;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -62,5 +63,20 @@ public abstract class AbstractDocumentBuilder implements DocumentBuilder {
         assert (image != null);
         BufferedImage bufferedImage= ImageIO.read(image);
         return createDocument(bufferedImage, identifier);
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see net.semanticmetadata.lire.DocumentBuilder#createDocument(org.apache.lucene.document.Document, java.awt.image.BufferedImage, java.lang.String)
+     */
+    public Document createDocument(Document doc, BufferedImage image, String identifier) throws Exception {
+        Document localDocument= createDocument(image, identifier);
+
+        for (Fieldable fieldable : localDocument.getFields()) {
+            doc.add(fieldable);
+        }
+
+        return doc;
+
     }
 }

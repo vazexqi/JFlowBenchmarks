@@ -62,17 +62,17 @@ public class Benchmark100 {
         file.delete();
     }
 
-    public static void main(String[] args) throws IOException, InterruptedException {
-        System.out.println("Benchmarking Serial Benchmark with Wang100");
-        System.out.println("==========================================");
-
-        int REPETITIONS= 1;
-
-        for (int iter= 1; iter <= REPETITIONS; iter++) {
-            Benchmark100 benchmark= new Benchmark100();
-            benchmark.execute();
-            benchmark.cleanUp();
-        }
-        System.out.println("");
-    }
+//    public static void main(String[] args) throws IOException, InterruptedException {
+//        System.out.println("Benchmarking Serial Benchmark with Wang100");
+//        System.out.println("==========================================");
+//
+//        int REPETITIONS= 1;
+//
+//        for (int iter= 1; iter <= REPETITIONS; iter++) {
+//            Benchmark100 benchmark= new Benchmark100();
+//            benchmark.execute();
+//            benchmark.cleanUp();
+//        }
+//        System.out.println("");
+//    }
 }
