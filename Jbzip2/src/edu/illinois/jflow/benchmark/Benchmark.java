@@ -5,7 +5,6 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 
 import org.itadaki.bzip2.BZip2OutputStream;
@@ -13,7 +12,8 @@ import org.itadaki.bzip2.BZip2OutputStream;
 public class Benchmark {
 
     public static void main(String[] args) throws Exception {
-        final File dir= mkdir("dir");
+        final File dir= new File("dir");
+        dir.mkdirs();
         final File inputFile= new File("inputs/media.dat");
         final File outputFile= new File(dir, "media.compressed.bz2");
 
@@ -32,15 +32,8 @@ public class Benchmark {
 
         fileInputStream.close();
         compressorStream.close();
-        
+
         long stopCompressed= System.currentTimeMillis();
         System.out.println((stopCompressed - startCompressed) + "ms");
-    }
-
-    static File mkdir(String name) throws IOException {
-        File f= File.createTempFile(name, "");
-        f.delete();
-        f.mkdir();
-        return f;
     }
 }
