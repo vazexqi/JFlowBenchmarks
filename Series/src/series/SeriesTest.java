@@ -38,10 +38,7 @@
 
 package series;
 
-import jgfutil.*;
-
-public class SeriesTest
-{
+public class SeriesTest {
 
 // Declare class data.
 
@@ -58,8 +55,7 @@ public class SeriesTest
 
 // Instantiate array(s) to hold fourier coefficients.
 
-    void buildTestData()
-    {
+    void buildTestData() {
         // Allocate appropriate length for the double array of doubles.
 
         TestArray= new double[2][array_rows];
@@ -76,16 +72,10 @@ public class SeriesTest
 * NOTE: The # of integration steps is fixed at 1000. 
 */
 
-    void Do()
-    {
-
+    void Do() {
         int i, j;
         Runnable thobjects[]= new Runnable[JGFSeriesBench.nthreads];
         Thread th[]= new Thread[JGFSeriesBench.nthreads];
-
-        // Start the stopwatch.
-
-        JGFInstrumentor.startTimer("Section2:Series:Kernel");
 
         //Start Threads
 
@@ -104,16 +94,9 @@ public class SeriesTest
             } catch (InterruptedException e) {
             }
         }
-
-
-        // Stop the stopwatch.
-
-        JGFInstrumentor.stopTimer("Section2:Series:Kernel");
-
     }
 
-    void freeTestData()
-    {
+    void freeTestData() {
         TestArray= null; // Destroy the array.
         System.gc(); // Force garbage collection.
     }

@@ -19,8 +19,7 @@
  **************************************************************************/
 
 
-import series.*;
-import jgfutil.*;
+import series.JGFSeriesBench;
 
 public class JGFSeriesBenchSizeB {
 
@@ -35,8 +34,6 @@ public class JGFSeriesBenchSizeB {
             System.out.println("  ");
             nthreads= 1;
         }
-
-        JGFInstrumentor.printHeader(2, 1, nthreads);
 
         JGFSeriesBench se= new JGFSeriesBench(nthreads);
         se.JGFrun(1);

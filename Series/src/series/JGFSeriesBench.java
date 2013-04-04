@@ -21,9 +21,7 @@
 
 package series;
 
-import jgfutil.*;
-
-public class JGFSeriesBench extends SeriesTest implements JGFSection2 {
+public class JGFSeriesBench extends SeriesTest {
 
     public static int nthreads;
 
@@ -80,18 +78,10 @@ public class JGFSeriesBench extends SeriesTest implements JGFSection2 {
 
 
     public void JGFrun(int size) {
-
-
-        JGFInstrumentor.addTimer("Section2:Series:Kernel", "coefficients", size);
         JGFsetsize(size);
         JGFinitialise();
         JGFkernel();
         JGFvalidate();
         JGFtidyup();
-
-
-        JGFInstrumentor.addOpsToTimer("Section2:Series:Kernel", (double)(array_rows * 2 - 1));
-
-        JGFInstrumentor.printTimer("Section2:Series:Kernel");
     }
 }
