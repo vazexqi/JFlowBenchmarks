@@ -30,6 +30,28 @@ public class FilterBank {
             System.out.println((int)(this.y[i] * 10000));
         }
     }
+
+    public static void main(String[] args) {
+        int N_sim= 1200 * 6;
+        int N_samp= 8;
+        int N_ch= 62; //16;
+        int N_col= 128 * 6;
+        int j;
+
+        boolean finished= false;
+        FilterBank fb= new FilterBank(N_sim, N_ch);
+        for (j= 0; j < N_ch; j++) {
+            FilterBankAtom fba= new FilterBankAtom(j,
+                    N_ch,
+                    N_col,
+                    N_sim,
+                    N_samp);
+            fba.FBCore();
+            finished= fb.merge(fba.vF);
+        }
+        if (finished)
+            fb.print();
+    }
 }
 
 class FilterBankAtom {

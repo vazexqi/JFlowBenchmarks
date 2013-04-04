@@ -1,0 +1,48 @@
+task t1(StartupObject s{initialstate}) {
+    //System.printString("task t1\n");
+
+    int N_sim=1200 * 6;
+    int N_samp=8;
+    int N_ch=62; //16;
+    int N_col=128 * 6;
+    int i,j;
+    
+    for(j = 0; j < N_ch; j++) {
+        FilterBankAtom fba = new FilterBankAtom(j, 
+                                            N_ch, 
+                                            N_col, 
+                                            N_sim, 
+                                            N_samp){tosamp};
+    }
+    FilterBank fb = new FilterBank(N_sim, N_ch){!finish, !print};
+
+    taskexit(s{!initialstate});
+}
+
+task t2(FilterBankAtom fba{tosamp}) {
+    //System.printString("task t2\n");
+    
+    fba.FBCore();
+
+    taskexit(fba{!tosamp, tomerge});
+}
+
+task t3(FilterBank fb{!finish}, FilterBankAtom fba{tomerge}) {
+    //System.printString("task t3\n");
+
+    boolean finish = fb.merge(fba.vF);
+
+    if(finish) {
+        taskexit(fb{finish, print}, fba{!tomerge});
+    } else {
+        taskexit(fba{!tomerge});
+    }
+}
+
+task t4(FilterBank fb{print}) {
+    //System.printString("task t4\n");
+
+    fb.print();
+
+    taskexit(fb{!print});
+}
