@@ -1,29 +1,27 @@
 <duke>
   <schema>
     <threshold>0.8</threshold>
-    <path>/Users/larsga/tmp/duke-sdshare/tomcat-lucene-index</path>
-
     <property type="id">
       <name>ID</name>
     </property>
 
     <property>
       <name>NameField1</name>
-      <comparator>no.priv.garshol.duke.JaroWinkler</comparator>
+      <comparator>no.priv.garshol.duke.comparators.JaroWinkler</comparator>
       <low>0.4</low>
       <high>0.7</high>
     </property>
 
     <property>
       <name>NameField2</name>
-      <comparator>no.priv.garshol.duke.JaroWinkler</comparator>
+      <comparator>no.priv.garshol.duke.comparators.JaroWinkler</comparator>
       <low>0.4</low>
       <high>0.6</high>
     </property>
 
     <property>
       <name>NameField3</name>
-      <comparator>no.priv.garshol.duke.JaroWinkler</comparator>
+      <comparator>no.priv.garshol.duke.comparators.JaroWinkler</comparator>
       <low>0.4</low>
       <high>0.55</high>
     </property>
@@ -37,12 +35,12 @@
     <column name="4" property="ID" prefix="http:/www.namebase.org/"/>
     <column name="1"
             property="NameField1"
-            cleaner="no.priv.garshol.duke.LowerCaseNormalizeCleaner"/>
+            cleaner="no.priv.garshol.duke.cleaners.LowerCaseNormalizeCleaner"/>
     <column name="2"
             property="NameField2"
-            cleaner="no.priv.garshol.duke.LowerCaseNormalizeCleaner"/>
+            cleaner="no.priv.garshol.duke.cleaners.LowerCaseNormalizeCleaner"/>
     <column name="3"
             property="NameField3"
-            cleaner="no.priv.garshol.duke.LowerCaseNormalizeCleaner"/>
+            cleaner="no.priv.garshol.duke.cleaners.LowerCaseNormalizeCleaner"/>
   </csv>
 </duke>
