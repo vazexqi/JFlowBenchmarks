@@ -46,8 +46,6 @@ public class SeriesTest {
 
     public static double[][] TestArray; // Array of arrays.
 
-
-
 /*
 * buildTestData
 *
@@ -61,8 +59,6 @@ public class SeriesTest {
         TestArray= new double[2][array_rows];
     }
 
-
-
 /*
 * Do
 *
@@ -71,13 +67,10 @@ public class SeriesTest {
 * the interval 0,2. n is given by array_rows, the array size.
 * NOTE: The # of integration steps is fixed at 1000. 
 */
-
     void Do() {
         int i, j;
         Runnable thobjects[]= new Runnable[JGFSeriesBench.nthreads];
         Thread th[]= new Thread[JGFSeriesBench.nthreads];
-
-        //Start Threads
 
         for (i= 1; i < JGFSeriesBench.nthreads; i++) {
             thobjects[i]= new SeriesRunner(i);
@@ -95,13 +88,6 @@ public class SeriesTest {
             }
         }
     }
-
-    void freeTestData() {
-        TestArray= null; // Destroy the array.
-        System.gc(); // Force garbage collection.
-    }
-
-
 }
 
 //This is the Thread

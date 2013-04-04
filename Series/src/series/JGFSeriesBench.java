@@ -71,17 +71,10 @@ public class JGFSeriesBench extends SeriesTest {
         }
     }
 
-    public void JGFtidyup() {
-        freeTestData();
-    }
-
-
-
     public void JGFrun(int size) {
         JGFsetsize(size);
         JGFinitialise();
         JGFkernel();
         JGFvalidate();
-        JGFtidyup();
     }
 }
