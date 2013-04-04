@@ -38,79 +38,35 @@
 
 package series;
 
-public class SeriesTest {
-
-// Declare class data.
-
-    static int array_rows;
-
-    public static double[][] TestArray; // Array of arrays.
-
-/*
-* buildTestData
-*
-*/
-
-// Instantiate array(s) to hold fourier coefficients.
-
-    void buildTestData() {
-        // Allocate appropriate length for the double array of doubles.
-
-        TestArray= new double[2][array_rows];
-    }
-
-/*
-* Do
-*
-* This consists of calculating the
-* first n pairs of fourier coefficients of the function (x+1)^x on
-* the interval 0,2. n is given by array_rows, the array size.
-* NOTE: The # of integration steps is fixed at 1000. 
-*/
-    void Do() {
-        int i, j;
-        Runnable thobjects[]= new Runnable[JGFSeriesBench.nthreads];
-        Thread th[]= new Thread[JGFSeriesBench.nthreads];
-
-        for (i= 1; i < JGFSeriesBench.nthreads; i++) {
-            thobjects[i]= new SeriesRunner(i);
-            th[i]= new Thread(thobjects[i]);
-            th[i].start();
-        }
-
-        thobjects[0]= new SeriesRunner(0);
-        thobjects[0].run();
-
-        for (i= 1; i < JGFSeriesBench.nthreads; i++) {
-            try {
-                th[i].join();
-            } catch (InterruptedException e) {
-            }
-        }
-    }
-}
-
-//This is the Thread
-
-class SeriesRunner implements Runnable {
+/**
+ * A rewrite of the SeriesTest class following the code from the paper Bamboo: A Data-Centric,
+ * Object-Oriented. Approach to Many-core Software
+ * 
+ * Main difference is that we retain the precision of using doubles instead of float (vs. the Bamboo
+ * version); We also do not try to limit ourselves to only one exit point as done in Bamboo.
+ * 
+ * @author nchen
+ * 
+ */
+public class SeriesRunner {
 
     int id;
 
-    public SeriesRunner(int id) {
+    int range;
+
+    public SeriesRunner(int id, int range) {
         this.id= id;
+        this.range= range;
     }
 
     public void run() {
-
-        double omega; // Fundamental frequency.
-        int ilow, iupper, slice;
-
-        //int array_rows=SeriesTest.array_rows;
+        double pair[][]= new double[2][range];
+        double omega;
+        int ilow, iupper;
 
         // Calculate the fourier series. Begin by calculating A[0].
-
         if (id == 0) {
-            SeriesTest.TestArray[0][0]= TrapezoidIntegrate((double)0.0, //Lower bound.
+            pair[0][0]= TrapezoidIntegrate((double)0.0, //Lower bound.
                     (double)2.0, // Upper bound.
                     1000, // # of steps.
                     (double)0.0, // No omega*n needed.
@@ -121,26 +77,21 @@ class SeriesRunner implements Runnable {
         // ( 2 * pi ) / period...and since the period
         // is 2, omega is simply pi.
 
-        omega= (double)3.1415926535897932;
+        omega= Math.PI;
 
-        slice= (SeriesTest.array_rows + JGFSeriesBench.nthreads - 1) / JGFSeriesBench.nthreads;
-
-        ilow= id * slice;
+        ilow= id * range;
         if (id == 0)
-            ilow= id * slice + 1;
-        iupper= (id + 1) * slice;
-        if (iupper > SeriesTest.array_rows)
-            iupper= SeriesTest.array_rows;
+            ilow= 1; // Start with 1 not 0
+        iupper= (id + 1) * range;
 
-
-        for (int i= ilow; i < iupper; i++)
-        {
+        for (int i= ilow; i < iupper; i++) {
+            int j= i - id * range;
             // Calculate A[i] terms. Note, once again, that we
             // can ignore the 2/period term outside the integral
             // since the period is 2 and the term cancels itself
             // out.
 
-            SeriesTest.TestArray[0][i]= TrapezoidIntegrate((double)0.0,
+            pair[0][j]= TrapezoidIntegrate((double)0.0,
                     (double)2.0,
                     1000,
                     omega * (double)i,
@@ -148,15 +99,30 @@ class SeriesRunner implements Runnable {
 
             // Calculate the B[i] terms.
 
-            SeriesTest.TestArray[1][i]= TrapezoidIntegrate((double)0.0,
+            pair[1][j]= TrapezoidIntegrate((double)0.0,
                     (double)2.0,
                     1000,
                     omega * (double)i,
                     2); // 2 = sine term.
         }
 
-
-
+        // validate
+        if (id == 0) {
+            double ref[][]= { { 2.8729524964837996, 0.0 },
+                    { 1.1161046676147888, -1.8819691893398025 },
+                    { 0.34429060398168704, -1.1645642623320958 },
+                    { 0.15238898702519288, -0.8143461113044298 } };
+            for (int i= 0; i < 4; i++) {
+                for (int j= 0; j < 2; j++) {
+                    double error= Math.abs(pair[j][i] - ref[i][j]);
+                    if (error > 1.0e-12) {
+                        System.out.println("Validation failed for coefficient " + j + "," + id + "\n");
+                        System.out.println("Computed value = " + (int)(pair[j][j] * 100000000) + "\n");
+                        System.out.println("Reference value = " + (int)(ref[i][j] * 100000000) + "\n");
+                    }
+                }
+            }
+        }
     }
 
 /*
@@ -226,8 +192,7 @@ class SeriesRunner implements Runnable {
 
         // Use select to pick which function we call.
 
-        switch (select)
-        {
+        switch (select) {
             case 0:
                 return (Math.pow(x + (double)1.0, x));
 
