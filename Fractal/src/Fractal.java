@@ -1,46 +1,5 @@
 import java.util.Random;
 
-/*  Draw a Mandelbrot set, maximum magnification 10000000 times;
- */
-//task t1(StartupObject s{initialstate}) {
-//    //System.printString("task t1\n");
-//    
-//    int width = 3200; 
-//    int height = 3200;
-//    int group = 2;
-//
-//    int h = height / group;
-//    for(int i = 0; i < group; i++) {
-//    Fractal fratal = new Fractal(i,
-//                             group,
-//                             width,
-//                             height){run};
-//    }
-//    Image image = new Image(group){!finish};
-//    
-//    taskexit(s{!initialstate});
-//}
-//
-//task t2(Fractal fractal{run}) {
-//    //System.printString("task t2\n");
-//    
-//    //  Now do the computation.
-//    fractal.run();
-//    
-//    taskexit(fractal{!run, output});
-//}
-//
-////task t3(Image image{!finish}, Fractal fractal{output}) {
-//    //System.printString("task t3\n");
-//
-////    if(image.outputImage(fractal.pixels, fractal.id)) {
-//    //System.printString("Finish!\n");
-////  taskexit(image{finish}, fractal{!output});
-////    } else {
-////  taskexit(fractal{!output});
-////    }
-////}
-
 public class Fractal {
     public int id;
 
@@ -164,6 +123,22 @@ public class Fractal {
             }
         }
         System.out.println(count + "\n");
+    }
+
+    public static void main(String[] args) {
+        //TODO: I got these configuration from the bamboo file but they seem incomplete
+        //The numbers are not realistic enough to parallelize and gain good performance even for 
+        //embarrassingly parallel applications.
+        int width= 3200;
+        int height= 3200;
+        int group= 2;
+
+        int h= height / group;
+        for (int i= 0; i < group; i++) {
+            Fractal fractal= new Fractal(i, group, width, height);
+            fractal.run();
+        }
+        Image image= new Image(group);
     }
 }
 
