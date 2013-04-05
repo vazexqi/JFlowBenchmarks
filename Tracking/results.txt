@@ -1,0 +1,13 @@
+read image: 1.bmp
+read image: 2.bmp
+this.m_rows_f=2
+this.m_cols_=3
+m_features.length=6
+228.18245
+201.37462
+340.63083
+141.68695
+70.49098
+242.1874
+Entire duration: 238010
+Critical duration: 237241

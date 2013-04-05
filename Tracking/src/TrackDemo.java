@@ -1189,7 +1189,7 @@ public class TrackDemo {
     }
 
     public void run() throws IOException {
-
+        long start= System.currentTimeMillis();
         ImageReader imageReader= new ImageReader();
 
         int[] input= imageReader.readImage("1.bmp");
@@ -1250,6 +1250,8 @@ public class TrackDemo {
 
         // TASK: processIDX
         IDX IDXarray[]= new IDX[c_pnum];
+        long startCritical= System.currentTimeMillis();
+
         for (int i= 0; i < c_pnum; i++) {
 //      sese parallel_IDX{
             IDX idx= new IDX(lda.N_FEA, i, c_range, data, c_rows, c_cols, r, c_pnum);
@@ -1259,6 +1261,7 @@ public class TrackDemo {
             IDXarray[i]= idx;
 //      }
         }
+        long stopCritical= System.currentTimeMillis();
 
         resize();
 
@@ -1350,5 +1353,8 @@ public class TrackDemo {
         }
 
         printFeatures();
+        long stop= System.currentTimeMillis();
+        System.out.println("Entire duration: " + (stop - start));
+        System.out.println("Critical duration: " + (stopCritical - startCritical));
     }
 }
