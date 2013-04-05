@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.LineNumberReader;
+import java.util.Scanner;
 
 /* =============================================================================
 *
@@ -218,7 +219,7 @@ public class KMeans /*extends Thread*/{
         /* Allocate new shared objects and read attributes of all objects */
         buf= new float[numObjects][numAttributes];
         attributes= new float[numObjects][numAttributes];
-        KMeans.readFromFile(kms.filename, buf, MAX_LINE_LENGTH);
+        KMeans.readFromFile(kms.filename, buf);
         System.out.println("Finished Reading from file ......");
         long startT= System.currentTimeMillis();
         /*
@@ -348,99 +349,21 @@ public class KMeans /*extends Thread*/{
      * @throws IOException
      * @throws NumberFormatException
      **/
-    public static void readFromFile(String filename, float[][] buf, int MAX_LINE_LENGTH) throws NumberFormatException, IOException {
-        BufferedInputStream inputStream= new BufferedInputStream(new FileInputStream(filename));
-        int j;
-        int i= 0;
+    public static void readFromFile(String filename, float[][] buf) throws NumberFormatException, IOException {
+        BufferedReader bufferedReader= new BufferedReader(new FileReader(filename));
+        String line;
+        while ((line= bufferedReader.readLine()) != null) {
+            Scanner scanner= new Scanner(line);
+            int position= scanner.nextInt();
+            int normalizedPosition= position - 1; // The buf array starts from but the line number starts from 1
 
-        byte b[]= new byte[MAX_LINE_LENGTH];
-        int n;
-        byte oldbytes[]= null;
-
-
-        j= -1;
-        while ((n= inputStream.read(b)) != 0) {
-            int x= 0;
-
-            if (oldbytes != null) {
-                //find space
-                boolean cr= false;
-                for (; x < n; x++) {
-                    if (b[x] == ' ')
-                        break;
-                    if (b[x] == '\n') {
-                        cr= true;
-                        break;
-                    }
-                }
-                byte newbytes[]= new byte[x + oldbytes.length];
-                boolean isnumber= false;
-                for (int ii= 0; ii < oldbytes.length; ii++) {
-                    if (oldbytes[ii] >= '0' && oldbytes[ii] <= '9')
-                        isnumber= true;
-                    newbytes[ii]= oldbytes[ii];
-                }
-                for (int ii= 0; ii < x; ii++) {
-                    if (b[ii] >= '0' && b[ii] <= '9')
-                        isnumber= true;
-                    newbytes[ii + oldbytes.length]= b[ii];
-                }
-                if (x != n)
-                    x++; //skip past space or cr
-                if (isnumber) {
-                    if (j >= 0) {
-                        buf[i][j]= (float)Double.parseDouble(new String(newbytes, 0, newbytes.length));
-                    }
-                    j++;
-                }
-                if (cr) {
-                    j= -1;
-                    i++;
-                }
-                oldbytes= null;
-            }
-
-            while (x < n) {
-                int y= x;
-                boolean cr= false;
-                boolean isnumber= false;
-                for (y= x; y < n; y++) {
-                    if ((b[y] >= '0') && (b[y] <= '9'))
-                        isnumber= true;
-                    if (b[y] == ' ')
-                        break;
-                    if (b[y] == '\n') {
-                        cr= true;
-                        break;
-                    }
-                }
-                if (y == n) {
-                    //need to continue for another read
-                    oldbytes= new byte[y - x];
-                    for (int ii= 0; ii < (y - x); ii++)
-                        oldbytes[ii]= b[ii + x];
-                    break;
-                }
-
-                //otherwise x is beginning of character string, y is end
-                if (isnumber) {
-                    if (j >= 0) {
-                        buf[i][j]= (float)Double.parseDouble(new String(b, x, y - x));
-                    }
-                    j++;
-                }
-                if (cr) {
-                    i++;//skip to next line
-                    j= -1;//don't store line number
-                    x= y;//skip to end of number
-                    x++;//skip past return
-                } else {
-                    x= y;//skip to end of number
-                    x++;//skip past space
-                }
+            int index= 0;
+            while (scanner.hasNextDouble()) {
+                float value= scanner.nextFloat();
+                buf[normalizedPosition][index++]= value;
             }
         }
-        inputStream.close();
+        bufferedReader.close();
     }
 }
 
