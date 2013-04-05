@@ -1,7 +1,10 @@
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.LineNumberReader;
 
 /* =============================================================================
 *
@@ -188,24 +191,10 @@ public class KMeans /*extends Thread*/{
         int numAttributes= 0;
         int numObjects= 0;
 
-        /*
-         * From the input file, get the numAttributes (columns in txt file) and numObjects (rows in txt file)
-         */
-        if (kms.isBinaryFile == 1) {
-            System.out.println("TODO: Unimplemented Binary file option\n");
-            System.exit(0);
-        }
+        LineNumberReader lnr= new LineNumberReader(new FileReader(kms.filename));
+        lnr.skip(Long.MAX_VALUE);
+        numObjects= lnr.getLineNumber();
 
-        FileInputStream inputFile= new FileInputStream(kms.filename);
-        byte b[]= new byte[MAX_LINE_LENGTH];
-        int n;
-        while ((n= inputFile.read(b)) != 0) {
-            for (int i= 0; i < n; i++) {
-                if (b[i] == '\n')
-                    numObjects++;
-            }
-        }
-        inputFile.close();
         BufferedReader inputReader= new BufferedReader(new FileReader(kms.filename));
         String line= null;
         if ((line= inputReader.readLine()) != null) {
@@ -220,7 +209,7 @@ public class KMeans /*extends Thread*/{
                 prevWhiteSpace= currWhiteSpace;
             }
         }
-        inputFile.close();
+        inputReader.close();
 
         /* Ignore the first attribute: numAttributes = 1; */
         numAttributes= numAttributes - 1;
@@ -229,7 +218,7 @@ public class KMeans /*extends Thread*/{
         /* Allocate new shared objects and read attributes of all objects */
         buf= new float[numObjects][numAttributes];
         attributes= new float[numObjects][numAttributes];
-        KMeans.readFromFile(inputFile, kms.filename, buf, MAX_LINE_LENGTH);
+        KMeans.readFromFile(kms.filename, buf, MAX_LINE_LENGTH);
         System.out.println("Finished Reading from file ......");
         long startT= System.currentTimeMillis();
         /*
@@ -359,8 +348,8 @@ public class KMeans /*extends Thread*/{
      * @throws IOException
      * @throws NumberFormatException
      **/
-    public static void readFromFile(FileInputStream inputFile, String filename, float[][] buf, int MAX_LINE_LENGTH) throws NumberFormatException, IOException {
-        inputFile= new FileInputStream(filename);
+    public static void readFromFile(String filename, float[][] buf, int MAX_LINE_LENGTH) throws NumberFormatException, IOException {
+        BufferedInputStream inputStream= new BufferedInputStream(new FileInputStream(filename));
         int j;
         int i= 0;
 
@@ -370,7 +359,7 @@ public class KMeans /*extends Thread*/{
 
 
         j= -1;
-        while ((n= inputFile.read(b)) != 0) {
+        while ((n= inputStream.read(b)) != 0) {
             int x= 0;
 
             if (oldbytes != null) {
@@ -451,7 +440,7 @@ public class KMeans /*extends Thread*/{
                 }
             }
         }
-        inputFile.close();
+        inputStream.close();
     }
 }
 
