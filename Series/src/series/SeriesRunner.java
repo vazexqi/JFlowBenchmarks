@@ -61,23 +61,20 @@ public class SeriesRunner {
 
     public void run() {
         double pair[][]= new double[2][range];
-        double omega;
         int ilow, iupper;
 
         // Calculate the fourier series. Begin by calculating A[0].
         if (id == 0) {
-            pair[0][0]= TrapezoidIntegrate((double)0.0, //Lower bound.
-                    (double)2.0, // Upper bound.
+            pair[0][0]= TrapezoidIntegrate(0.0, //Lower bound.
+                    2.0, // Upper bound.
                     1000, // # of steps.
-                    (double)0.0, // No omega*n needed.
-                    0) / (double)2.0; // 0 = term A[0].
+                    0.0, // No omega*n needed.
+                    0) / 2.0; // 0 = term A[0].
         }
 
         // Calculate the fundamental frequency.
         // ( 2 * pi ) / period...and since the period
         // is 2, omega is simply pi.
-
-        omega= Math.PI;
 
         ilow= id * range;
         if (id == 0)
@@ -91,18 +88,18 @@ public class SeriesRunner {
             // since the period is 2 and the term cancels itself
             // out.
 
-            pair[0][j]= TrapezoidIntegrate((double)0.0,
-                    (double)2.0,
+            pair[0][j]= TrapezoidIntegrate(0.0,
+                    2.0,
                     1000,
-                    omega * (double)i,
+                    Math.PI * i,
                     1); // 1 = cosine term.
 
             // Calculate the B[i] terms.
 
-            pair[1][j]= TrapezoidIntegrate((double)0.0,
-                    (double)2.0,
+            pair[1][j]= TrapezoidIntegrate(0.0,
+                    2.0,
                     1000,
-                    omega * (double)i,
+                    Math.PI * i,
                     2); // 2 = sine term.
         }
 
