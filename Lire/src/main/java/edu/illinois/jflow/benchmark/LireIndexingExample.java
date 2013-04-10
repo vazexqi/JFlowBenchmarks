@@ -58,17 +58,26 @@ public class LireIndexingExample {
 
     void serialIndexImages() throws Exception {
         IndexWriter indexWriter= LuceneUtils.createIndexWriter(DATABASE, true);
-        ArrayList<String> imagePaths= FileUtils.getAllImages(new File(IMAGES_DIRECTORY), true);
 
-        for (String imagePath : imagePaths) {
+        for (String imagePath : FileUtils.getAllImages(new File(IMAGES_DIRECTORY), true)) {
+
+            // Begin Stage1
             BufferedImage bufferedImage= ImageIO.read(new FileInputStream(imagePath));
+            Document docJPEG= JPEGExtractor.createDocument(bufferedImage, imagePath);
+            // End Stage1
 
-            Document docJPEG= JPEGCoefficientHistogramExtractor().createDocument(bufferedImage, imagePath);
-            Document docTamura= tamuraExtractor().createDocument(docJPEG, bufferedImage, imagePath);
-            Document docColor= autoColorCorrelogramExtractor().createDocument(docTamura, bufferedImage, imagePath);
-            Document docFCTH= FCTHExtractor().createDocument(docColor, bufferedImage, imagePath);
+            // Begin Stage2
+            Document docTamura= tamuraExtractor.createDocument(docJPEG, bufferedImage, imagePath);
+            // End Stage2
 
+            // Begin Stage3
+            Document docColor= autoColorCorrelogramExtractor.createDocument(docTamura, bufferedImage, imagePath);
+            // End Stage3
+
+            // Begin Stage4
+            Document docFCTH= FCTHExtractor.createDocument(docColor, bufferedImage, imagePath);
             indexWriter.addDocument(docFCTH);
+            // End Stage4
         }
 
         indexWriter.optimize();
