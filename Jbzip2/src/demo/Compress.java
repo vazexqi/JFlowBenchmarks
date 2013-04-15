@@ -43,7 +43,7 @@ public class Compress {
      * @param args
      * @throws IOException
      */
-    public static void main(String[] args) throws IOException {
+    public static void main_NONENTRY(String[] args) throws IOException {
 
         if (args.length == 0) {
             System.err.println("Demonstration BZip2 compressor\n\nUsage:\n  java demo.Compress <filename>\n");

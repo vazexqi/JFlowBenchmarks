@@ -11,7 +11,7 @@ import org.itadaki.bzip2.BZip2OutputStream;
 
 public class Benchmark {
 
-    public static void main(String[] args) throws Exception {
+    public static void main_NONENTRY(String[] args) throws Exception {
         final File dir= new File("dir");
         dir.mkdirs();
         final File inputFile= new File("inputs/media.dat");
