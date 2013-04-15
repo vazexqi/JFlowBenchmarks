@@ -29,16 +29,15 @@
  */
 package net.semanticmetadata.lire.impl;
 
+import java.awt.image.BufferedImage;
+
 import net.semanticmetadata.lire.AbstractDocumentBuilder;
 import net.semanticmetadata.lire.DocumentBuilder;
 import net.semanticmetadata.lire.imageanalysis.LireFeature;
 import net.semanticmetadata.lire.utils.ImageUtils;
+
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
-
-import java.awt.image.BufferedImage;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * This class allows to create a DocumentBuilder based on a class implementing LireFeature. Date:
@@ -47,7 +46,7 @@ import java.util.logging.Logger;
  * @author Mathias Lux, mathias@juggle.at
  */
 public class GenericDocumentBuilder extends AbstractDocumentBuilder {
-    private Logger logger= Logger.getLogger(getClass().getName());
+//    private Logger logger= Logger.getLogger(getClass().getName());
 
     public static final int MAX_IMAGE_DIMENSION= 1024;
 
@@ -103,12 +102,12 @@ public class GenericDocumentBuilder extends AbstractDocumentBuilder {
             bimg= ImageUtils.scaleImage(image, MAX_IMAGE_DIMENSION);
         }
         Document doc= null;
-        logger.finer("Starting extraction from image [" + descriptorClass.getName() + "].");
+//        logger.finer("Starting extraction from image [" + descriptorClass.getName() + "].");
         try {
             LireFeature vd= (LireFeature)descriptorClass.newInstance();
             vd.extract(bimg);
 //            featureString = vd.getStringRepresentation();
-            logger.fine("Extraction finished [" + descriptorClass.getName() + "].");
+//            logger.fine("Extraction finished [" + descriptorClass.getName() + "].");
 
             doc= new Document();
             if (currentMode == Mode.Slow)
@@ -120,9 +119,9 @@ public class GenericDocumentBuilder extends AbstractDocumentBuilder {
                 doc.add(new Field(DocumentBuilder.FIELD_NAME_IDENTIFIER, identifier, Field.Store.YES, Field.Index.NOT_ANALYZED));
 
         } catch (InstantiationException e) {
-            logger.log(Level.SEVERE, "Error instantiating class for generic document builder: " + e.getMessage());
+//            logger.log(Level.SEVERE, "Error instantiating class for generic document builder: " + e.getMessage());
         } catch (IllegalAccessException e) {
-            logger.log(Level.SEVERE, "Error instantiating class for generic document builder: " + e.getMessage());
+//            logger.log(Level.SEVERE, "Error instantiating class for generic document builder: " + e.getMessage());
         }
         return doc;
     }
