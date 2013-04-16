@@ -2,6 +2,12 @@ package edu.illinois.jflow.benchmark;
 
 import net.semanticmetadata.lire.DocumentBuilder;
 import net.semanticmetadata.lire.DocumentBuilderFactory;
+import net.semanticmetadata.lire.imageanalysis.AutoColorCorrelogram;
+import net.semanticmetadata.lire.imageanalysis.FCTH;
+import net.semanticmetadata.lire.imageanalysis.JpegCoefficientHistogram;
+import net.semanticmetadata.lire.imageanalysis.Tamura;
+import net.semanticmetadata.lire.impl.GenericDocumentBuilder;
+import net.semanticmetadata.lire.impl.GenericFastDocumentBuilder;
 import net.semanticmetadata.lire.utils.FileUtils;
 import net.semanticmetadata.lire.utils.LuceneUtils;
 import org.apache.lucene.document.Document;
@@ -34,10 +40,10 @@ public class LireIndexingExample {
     private DocumentBuilder FCTHExtractor;
 
     public LireIndexingExample() {
-        this.JPEGExtractor= DocumentBuilderFactory.getJpegCoefficientHistogramDocumentBuilder();
-        this.tamuraExtractor= DocumentBuilderFactory.getTamuraDocumentBuilder();
-        this.autoColorCorrelogramExtractor= DocumentBuilderFactory.getAutoColorCorrelogramDocumentBuilder();
-        this.FCTHExtractor= DocumentBuilderFactory.getFCTHDocumentBuilder();
+        this.JPEGExtractor= new GenericDocumentBuilder(JpegCoefficientHistogram.class, DocumentBuilder.FIELD_NAME_JPEGCOEFFS, GenericDocumentBuilder.Mode.Fast);
+        this.tamuraExtractor= new GenericFastDocumentBuilder(Tamura.class, DocumentBuilder.FIELD_NAME_TAMURA);
+        this.autoColorCorrelogramExtractor= new GenericDocumentBuilder(AutoColorCorrelogram.class, DocumentBuilder.FIELD_NAME_AUTOCOLORCORRELOGRAM, GenericDocumentBuilder.Mode.Fast);
+        this.FCTHExtractor= new GenericDocumentBuilder(FCTH.class, DocumentBuilder.FIELD_NAME_FCTH, GenericDocumentBuilder.Mode.Fast);
     }
 
     DocumentBuilder JPEGCoefficientHistogramExtractor() {

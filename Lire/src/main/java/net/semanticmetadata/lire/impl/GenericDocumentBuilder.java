@@ -102,12 +102,9 @@ public class GenericDocumentBuilder extends AbstractDocumentBuilder {
             bimg= ImageUtils.scaleImage(image, MAX_IMAGE_DIMENSION);
         }
         Document doc= null;
-//        logger.finer("Starting extraction from image [" + descriptorClass.getName() + "].");
         try {
             LireFeature vd= (LireFeature)descriptorClass.newInstance();
             vd.extract(bimg);
-//            featureString = vd.getStringRepresentation();
-//            logger.fine("Extraction finished [" + descriptorClass.getName() + "].");
 
             doc= new Document();
             if (currentMode == Mode.Slow)
@@ -119,9 +116,7 @@ public class GenericDocumentBuilder extends AbstractDocumentBuilder {
                 doc.add(new Field(DocumentBuilder.FIELD_NAME_IDENTIFIER, identifier, Field.Store.YES, Field.Index.NOT_ANALYZED));
 
         } catch (InstantiationException e) {
-//            logger.log(Level.SEVERE, "Error instantiating class for generic document builder: " + e.getMessage());
         } catch (IllegalAccessException e) {
-//            logger.log(Level.SEVERE, "Error instantiating class for generic document builder: " + e.getMessage());
         }
         return doc;
     }
