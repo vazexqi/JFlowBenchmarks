@@ -21,6 +21,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class LireIndexingExample {
@@ -124,7 +125,15 @@ public class LireIndexingExample {
     public static void main(String[] args) throws Exception {
         System.out.println("Running Lire Indexing Example");
         LireIndexingExample lire= new LireIndexingExample();
+        preloadClasses();
         lire.timeIndexImages();
+    }
+
+    // This is an experiment to see if we can preload the JDK for some of the libraries
+    private static void preloadClasses() throws IOException {
+        ArrayList<String> allImages= FileUtils.getAllImages(new File(IMAGES_DIRECTORY), true);
+        BufferedImage bufferedImage= ImageIO.read(new FileInputStream(allImages.get(0)));
+
     }
 
 }

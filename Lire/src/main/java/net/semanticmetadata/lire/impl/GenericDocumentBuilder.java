@@ -93,7 +93,6 @@ public class GenericDocumentBuilder extends AbstractDocumentBuilder {
     }
 
     public Document createDocument(BufferedImage image, String identifier) {
-        String featureString= "";
         assert (image != null);
         BufferedImage bimg= image;
         // Scaling image is especially with the correlogram features very important!
