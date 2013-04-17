@@ -39,7 +39,7 @@ import net.semanticmetadata.lire.utils.ImageUtils;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 
-import edu.illinois.jflow.benchmark.Factory;
+import edu.illinois.jflow.benchmark.JFlowFactory;
 
 /**
  * This class allows to create a DocumentBuilder based on a class implementing LireFeature. Date:
@@ -94,7 +94,7 @@ public class GenericDocumentBuilder extends AbstractDocumentBuilder {
         this.currentMode= mode;
     }
 
-    @Factory
+    @JFlowFactory
     public Document createDocument(BufferedImage image, String identifier) {
         assert (image != null);
         BufferedImage bimg= image;
