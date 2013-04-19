@@ -1,4 +1,4 @@
-package demo;
+package edu.illinois.jflow.benchmark;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -95,10 +95,7 @@ public class RoundTrip {
 
         for (File inputFile : files) {
 
-            long inputLength= inputFile.length();
-            System.out.print(inputLength + " " + inputFile);
-
-            // Compress file
+            // Begin Stage1
             InputStream fileInputStream= new BufferedInputStream(new FileInputStream(inputFile));
             OutputStream compressedOutputStream= new BufferedOutputStream(new FileOutputStream(tempFile));
             BZip2OutputStream bzip2OutputStream= new BZip2OutputStream(compressedOutputStream);
@@ -111,11 +108,9 @@ public class RoundTrip {
             bzip2OutputStream.close();
             compressedOutputStream.close();
             fileInputStream.close();
+            // End Stage1
 
-            long compressedLength= tempFile.length();
-            System.out.printf(" (%.1f%%)\n", ((float)(inputLength - compressedLength) / inputLength) * 100);
-
-            // Decompress file
+            // Begin Stage2
             InputStream compressedInputStream= new BufferedInputStream(new FileInputStream(tempFile));
             BZip2InputStream bzip2InputStream= new BZip2InputStream(compressedInputStream, false);
             byte[] decoded= new byte[524288];
@@ -124,6 +119,7 @@ public class RoundTrip {
 
             compressedInputStream.close();
             bzip2InputStream.close();
+            // End Stage2
 
         }
 
