@@ -91,11 +91,11 @@ public class RoundTrip {
      */
     private static void roundTrip(List<File> files) throws IOException {
 
-        File tempFile= File.createTempFile("rtr", ".tmp");
 
         for (File inputFile : files) {
 
             // Begin Stage1
+            File tempFile= File.createTempFile("rtr", ".tmp");
             InputStream fileInputStream= new BufferedInputStream(new FileInputStream(inputFile));
             OutputStream compressedOutputStream= new BufferedOutputStream(new FileOutputStream(tempFile));
             BZip2OutputStream bzip2OutputStream= new BZip2OutputStream(compressedOutputStream);
