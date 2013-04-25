@@ -6,5 +6,8 @@
 	<classpathentry kind="lib" path="lib/commons-math-2.2.jar"/>
 	<classpathentry kind="lib" path="lib/JOpenSurf.jar"/>
 	<classpathentry kind="lib" path="lib/lucene-core-3.3.0.jar"/>
+	<classpathentry kind="lib" path="lib/groovy-all-2.1.3.jar"/>
+	<classpathentry kind="lib" path="lib/gpars-1.1-jflow.jar"/>
+	<classpathentry kind="lib" path="lib/jsr166y.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
