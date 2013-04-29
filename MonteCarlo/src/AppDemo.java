@@ -157,7 +157,7 @@ public class AppDemo extends Universal {
     // anonymous inner classes not being able to reference non-final local variables
     private double avgExpectedReturnRateMC2;
 
-    public void runSerial() {
+    public void runSerial() throws Exception {
         avgExpectedReturnRateMC2= 0.0;
 
         // Create an instance of a RatePath, for accumulating the results of the

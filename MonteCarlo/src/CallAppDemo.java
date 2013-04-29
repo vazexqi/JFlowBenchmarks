@@ -59,7 +59,11 @@ public class CallAppDemo {
 
     public void runiters() {
         long sTime= System.currentTimeMillis();
-        ap.runSerial();
+        try {
+            ap.runSerial();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         System.out.println("Time=" + (System.currentTimeMillis() - sTime));
     }
 
