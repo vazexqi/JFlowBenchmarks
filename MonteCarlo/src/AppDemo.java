@@ -153,9 +153,12 @@ public class AppDemo extends Universal {
 
     }
 
+    // Made avgExpectedReturnRateMC2 into a field so that we can overcome the limitation of Java
+    // anonymous inner classes not being able to reference non-final local variables
+    private double avgExpectedReturnRateMC2;
+
     public void runSerial() {
-        // Now do the computation.
-        double avgExpectedReturnRateMC= 0.0;
+        avgExpectedReturnRateMC2= 0.0;
 
         // Create an instance of a RatePath, for accumulating the results of the
         // Monte Carlo simulations.
@@ -185,16 +188,16 @@ public class AppDemo extends Universal {
             for (int idx= ilow; idx < iupper; idx++) {
                 ToResult returnMC= (ToResult)psArray[idx - ilow].getResult();
                 avgMCrate.inc_pathValue(returnMC.get_pathValue());
-                avgExpectedReturnRateMC+= returnMC.get_expectedReturnRate();
+                avgExpectedReturnRateMC2+= returnMC.get_expectedReturnRate();
                 avgVolatilityMC+= returnMC.get_volatility();
             }
             // End Stage2
 
         }
         avgMCrate.inc_pathValue((double)1.0 / ((double)nRunsMC));
-        avgExpectedReturnRateMC/= nRunsMC;
+        avgExpectedReturnRateMC2/= nRunsMC;
         avgVolatilityMC/= nRunsMC;
-        JGFavgExpectedReturnRateMC= avgExpectedReturnRateMC;
+        JGFavgExpectedReturnRateMC= avgExpectedReturnRateMC2;
     }
 
     // ------------------------------------------------------------------------idx
