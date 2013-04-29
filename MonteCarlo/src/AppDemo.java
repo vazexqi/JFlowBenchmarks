@@ -156,9 +156,6 @@ public class AppDemo extends Universal {
     public void runSerial() {
         // Now do the computation.
         double avgExpectedReturnRateMC= 0.0;
-        double avgVolatilityMC= 0.0;
-        double runAvgExpectedReturnRateMC= 0.0;
-        double runAvgVolatilityMC= 0.0;
 
         // Create an instance of a RatePath, for accumulating the results of the
         // Monte Carlo simulations.
@@ -190,8 +187,6 @@ public class AppDemo extends Universal {
                 avgMCrate.inc_pathValue(returnMC.get_pathValue());
                 avgExpectedReturnRateMC+= returnMC.get_expectedReturnRate();
                 avgVolatilityMC+= returnMC.get_volatility();
-                runAvgExpectedReturnRateMC= avgExpectedReturnRateMC / ((double)(idx + 1));
-                runAvgVolatilityMC= avgVolatilityMC / ((double)(idx + 1));
             }
             // End Stage2
 
@@ -200,41 +195,6 @@ public class AppDemo extends Universal {
         avgExpectedReturnRateMC/= nRunsMC;
         avgVolatilityMC/= nRunsMC;
         JGFavgExpectedReturnRateMC= avgExpectedReturnRateMC;
-
-        /*
-        sese serial{
-          for(int idx=ilow;idx<iupper;idx++){
-            results.addElement(psArray[idx-ilow].getResult());
-          }
-        }
-        
-        }
-
-        // process serial
-        ToResult returnMC;
-        if (nRunsMC != results.size()) {
-        errPrintln("Fatal: TaskRunner managed to finish with no all the results gathered in!");
-        System.exit(-1);
-        }
-        // Create an instance of a RatePath, for accumulating the results of the
-        // Monte Carlo simulations.
-        RatePath avgMCrate = new RatePath(nTimeStepsMC, "MC", 19990109, 19991231, dTime);
-        for (int i = 0; i < nRunsMC; i++) {
-        // First, create an instance which is supposed to generate a
-        // particularly simple MC path.
-        returnMC = (ToResult) results.elementAt(i);
-        avgMCrate.inc_pathValue(returnMC.get_pathValue());
-        avgExpectedReturnRateMC += returnMC.get_expectedReturnRate();
-        avgVolatilityMC += returnMC.get_volatility();
-        runAvgExpectedReturnRateMC = avgExpectedReturnRateMC / ((double) (i + 1));
-        runAvgVolatilityMC = avgVolatilityMC / ((double) (i + 1));
-        } // for i;
-        avgMCrate.inc_pathValue((double) 1.0 / ((double) nRunsMC));
-        avgExpectedReturnRateMC /= nRunsMC;
-        avgVolatilityMC /= nRunsMC;
-        JGFavgExpectedReturnRateMC = avgExpectedReturnRateMC;
-        */
-
     }
 
     // ------------------------------------------------------------------------idx
