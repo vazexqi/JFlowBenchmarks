@@ -154,11 +154,7 @@ public class AppDemo extends Universal {
     }
 
     public void runSerial() {
-        Vector results= new Vector(nRunsMC);
         // Now do the computation.
-        int nMC= nRunsMC;
-        int lworkload= workload;
-
         double avgExpectedReturnRateMC= 0.0;
         double avgVolatilityMC= 0.0;
         double runAvgExpectedReturnRateMC= 0.0;
@@ -168,17 +164,17 @@ public class AppDemo extends Universal {
         // Monte Carlo simulations.
         RatePath avgMCrate= new RatePath(nTimeStepsMC, "MC", 19990109, 19991231, dTime);
 
-        for (int iRun= 0; iRun < nMC; iRun= iRun + lworkload) {
-
+        for (int iRun= 0; iRun < nRunsMC; iRun= iRun + workload) {
+            // Begin Stage1
             int ilow= iRun;
-            int iupper= iRun + lworkload;
-            if (iupper > nMC) {
-                iupper= nMC;
+            int iupper= iRun + workload;
+            if (iupper > nRunsMC) {
+                iupper= nRunsMC;
             }
 
             int l_size= iupper - ilow;
-//      sese parallel{
             PriceStock psArray[]= new PriceStock[l_size];
+
             for (int idx= ilow; idx < iupper; idx++) {
                 PriceStock ps= new PriceStock();
                 ps.setInitAllTasks(initAllTasks);
@@ -186,9 +182,9 @@ public class AppDemo extends Universal {
                 ps.run();
                 psArray[idx - ilow]= ps;
             }
-//      }
+            // End Stage1
 
-//      sese serial{
+            // Begin Stage2
             for (int idx= ilow; idx < iupper; idx++) {
                 ToResult returnMC= (ToResult)psArray[idx - ilow].getResult();
                 avgMCrate.inc_pathValue(returnMC.get_pathValue());
@@ -196,8 +192,8 @@ public class AppDemo extends Universal {
                 avgVolatilityMC+= returnMC.get_volatility();
                 runAvgExpectedReturnRateMC= avgExpectedReturnRateMC / ((double)(idx + 1));
                 runAvgVolatilityMC= avgVolatilityMC / ((double)(idx + 1));
-//        }
             }
+            // End Stage2
 
         }
         avgMCrate.inc_pathValue((double)1.0 / ((double)nRunsMC));
