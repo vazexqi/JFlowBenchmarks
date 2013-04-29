@@ -27,3 +27,9 @@ h4. Jbzip2
 jbzip2 is a Java bzip2 compression/decompression library. It can be used as a replacement for the Apache CBZip2InputStream / CBZip2OutputStream classes.
 
 Original code from "Jbzip2":http://code.google.com/p/jbzip2/.
+
+h4. Duke
+
+Duke is a fast and flexible deduplication (or entity resolution, or record linkage) engine written in Java on top of Lucene.
+
+Original code from "Duke":http://code.google.com/p/duke/
