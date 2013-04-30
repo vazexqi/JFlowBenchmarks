@@ -1,3 +1,4 @@
+package edu.illinois.jflow.benchmark;
 /**************************************************************************
  *                                                                         *
  *             Java Grande Forum Benchmark Suite - Version 2.0             *
