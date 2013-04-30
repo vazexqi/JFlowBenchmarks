@@ -196,11 +196,6 @@ public class RatePath extends PathId {
      *                target arrays.
      */
     public void inc_pathValue(double[] operandPath) {
-        if (pathValue.length != operandPath.length) {
-            System.out
-                    .println("The path to update has a different size to the path to update with!-inc_pathValue");
-            System.exit(0);
-        }
         for (int i= 0; i < pathValue.length; i++)
             pathValue[i]+= operandPath[i];
     }

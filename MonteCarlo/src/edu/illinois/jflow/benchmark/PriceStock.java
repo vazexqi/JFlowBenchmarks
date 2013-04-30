@@ -1,4 +1,5 @@
 package edu.illinois.jflow.benchmark;
+
 /**************************************************************************
  *                                                                         *
  *             Java Grande Forum Benchmark Suite - Version 2.0             *
@@ -170,12 +171,8 @@ public class PriceStock extends Universal {
      * @return An object representing the computed results.
      */
     public Object getResult() {
-        String resultHeader=
-                "Result of task with Header=" + taskHeader + ": randomSeed=" + randomSeed
-                        + ": pathStartValue=" + pathStartValue;
-        ToResult res=
-                new ToResult(resultHeader, expectedReturnRate, volatility, volatility2, finalStockPrice,
-                        pathValue);
+        String resultHeader= "Result of task with Header=" + taskHeader + ": randomSeed=" + randomSeed + ": pathStartValue=" + pathStartValue;
+        ToResult res= new ToResult(resultHeader, expectedReturnRate, volatility, volatility2, finalStockPrice, pathValue);
         return (Object)res;
     }
 }
