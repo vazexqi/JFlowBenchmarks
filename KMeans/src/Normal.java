@@ -118,8 +118,8 @@ public class Normal {
             int indexArrayLen= stop - start;
             int indexArray[]= new int[indexArrayLen];
             int pidx= 0;
-            for (int i= start; i < stop; i++) {
-                int index= Common.common_findNearestPoint(feature[i], nfeatures, clusters, nclusters);
+            for (int i1= start; i1 < stop; i1++) {
+                int index= Common.common_findNearestPoint(feature[i1], nfeatures, clusters, nclusters);
                 indexArray[pidx]= index;
                 pidx++;
             }
@@ -127,18 +127,18 @@ public class Normal {
 
             // Begin Stage2
             int sidx= 0;
-            for (int i= start; i < stop; i++) {
+            for (int i2= start; i2 < stop; i2++) {
 
                 int newIndex= indexArray[sidx];
-                if (membership[i] != newIndex) {
+                if (membership[i2] != newIndex) {
                     delta+= 1.0f;
                 }
 
-                membership[i]= newIndex;
+                membership[i2]= newIndex;
                 new_centers_len[newIndex]= new_centers_len[newIndex] + 1;
 
                 float[] tmpnew_centers= new_centers[newIndex];
-                float[] tmpfeature= feature[i];
+                float[] tmpfeature= feature[i2];
 
                 for (int j= 0; j < nfeatures; j++) {
                     tmpnew_centers[j]= tmpnew_centers[j] + tmpfeature[j];
