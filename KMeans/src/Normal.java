@@ -1,4 +1,3 @@
-
 /* =============================================================================
  *
  * normal.java
@@ -110,30 +109,23 @@ public class Normal {
         int[] new_centers_len= args.new_centers_len;
         float[][] new_centers= args.new_centers;
         float delta= 0.0f;
-        int start, stop;
 
         int CHUNK= 500;
-        start= myId * CHUNK;
 
-        while (start < npoints) {
-            stop= (((start + CHUNK) < npoints) ? (start + CHUNK) : npoints);
-
-//      	  sese parallel{
+        for (int start= myId * CHUNK; start < npoints; start+= CHUNK) {
+            // Begin Stage1
+            int stop= (((start + CHUNK) < npoints) ? (start + CHUNK) : npoints);
             int indexArrayLen= stop - start;
             int indexArray[]= new int[indexArrayLen];
             int pidx= 0;
             for (int i= start; i < stop; i++) {
-                int index= Common.common_findNearestPoint(feature[i],
-                        nfeatures,
-                        clusters,
-                        nclusters);
+                int index= Common.common_findNearestPoint(feature[i], nfeatures, clusters, nclusters);
                 indexArray[pidx]= index;
                 pidx++;
             }
-//      	  }
+            // End Stage1
 
-//      	  sese serial{
-
+            // Begin Stage2
             int sidx= 0;
             for (int i= start; i < stop; i++) {
 
@@ -155,63 +147,12 @@ public class Normal {
                 sidx++;
             }
 
-//      	  }
-
-
             if (start + CHUNK < npoints) {
-//  	atomic {
-                start= args.global_i;
                 args.global_i= start + CHUNK;
-//          }
-            } else {
-                break;
             }
+            // End Stage2
         }
 
-
-/*
-    while (start < npoints) {
-      stop = (((start + CHUNK) < npoints) ? (start + CHUNK) : npoints);
-
-      for (int i = start; i < stop; i++) {
-    	  
-    	  sese parallel{
-	        int index = Common.common_findNearestPoint(feature[i],
-	            nfeatures,
-	            clusters,
-	            nclusters);
-    	  }
-    	  
-    	  sese serial{
-    		  
-		         // If membership changes, increase delta by 1.
-		         // membership[i] cannot be changed by other threads
-		        if (membership[i] != index) {
-		            delta += 1.0f;
-		        }
-
-		        // Assign the membership to object i 
-    	        // membership[i] can't be changed by other thread 
-    	        membership[i] = index;
-
-    	        // Update new cluster centers : sum of objects located within 
-    	          new_centers_len[index] = new_centers_len[index] + 1;
-    	          for (int j = 0; j < nfeatures; j++) {
-    	            new_centers[index][j] = new_centers[index][j] + feature[i][j];
-    	          }
-    	  }
-          
-      }
-
-      // Update task queue 
-      if (start + CHUNK < npoints) {
-          start = args.global_i;
-          args.global_i = start + CHUNK;
-      } else {
-        break;
-      }
-    }//end of while
-*/
         args.global_delta= args.global_delta + delta;
     }
 
