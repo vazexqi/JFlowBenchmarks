@@ -98,6 +98,9 @@ public class Normal {
      * ==================================================================
      * ===========
      */
+
+    private static float delta;
+
     public static void work(int myId, GlobalArgs globalArgs) {
 
         float[][] feature= globalArgs.feature;
@@ -108,7 +111,7 @@ public class Normal {
         float[][] clusters= globalArgs.clusters;
         int[] new_centers_len= globalArgs.new_centers_len;
         float[][] new_centers= globalArgs.new_centers;
-        float delta= 0.0f;
+        delta= 0.0f;
 
         final int CHUNK= 500;
 
@@ -129,18 +132,18 @@ public class Normal {
 
                 // Begin Stage2
                 int sidx= 0;
-                for (int i= start; i < stop; i++) {
+                for (int i2= start; i2 < stop; i2++) {
 
                     int newIndex= indexArray[sidx];
-                    if (membership[i] != newIndex) {
+                    if (membership[i2] != newIndex) {
                         delta+= 1.0f;
                     }
 
-                    membership[i]= newIndex;
+                    membership[i2]= newIndex;
                     new_centers_len[newIndex]= new_centers_len[newIndex] + 1;
 
                     float[] tmpnew_centers= new_centers[newIndex];
-                    float[] tmpfeature= feature[i];
+                    float[] tmpfeature= feature[i2];
 
                     for (int j= 0; j < nfeatures; j++) {
                         tmpnew_centers[j]= tmpnew_centers[j] + tmpfeature[j];
