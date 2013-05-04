@@ -98,62 +98,67 @@ public class Normal {
      * ==================================================================
      * ===========
      */
-    public static void work(int myId, GlobalArgs args) {
+    public static void work(int myId, GlobalArgs globalArgs) {
 
-        float[][] feature= args.feature;
-        int nfeatures= args.nfeatures;
-        int npoints= args.npoints;
-        int nclusters= args.nclusters;
-        int[] membership= args.membership;
-        float[][] clusters= args.clusters;
-        int[] new_centers_len= args.new_centers_len;
-        float[][] new_centers= args.new_centers;
+        float[][] feature= globalArgs.feature;
+        int nfeatures= globalArgs.nfeatures;
+        int npoints= globalArgs.npoints;
+        int nclusters= globalArgs.nclusters;
+        int[] membership= globalArgs.membership;
+        float[][] clusters= globalArgs.clusters;
+        int[] new_centers_len= globalArgs.new_centers_len;
+        float[][] new_centers= globalArgs.new_centers;
         float delta= 0.0f;
 
-        int CHUNK= 500;
+        final int CHUNK= 500;
 
-        for (int start= myId * CHUNK; start < npoints; start+= CHUNK) {
-            // Begin Stage1
-            int stop= (((start + CHUNK) < npoints) ? (start + CHUNK) : npoints);
-            int indexArrayLen= stop - start;
-            int indexArray[]= new int[indexArrayLen];
-            int pidx= 0;
-            for (int i1= start; i1 < stop; i1++) {
-                int index= Common.common_findNearestPoint(feature[i1], nfeatures, clusters, nclusters);
-                indexArray[pidx]= index;
-                pidx++;
-            }
-            // End Stage1
+        try {
 
-            // Begin Stage2
-            int sidx= 0;
-            for (int i2= start; i2 < stop; i2++) {
+            for (int start= myId * CHUNK; start < npoints; start+= CHUNK) {
+                // Begin Stage1
+                int stop= (((start + CHUNK) < npoints) ? (start + CHUNK) : npoints);
+                int indexArrayLen= stop - start;
+                int indexArray[]= new int[indexArrayLen];
+                int pidx= 0;
+                for (int i1= start; i1 < stop; i1++) {
+                    int index= Common.common_findNearestPoint(feature[i1], nfeatures, clusters, nclusters);
+                    indexArray[pidx]= index;
+                    pidx++;
+                }
+                // End Stage1
 
-                int newIndex= indexArray[sidx];
-                if (membership[i2] != newIndex) {
-                    delta+= 1.0f;
+                // Begin Stage2
+                int sidx= 0;
+                for (int i= start; i < stop; i++) {
+
+                    int newIndex= indexArray[sidx];
+                    if (membership[i] != newIndex) {
+                        delta+= 1.0f;
+                    }
+
+                    membership[i]= newIndex;
+                    new_centers_len[newIndex]= new_centers_len[newIndex] + 1;
+
+                    float[] tmpnew_centers= new_centers[newIndex];
+                    float[] tmpfeature= feature[i];
+
+                    for (int j= 0; j < nfeatures; j++) {
+                        tmpnew_centers[j]= tmpnew_centers[j] + tmpfeature[j];
+                    }
+
+                    sidx++;
                 }
 
-                membership[i2]= newIndex;
-                new_centers_len[newIndex]= new_centers_len[newIndex] + 1;
-
-                float[] tmpnew_centers= new_centers[newIndex];
-                float[] tmpfeature= feature[i2];
-
-                for (int j= 0; j < nfeatures; j++) {
-                    tmpnew_centers[j]= tmpnew_centers[j] + tmpfeature[j];
+                if (start + CHUNK < npoints) {
+                    globalArgs.global_i= start + CHUNK;
                 }
-
-                sidx++;
+                // End Stage2
             }
+        } catch (Exception e) {
 
-            if (start + CHUNK < npoints) {
-                args.global_i= start + CHUNK;
-            }
-            // End Stage2
         }
 
-        args.global_delta= args.global_delta + delta;
+        globalArgs.global_delta= globalArgs.global_delta + delta;
     }
 
     /*
