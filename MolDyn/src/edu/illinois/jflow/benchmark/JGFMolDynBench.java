@@ -407,38 +407,41 @@ class mdRunner {
             /* compute forces */
             int lworkload= workload;
 
-            for (int i= 0, scratch_idx= 0; i < mdsize; i+= lworkload, scratch_idx++) {
+            try {
+                for (int i= 0, scratch_idx= 0; i < mdsize; i+= lworkload, scratch_idx++) {
 
-                // Begin Stage1
-                int ilow= i;
-                int iupper= i + lworkload;
-                if (iupper > mdsize) {
-                    iupper= mdsize;
-                }
-
-                double workingpad[][]= scratchpad[scratch_idx];
-                for (int j= 0; j < 3; j++) {
-                    for (int l= 0; l < mdsize; l++) {
-                        workingpad[j][l]= 0;
+                    // Begin Stage1
+                    int ilow= i;
+                    int iupper= i + lworkload;
+                    if (iupper > mdsize) {
+                        iupper= mdsize;
                     }
-                }
-                MDStore store= new MDStore();
-                for (int idx= ilow; idx < iupper; idx++) {
-                    one[idx].force(side, rcoff, mdsize, idx, xx, yy, zz, mymd, store, workingpad);
-                }
-                // End Stage1
 
-                // Begin Stage2
-                for (int k= 0; k < 3; k++) {
-                    for (int j= 0; j < mdsize; j++) {
-                        sh_force[k][j]+= workingpad[k][j];
+                    double workingpad[][]= scratchpad[scratch_idx];
+                    for (int j= 0; j < 3; j++) {
+                        for (int l= 0; l < mdsize; l++) {
+                            workingpad[j][l]= 0;
+                        }
                     }
-                }
-                l_epot+= store.epot;
-                l_vir+= store.vir;
-                l_interacts+= store.interacts;
-                // End Stage2
+                    MDStore store= new MDStore();
+                    for (int idx= ilow; idx < iupper; idx++) {
+                        one[idx].force(side, rcoff, mdsize, idx, xx, yy, zz, mymd, store, workingpad);
+                    }
+                    // End Stage1
 
+                    // Begin Stage2
+                    for (int k= 0; k < 3; k++) {
+                        for (int j= 0; j < mdsize; j++) {
+                            sh_force[k][j]+= workingpad[k][j];
+                        }
+                    }
+                    l_epot+= store.epot;
+                    l_vir+= store.vir;
+                    l_interacts+= store.interacts;
+                    // End Stage2
+
+                }
+            } catch (Exception e) {
             }
 
             mymd.epot[0]= l_epot;
