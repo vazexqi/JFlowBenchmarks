@@ -339,6 +339,12 @@ class mdRunner {
         }
     }
 
+    double l_epot= 0.0;
+
+    double l_vir= 0.0;
+
+    int l_interacts= 0;
+
     public void run() {
         /* Parameter determination */
 
@@ -384,8 +390,6 @@ class mdRunner {
         double scratchpad[][][];
         scratchpad= new double[numP][3][mdsize];
 
-        long par_time= 0;
-
         for (int move= 0; move < movemx; move++) {
             /* move the particles and update velocities */
             for (int i= 0; i < one.length; i++) {
@@ -401,27 +405,18 @@ class mdRunner {
             mymd.interacts[id]= 0;
 
             /* compute forces */
-            int numThread= nthreads;
             int lworkload= workload;
-            // for (int i=0+id;i<mdsize;i+=numThread) {
-            int scratch_idx= 0;
 
-            double l_epot= 0.0;
-            double l_vir= 0.0;
-            int l_interacts= 0;
+            for (int i= 0, scratch_idx= 0; i < mdsize; i+= lworkload, scratch_idx++) {
 
-            for (int i= 0; i < mdsize; i+= lworkload) {
-
+                // Begin Stage1
                 int ilow= i;
                 int iupper= i + lworkload;
                 if (iupper > mdsize) {
                     iupper= mdsize;
                 }
-                int l_size= iupper - ilow;
 
-                double workingpad[][]= scratchpad[scratch_idx++];
-                long par_start= System.currentTimeMillis();
-//        sese parallel{
+                double workingpad[][]= scratchpad[scratch_idx];
                 for (int j= 0; j < 3; j++) {
                     for (int l= 0; l < mdsize; l++) {
                         workingpad[j][l]= 0;
@@ -431,11 +426,9 @@ class mdRunner {
                 for (int idx= ilow; idx < iupper; idx++) {
                     one[idx].force(side, rcoff, mdsize, idx, xx, yy, zz, mymd, store, workingpad);
                 }
-//        }
-                long par_end= System.currentTimeMillis();
-                par_time+= (par_end - par_start);
+                // End Stage1
 
-//        sese serial{
+                // Begin Stage2
                 for (int k= 0; k < 3; k++) {
                     for (int j= 0; j < mdsize; j++) {
                         sh_force[k][j]+= workingpad[k][j];
@@ -444,12 +437,11 @@ class mdRunner {
                 l_epot+= store.epot;
                 l_vir+= store.vir;
                 l_interacts+= store.interacts;
-//        }
+                // End Stage2
 
             }
 
             mymd.epot[0]= l_epot;
-//      System.out.println("SEQ_START");
             mymd.vir[0]= l_vir;
             mymd.interactions= l_interacts;
 
@@ -512,7 +504,6 @@ class mdRunner {
             }
 
         }
-//    System.out.println("par time="+par_time);
     }
 }
 
