@@ -1,4 +1,5 @@
 package edu.illinois.jflow.benchmark;
+
 /**************************************************************************
  *                                                                         *
  *             Java Grande Forum Benchmark Suite - Version 2.0             *
@@ -47,31 +48,31 @@ public class RatePath extends PathId {
     /**
      * Class variable, for setting whether to print debug messages.
      */
-    public static boolean DEBUG;
+    public static boolean DEBUG= true;
 
     /**
      * The prompt to write before any debug messages.
      */
-    protected static String prompt;
+    protected static String prompt= "RatePath>";
 
     /**
      * Class variable for determining which field in the stock data should be used. This is
      * currently set to point to the 'closing price'.
      */
-    public static int DATUMFIELD;
+    public static int DATUMFIELD= 4;
 
     /**
      * Class variable to represent the minimal date, whence the stock prices appear. Used to trap
      * any potential problems with the data.
      */
-    public static int MINIMUMDATE;
+    public static int MINIMUMDATE= 19000101;
 
     /**
      * Class variable for defining what is meant by a small number, small enough to cause an
      * arithmetic overflow when dividing. According to the Java Nutshell book, the actual range is
      * +/-4.9406564841246544E-324
      */
-    public static double EPSILON;
+    public static double EPSILON= 10.0 * (4.9E-324);
 
     // ------------------------------------------------------------------------
     // Instance variables.
@@ -91,15 +92,6 @@ public class RatePath extends PathId {
      */
     private int nAcceptedPathValue;
 
-    public void initFields() {
-        DEBUG= true;
-        prompt= "RatePath> ";
-        DATUMFIELD= 4;
-        MINIMUMDATE= 19000101;
-        EPSILON= 10.0 * (4.9E-324);
-        nAcceptedPathValue= 0;
-    }
-
     // ------------------------------------------------------------------------
     // Constructors.
     // ------------------------------------------------------------------------
@@ -110,7 +102,6 @@ public class RatePath extends PathId {
      * @exception DemoException thrown if there is a problem reading in the data file.
      */
     public RatePath(String filename) {
-        initFields();
         set_prompt(prompt);
         set_DEBUG(DEBUG);
         readRatesFile(filename);
@@ -127,7 +118,6 @@ public class RatePath extends PathId {
      * @param dTime the time interval between successive path values, in fractions of a year.
      */
     public RatePath(double[] pathValue, String name, int startDate, int endDate, double dTime) {
-        initFields();
         set_name(name);
         set_startDate(startDate);
         set_endDate(endDate);
@@ -146,8 +136,6 @@ public class RatePath extends PathId {
      * @exception DemoException thrown if there is an attempt to access an undefined variable.
      */
     public RatePath(MonteCarloPath mc) {
-        initFields();
-        //
         // Fields pertaining to the parent PathId object:
         set_name(mc.get_name());
         set_startDate(mc.get_startDate());
@@ -173,7 +161,6 @@ public class RatePath extends PathId {
      * @param dTime the time interval between successive path values, in fractions of a year.
      */
     public RatePath(int pathValueLength, String name, int startDate, int endDate, double dTime) {
-        initFields();
         set_name(name);
         set_startDate(startDate);
         set_endDate(endDate);

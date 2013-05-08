@@ -37,12 +37,12 @@ public class PriceStock extends Universal {
     /**
      * Class variable for determining whether to switch on debug output or not.
      */
-    public static boolean DEBUG;
+    public static boolean DEBUG = true;
 
     /**
      * Class variable for defining the debug message prompt.
      */
-    protected static String prompt;
+    protected static String prompt= "PriceStock> ";
 
     // ------------------------------------------------------------------------
     // Instance variables.
@@ -60,7 +60,7 @@ public class PriceStock extends Universal {
     /**
      * Random seed from which the Monte Carlo sequence is started.
      */
-    private long randomSeed;
+    private long randomSeed = -1;
 
     /**
      * Initial stock price value.
@@ -82,18 +82,6 @@ public class PriceStock extends Universal {
 
     private double[] pathValue;
 
-    public void initFields() {
-        DEBUG= true;
-        prompt= "PriceStock> ";
-
-        randomSeed= -1;
-//    pathStartValue = Double.NaN;
-//    expectedReturnRate = Double.NaN;
-//    volatility = Double.NaN;
-//    volatility2 = Double.NaN;
-//    finalStockPrice = Double.NaN;
-    }
-
     // ------------------------------------------------------------------------
     // Constructors.
     // ------------------------------------------------------------------------
@@ -102,7 +90,6 @@ public class PriceStock extends Universal {
      */
     public PriceStock() {
         super();
-        initFields();
         mcPath= new MonteCarloPath();
         set_prompt(prompt);
         set_DEBUG(DEBUG);

@@ -1,4 +1,5 @@
 package edu.illinois.jflow.benchmark;
+
 /**************************************************************************
  *                                                                         *
  *             Java Grande Forum Benchmark Suite - Version 2.0             *
@@ -35,12 +36,12 @@ public class PathId extends Universal {
     /**
      * A class variable.
      */
-    public static boolean DEBUG;
+    public static boolean DEBUG= true;
 
     /**
      * The prompt to write before any debug messages.
      */
-    protected static String prompt;
+    protected static String prompt= "PathId>";
 
     // ------------------------------------------------------------------------
     // Instance variables.
@@ -65,14 +66,6 @@ public class PathId extends Universal {
      */
     private double dTime;
 
-    public void initFields() {
-        DEBUG= true;
-        prompt= "PathId> ";
-        startDate= 0;
-        endDate= 0;
-//    dTime = Double.NaN;
-    }
-
     // ------------------------------------------------------------------------
     // Constructors.
     // ------------------------------------------------------------------------
@@ -81,7 +74,6 @@ public class PathId extends Universal {
      */
     public PathId() {
         super();
-        initFields();
         set_prompt(prompt);
         set_DEBUG(DEBUG);
     }
@@ -92,7 +84,6 @@ public class PathId extends Universal {
      * @param name The name for the security to record.
      */
     public PathId(String name) {
-        initFields();
         set_prompt(prompt);
         set_DEBUG(DEBUG);
         this.name= name;

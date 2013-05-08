@@ -1,4 +1,5 @@
 package edu.illinois.jflow.benchmark;
+
 /**************************************************************************
  *                                                                         *
  *             Java Grande Forum Benchmark Suite - Version 2.0             *
@@ -36,7 +37,7 @@ public class Universal {
      * Class variable, for whether to print debug messages. This one is unique to this class, and
      * can hence be set in the one place.
      */
-    private static boolean UNIVERSAL_DEBUG;
+    private static boolean UNIVERSAL_DEBUG= true;
 
     //------------------------------------------------------------------------
     // Instance variables.
@@ -45,12 +46,12 @@ public class Universal {
      * Variable, for whether to print debug messages. This one can be set by subsequent child
      * classes.
      */
-    private boolean DEBUG;
+    private boolean DEBUG= true;
 
     /**
      * The prompt to write before any debug messages.
      */
-    private String prompt;
+    private String prompt= "Universal> ";
 
     //------------------------------------------------------------------------
     // Constructors.
@@ -59,9 +60,6 @@ public class Universal {
      * Default constructor.
      */
     public Universal() {
-        this.DEBUG= true;
-        this.UNIVERSAL_DEBUG= true;
-        this.prompt= "Universal> ";
     }
 
     //------------------------------------------------------------------------

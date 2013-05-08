@@ -42,18 +42,18 @@ public class MonteCarloPath extends PathId {
     /**
      * Class variable for determining whether to switch on debug output or not.
      */
-    public static boolean DEBUG;
+    public static boolean DEBUG = true;
 
     /**
      * Class variable for defining the debug message prompt.
      */
-    protected static String prompt;
+    protected static String prompt= "MonteCarloPath> ";
 
     /**
      * Class variable for determining which field in the stock data should be used. This is
      * currently set to point to the 'closing price', as defined in class RatePath.
      */
-    public static int DATUMFIELD;
+    public static int DATUMFIELD = 4;
 
     // ------------------------------------------------------------------------
     // Instance variables.
@@ -94,18 +94,6 @@ public class MonteCarloPath extends PathId {
      */
     private double pathStartValue;
 
-    public void initFields() {
-        DEBUG= true;
-        prompt= "MonteCarloPath> ";
-        DATUMFIELD= 4;
-        returnDefinition= 0;
-        // expectedReturnRate = Double.NaN;
-        // volatility = Double.NaN;
-        nTimeSteps= 0;
-        // pathStartValue = Double.NaN;
-
-    }
-
     // ------------------------------------------------------------------------
     // Constructors.
     // ------------------------------------------------------------------------
@@ -116,7 +104,6 @@ public class MonteCarloPath extends PathId {
      */
     public MonteCarloPath() {
         super();
-        initFields();
         set_prompt(prompt);
         set_DEBUG(DEBUG);
     }
@@ -134,7 +121,6 @@ public class MonteCarloPath extends PathId {
         /**
          * These instance variables are members of PathId class.
          */
-        initFields();
         copyInstanceVariables(returnPath);
         this.nTimeSteps= nTimeSteps;
         this.pathValue= new double[nTimeSteps];
@@ -166,7 +152,6 @@ public class MonteCarloPath extends PathId {
          * These instance variables are members of PathId class. Invoking with this particular
          * signature should point to the definition in the PathId class.
          */
-        initFields();
         copyInstanceVariables(pathId);
         this.returnDefinition= returnDefinition;
         this.expectedReturnRate= expectedReturnRate;
@@ -200,7 +185,6 @@ public class MonteCarloPath extends PathId {
         /**
          * These instance variables are members of PathId class.
          */
-        initFields();
         set_name(name);
         set_startDate(startDate);
         set_endDate(endDate);
