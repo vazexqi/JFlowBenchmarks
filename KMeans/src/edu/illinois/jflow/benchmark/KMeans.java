@@ -1,3 +1,4 @@
+package edu.illinois.jflow.benchmark;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;

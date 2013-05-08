@@ -1,3 +1,4 @@
+package edu.illinois.jflow.benchmark;
 public class Random {
   int[] mt; 
   int mti;

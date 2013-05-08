@@ -1,3 +1,4 @@
+package edu.illinois.jflow.benchmark;
 /* =============================================================================
  *
  * cluster.java
