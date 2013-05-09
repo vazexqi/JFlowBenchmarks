@@ -1,5 +1,10 @@
 package no.priv.garshol.duke;
 
+import groovyx.gpars.DataflowMessagingRunnable;
+import groovyx.gpars.dataflow.DataflowQueue;
+import groovyx.gpars.dataflow.operator.FlowGraph;
+
+import java.util.Arrays;
 import java.util.List;
 import java.util.Iterator;
 import java.util.ArrayList;
@@ -218,27 +223,42 @@ public class Processor {
         }
     }
 
+    class Bundle {
+        boolean matchall;
+
+        Record record;
+    }
+
     private void match(Collection<Record> records, boolean matchall)
             throws IOException {
         try {
+            final DataflowQueue<Bundle> channel0= new DataflowQueue<Bundle>();
+            FlowGraph fGraph= new FlowGraph();
+            fGraph.operator(Arrays.asList(channel0), Arrays.asList(), 8, new DataflowMessagingRunnable(1) {
+                @Override
+                protected void doRun(Object... args) {
+                    try {
+                        Bundle b= ((Bundle)args[0]);
+                        Record record= b.record;
+                        boolean matchall= b.matchall;
+                        Collection<Record> candidates= database.findCandidateMatches(record);
+                        if (logger.isDebugEnabled())
+                            logger.debug("Matching record " + PrintMatchListener.toString(record, config.getProperties()) + " found " + candidates.size() + " candidates");
+                        if (matchall)
+                            compareCandidatesSimple(record, candidates);
+                        else
+                            compareCandidatesBest(record, candidates);
+                    } catch (Exception e) {
+                    }
+                }
+            });
             for (Record record : records) {
-                // Begin Stage1
-//                long start= System.currentTimeMillis();
-                Collection<Record> candidates= database.findCandidateMatches(record);
-//                searching+= System.currentTimeMillis() - start;
-                if (logger.isDebugEnabled())
-                    logger.debug("Matching record " +
-                            PrintMatchListener.toString(record, config.getProperties()) +
-                            " found " + candidates.size() + " candidates");
-
-//                start= System.currentTimeMillis();
-                if (matchall)
-                    compareCandidatesSimple(record, candidates);
-                else
-                    compareCandidatesBest(record, candidates);
-//                comparing+= System.currentTimeMillis() - start;
-                // End Stage1
+                Bundle b= new Bundle();
+                b.record= record;
+                b.matchall= matchall;
+                channel0.bind(b);
             }
+            fGraph.waitForAll();
         } catch (Exception e) {
 
         }
