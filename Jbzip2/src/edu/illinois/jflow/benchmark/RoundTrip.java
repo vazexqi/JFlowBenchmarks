@@ -144,7 +144,9 @@ public class RoundTrip {
         List<File> files= getFiles(new File(args[0]));
 
         System.out.println("Testing compression/decompression cycle...");
+        long sTime= System.currentTimeMillis();
         roundTrip(files);
+        System.out.println("Time=" + (System.currentTimeMillis() - sTime));
 
     }
 
