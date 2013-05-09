@@ -17,12 +17,17 @@ import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.RAMDirectory;
 
+import groovyx.gpars.DataflowMessagingRunnable;
+import groovyx.gpars.dataflow.DataflowQueue;
+import groovyx.gpars.dataflow.operator.FlowGraph;
+
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class LireIndexingExample {
 
@@ -63,29 +68,96 @@ public class LireIndexingExample {
         return FCTHExtractor;
     }
 
+    class Bundle {
+        BufferedImage bufferedImage;
+
+        Document docColor;
+
+        Document docJPEG;
+
+        Document docTamura;
+
+        String imagePath;
+
+        IndexWriter indexWriter;
+    }
+
     void serialIndexImages() throws Exception {
         IndexWriter indexWriter= LuceneUtils.createIndexWriter(DATABASE, true);
 
+        final DataflowQueue<Bundle> channel0= new DataflowQueue<Bundle>();
+        final DataflowQueue<Bundle> channel1= new DataflowQueue<Bundle>();
+        final DataflowQueue<Bundle> channel2= new DataflowQueue<Bundle>();
+        final DataflowQueue<Bundle> channel3= new DataflowQueue<Bundle>();
+        FlowGraph fGraph= new FlowGraph();
+        fGraph.operator(Arrays.asList(channel0), Arrays.asList(channel1), 8, new DataflowMessagingRunnable(1) {
+            @Override
+            protected void doRun(Object... args) {
+                try {
+                    Bundle b= ((Bundle)args[0]);
+                    String imagePath= b.imagePath;
+                    BufferedImage bufferedImage= ImageIO.read(new FileInputStream(imagePath));
+                    Document docJPEG= JPEGExtractor.createDocument(bufferedImage, imagePath);
+                    b.bufferedImage= bufferedImage;
+                    b.docJPEG= docJPEG;
+                    channel1.bind(b);
+                } catch (Exception e) {
+                }
+            }
+        });
+        fGraph.operator(Arrays.asList(channel1), Arrays.asList(channel2), 8, new DataflowMessagingRunnable(1) {
+            @Override
+            protected void doRun(Object... args) {
+                try {
+                    Bundle b= ((Bundle)args[0]);
+                    BufferedImage bufferedImage= b.bufferedImage;
+                    Document docJPEG= b.docJPEG;
+                    String imagePath= b.imagePath;
+                    Document docTamura= tamuraExtractor.createDocument(docJPEG, bufferedImage, imagePath);
+                    b.docTamura= docTamura;
+                    channel2.bind(b);
+                } catch (Exception e) {
+                }
+            }
+        });
+        fGraph.operator(Arrays.asList(channel2), Arrays.asList(channel3), 8, new DataflowMessagingRunnable(1) {
+            @Override
+            protected void doRun(Object... args) {
+                try {
+                    Bundle b= ((Bundle)args[0]);
+                    BufferedImage bufferedImage= b.bufferedImage;
+                    String imagePath= b.imagePath;
+                    Document docTamura= b.docTamura;
+                    Document docColor= autoColorCorrelogramExtractor.createDocument(docTamura, bufferedImage, imagePath);
+                    b.docColor= docColor;
+                    channel3.bind(b);
+                } catch (Exception e) {
+                }
+            }
+        });
+        fGraph.operator(Arrays.asList(channel3), Arrays.asList(), new DataflowMessagingRunnable(1) {
+            @Override
+            protected void doRun(Object... args) {
+                try {
+                    Bundle b= ((Bundle)args[0]);
+                    BufferedImage bufferedImage= b.bufferedImage;
+                    Document docColor= b.docColor;
+                    String imagePath= b.imagePath;
+                    IndexWriter indexWriter= b.indexWriter;
+                    Document docFCTH= FCTHExtractor.createDocument(docColor, bufferedImage, imagePath);
+                    indexWriter.addDocument(docFCTH);
+                } catch (Exception e) {
+                }
+            }
+        });
         for (String imagePath : FileUtils.getAllImages(new File(IMAGES_DIRECTORY), true)) {
 
-            // Begin Stage1
-            BufferedImage bufferedImage= ImageIO.read(new FileInputStream(imagePath));
-            Document docJPEG= JPEGExtractor.createDocument(bufferedImage, imagePath);
-            // End Stage1
-
-            // Begin Stage2
-            Document docTamura= tamuraExtractor.createDocument(docJPEG, bufferedImage, imagePath);
-            // End Stage2
-
-            // Begin Stage3
-            Document docColor= autoColorCorrelogramExtractor.createDocument(docTamura, bufferedImage, imagePath);
-            // End Stage3
-
-            // Begin Stage4
-            Document docFCTH= FCTHExtractor.createDocument(docColor, bufferedImage, imagePath);
-            indexWriter.addDocument(docFCTH);
-            // End Stage4
+            Bundle b= new Bundle();
+            b.imagePath= imagePath;
+            b.indexWriter= indexWriter;
+            channel0.bind(b);
         }
+        fGraph.waitForAll();
 
         indexWriter.optimize();
         indexWriter.close();
