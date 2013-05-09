@@ -1,5 +1,11 @@
 package edu.illinois.jflow.benchmark;
 
+import java.util.Arrays;
+
+import groovyx.gpars.DataflowMessagingRunnable;
+import groovyx.gpars.dataflow.DataflowQueue;
+import groovyx.gpars.dataflow.operator.FlowGraph;
+
 /**************************************************************************
 *                                                                         *
 *             Java Grande Forum Benchmark Suite - Version 2.0             *
@@ -179,6 +185,24 @@ public class RayTracer {
         view= scene.getView();
     }
 
+    class Bundle {
+        Interval interval;
+
+        Vec leftVec;
+
+        int line_checksum;
+
+        int[] row;
+
+        int[] tempArray;
+
+        Vec upVec;
+
+        Vec viewVec;
+
+        int yLine;
+    }
+
     public void render(Interval interval, boolean vtest) {
         // Screen variables
         int row[]= new int[interval.width * (interval.yto - interval.yfrom)];
@@ -197,56 +221,86 @@ public class RayTracer {
         leftVec.scale(view.aspect * frustrumwidth);
 
         try {
+            final DataflowQueue<Bundle> channel0= new DataflowQueue<Bundle>();
+            final DataflowQueue<Bundle> channel1= new DataflowQueue<Bundle>();
+            FlowGraph fGraph= new FlowGraph();
+            fGraph.operator(Arrays.asList(channel0), Arrays.asList(channel1), 8, new DataflowMessagingRunnable(1) {
+                @Override
+                protected void doRun(Object... args) {
+                    try {
+                        Bundle b= ((Bundle)args[0]);
+                        Interval interval= b.interval;
+                        int yLine= b.yLine;
+                        Vec upVec= b.upVec;
+                        Vec viewVec= b.viewVec;
+                        Vec leftVec= b.leftVec;
+                        double ylen= (double)(2.0 * yLine) / (double)interval.width - 1.0;
+                        int tempArray[]= new int[interval.width];
+                        int line_checksum= 0;
+                        Ray r= new Ray(view.from, new Vec(0, 0, 0));
+                        for (int x= 0; x < interval.width; x++) {
+                            Vec col= new Vec();
+                            double xlen= (double)(2.0 * x) / (double)interval.width - 1.0;
+                            r.D= new Vec(xlen * leftVec.x + ylen * upVec.x, xlen * leftVec.y + ylen * upVec.y, xlen * leftVec.z + ylen * upVec.z);
+                            r.D.add(viewVec);
+                            r.D.normalize();
+                            col= trace(0, 1.0, r, new Isect(), new Ray(), new Vec());
+                            int red= (int)(col.x * 255.0);
+                            if (red > 255)
+                                red= 255;
+                            int green= (int)(col.y * 255.0);
+                            if (green > 255)
+                                green= 255;
+                            int blue= (int)(col.z * 255.0);
+                            if (blue > 255)
+                                blue= 255;
+                            line_checksum+= red;
+                            line_checksum+= green;
+                            line_checksum+= blue;
+                            tempArray[x]= alpha | (red << 16) | (green << 8) | (blue);
+                        }
+                        b.tempArray= tempArray;
+                        b.line_checksum= line_checksum;
+                        channel1.bind(b);
+                    } catch (Exception e) {
+                    }
+                }
+            });
+            fGraph.operator(Arrays.asList(channel1), Arrays.asList(), new DataflowMessagingRunnable(1) {
+                @Override
+                protected void doRun(Object... args) {
+                    try {
+                        Bundle b= ((Bundle)args[0]);
+                        Interval interval= b.interval;
+                        int[] tempArray= b.tempArray;
+                        int yLine= b.yLine;
+                        int line_checksum= b.line_checksum;
+                        int[] row= b.row;
+                        for (int x= 0; x < interval.width; x++) {
+                            int pixCounter_t= yLine * (interval.width) + x;
+                            row[pixCounter_t]= tempArray[x];
+                        }
+                        checksum+= line_checksum;
+                        if (yLine == (interval.yto - 1)) {
+                            System.out.println("CHECKSUM=" + checksum);
+                        }
+                    } catch (Exception e) {
+                    }
+                }
+            });
             // For each line
             for (int yLine= interval.yfrom; yLine < interval.yto; yLine++) {
 
-                // Begin Stage1
-                double ylen= (double)(2.0 * yLine) / (double)interval.width - 1.0;
-                int tempArray[]= new int[interval.width];
-                int line_checksum= 0;
-                Ray r= new Ray(view.from, new Vec(0, 0, 0));
-
-                for (int x= 0; x < interval.width; x++) {
-                    Vec col= new Vec();
-
-                    double xlen= (double)(2.0 * x) / (double)interval.width - 1.0;
-                    r.D= new Vec(xlen * leftVec.x + ylen * upVec.x, xlen * leftVec.y + ylen * upVec.y, xlen * leftVec.z + ylen * upVec.z);
-                    r.D.add(viewVec);
-                    r.D.normalize();
-
-                    col= trace(0, 1.0, r, new Isect(), new Ray(), new Vec());
-
-                    // computes the color of the ray
-
-                    int red= (int)(col.x * 255.0);
-                    if (red > 255)
-                        red= 255;
-                    int green= (int)(col.y * 255.0);
-                    if (green > 255)
-                        green= 255;
-                    int blue= (int)(col.z * 255.0);
-                    if (blue > 255)
-                        blue= 255;
-
-                    line_checksum+= red;
-                    line_checksum+= green;
-                    line_checksum+= blue;
-
-                    tempArray[x]= alpha | (red << 16) | (green << 8) | (blue);
-                }
-                // End Stage1
-
-                // Begin Stage2
-                for (int x= 0; x < interval.width; x++) {
-                    int pixCounter_t= yLine * (interval.width) + x;
-                    row[pixCounter_t]= tempArray[x];
-                }
-                checksum+= line_checksum;
-                if (yLine == (interval.yto - 1)) {
-                    System.out.println("CHECKSUM=" + checksum);
-                }
-                // End Stage2
+                Bundle b= new Bundle();
+                b.yLine= yLine;
+                b.interval= interval;
+                b.leftVec= leftVec;
+                b.row= row;
+                b.upVec= upVec;
+                b.viewVec= viewVec;
+                channel0.bind(b);
             }
+            fGraph.waitForAll();
         } catch (Exception e) {
 
         }
