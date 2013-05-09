@@ -1,0 +1,8 @@
+apply plugin: 'java'
+
+dependencies {
+    compile fileTree(dir: 'lib', include: '*.jar')
+
+    testCompile group: 'junit', name: 'junit', version: '4.+'
+    testCompile fileTree(dir: 'test-lib', include: '*.jar')
+}
