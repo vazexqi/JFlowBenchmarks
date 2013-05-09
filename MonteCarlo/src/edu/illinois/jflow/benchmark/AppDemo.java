@@ -1,4 +1,9 @@
 package edu.illinois.jflow.benchmark;
+import groovyx.gpars.DataflowMessagingRunnable;
+import groovyx.gpars.dataflow.DataflowQueue;
+import groovyx.gpars.dataflow.operator.FlowGraph;
+
+import java.util.Arrays;
 /**************************************************************************
  *                                                                         *
  *             Java Grande Forum Benchmark Suite - Version 2.0             *
@@ -156,6 +161,18 @@ public class AppDemo extends Universal {
     // anonymous inner classes not being able to reference non-final local variables
     private double avgExpectedReturnRateMC2;
 
+    class Bundle {
+        RatePath avgMCrate;
+
+        int iRun;
+
+        int ilow;
+
+        int iupper;
+
+        PriceStock[] psArray;
+    }
+
     public void runSerial() throws Exception {
         avgExpectedReturnRateMC2= 0.0;
 
@@ -163,36 +180,63 @@ public class AppDemo extends Universal {
         // Monte Carlo simulations.
         RatePath avgMCrate= new RatePath(nTimeStepsMC, "MC", 19990109, 19991231, dTime);
 
+        final DataflowQueue<Bundle> channel0= new DataflowQueue<Bundle>();
+        final DataflowQueue<Bundle> channel1= new DataflowQueue<Bundle>();
+        FlowGraph fGraph= new FlowGraph();
+        fGraph.operator(Arrays.asList(channel0), Arrays.asList(channel1), 8, new DataflowMessagingRunnable(1) {
+            @Override
+            protected void doRun(Object... args) {
+                try {
+                    Bundle b= ((Bundle)args[0]);
+                    int iRun= b.iRun;
+                    int ilow= iRun;
+                    int iupper= iRun + workload;
+                    if (iupper > nRunsMC) {
+                        iupper= nRunsMC;
+                    }
+                    int l_size= iupper - ilow;
+                    PriceStock psArray[]= new PriceStock[l_size];
+                    for (int idx= ilow; idx < iupper; idx++) {
+                        PriceStock ps= new PriceStock();
+                        ps.setInitAllTasks(initAllTasks);
+                        ps.setTask(tasks.elementAt(idx));
+                        ps.run();
+                        psArray[idx - ilow]= ps;
+                    }
+                    b.psArray= psArray;
+                    b.iupper= iupper;
+                    channel1.bind(b);
+                } catch (Exception e) {
+                }
+            }
+        });
+        fGraph.operator(Arrays.asList(channel1), Arrays.asList(), new DataflowMessagingRunnable(1) {
+            @Override
+            protected void doRun(Object... args) {
+                try {
+                    Bundle b= ((Bundle)args[0]);
+                    int ilow= b.ilow;
+                    PriceStock[] psArray= b.psArray;
+                    RatePath avgMCrate= b.avgMCrate;
+                    int iupper= b.iupper;
+                    for (int idx= ilow; idx < iupper; idx++) {
+                        ToResult returnMC= (ToResult)psArray[idx - ilow].getResult();
+                        avgMCrate.inc_pathValue(returnMC.get_pathValue());
+                        avgExpectedReturnRateMC2+= returnMC.get_expectedReturnRate();
+                        avgVolatilityMC+= returnMC.get_volatility();
+                    }
+                } catch (Exception e) {
+                }
+            }
+        });
         for (int iRun= 0; iRun < nRunsMC; iRun= iRun + workload) {
-            // Begin Stage1
-            int ilow= iRun;
-            int iupper= iRun + workload;
-            if (iupper > nRunsMC) {
-                iupper= nRunsMC;
-            }
-
-            int l_size= iupper - ilow;
-            PriceStock psArray[]= new PriceStock[l_size];
-
-            for (int idx= ilow; idx < iupper; idx++) {
-                PriceStock ps= new PriceStock();
-                ps.setInitAllTasks(initAllTasks);
-                ps.setTask(tasks.elementAt(idx));
-                ps.run();
-                psArray[idx - ilow]= ps;
-            }
-            // End Stage1
-
-            // Begin Stage2
-            for (int idx= ilow; idx < iupper; idx++) {
-                ToResult returnMC= (ToResult)psArray[idx - ilow].getResult();
-                avgMCrate.inc_pathValue(returnMC.get_pathValue());
-                avgExpectedReturnRateMC2+= returnMC.get_expectedReturnRate();
-                avgVolatilityMC+= returnMC.get_volatility();
-            }
-            // End Stage2
+            Bundle b= new Bundle();
+            b.iRun= iRun;
+            b.avgMCrate= avgMCrate;
+            channel0.bind(b);
 
         }
+        fGraph.waitForAll();
         avgMCrate.inc_pathValue((double)1.0 / ((double)nRunsMC));
         avgExpectedReturnRateMC2/= nRunsMC;
         avgVolatilityMC/= nRunsMC;
