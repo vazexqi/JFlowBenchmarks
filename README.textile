@@ -14,7 +14,11 @@ h4. Coding Conventions
 
 When coding with Eclipse, please use the included code formatter (from Eclipse JDT) in the "Coding conventions" folder. For more information on using the custom code formatter, refer to this "guide":http://help.eclipse.org/juno/index.jsp?topic=/org.eclipse.jdt.doc.user/reference/preferences/java/codestyle/ref-preferences-formatter.htm.
 
-h2. The benchmarks
+h2. The benchmarks (that we actually used)
+
+While there are several benchmarks that we have looked at, we decided on _six_. We made this decision based on the lines of code, and whether the benchmarks were too array-intensive. Our analysis is _index-insensitive_ meaning that it will unlikely work well for heavy array operations.
+
+We further divide those six benchmarks into two categories: big and small. Big applications (Lire, Jbzip2, Duke) are real applications that we could find. Small applications (MolDyn, KMeans, MonteCarlo) are from the group who did OoOJava. We use the big applications to show the utility of our tool on large applications where static analysis is likely to give warnings. We use the small applications as verification to show that our tool can work without much user intervention on small applications (that others have worked on).
 
 h4. Lire
 
@@ -33,3 +37,17 @@ h4. Duke
 Duke is a fast and flexible deduplication (or entity resolution, or record linkage) engine written in Java on top of Lucene.
 
 Original code from "Duke":http://code.google.com/p/duke/
+
+h4. MolDyn
+
+Molecular Dynamics Simulation. From OoOJava, which ported it over from the Java Grande benchmarks.
+
+h4. KMeans
+
+KMeans clustering algorithm. From OoOJava, which ported it over from the STAMP Transactional Memory benchmark.
+
+h4. MonteCarlo
+
+Monte Carlo simulation for option pricing. From OoOJava, which ported it over from the Java Grande benchmarks.
+
+
