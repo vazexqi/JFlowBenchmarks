@@ -1,4 +1,11 @@
 package edu.illinois.jflow.benchmark;
+
+import java.util.Arrays;
+
+import groovyx.gpars.DataflowMessagingRunnable;
+import groovyx.gpars.dataflow.DataflowQueue;
+import groovyx.gpars.dataflow.operator.FlowGraph;
+
 /**************************************************************************
 *                                                                         *
 *             Java Grande Forum Benchmark Suite - Version 2.0             *
@@ -345,6 +352,24 @@ class mdRunner {
 
     int l_interacts= 0;
 
+    class Bundle {
+        int i;
+
+        int lworkload;
+
+        int mdsize;
+
+        particle[] one;
+
+        int scratch_idx;
+
+        double[][][] scratchpad;
+
+        MDStore store;
+
+        double[][] workingpad;
+    }
+
     public void run() {
         /* Parameter determination */
 
@@ -408,39 +433,75 @@ class mdRunner {
             int lworkload= workload;
 
             try {
+                final DataflowQueue<Bundle> channel0= new DataflowQueue<Bundle>();
+                final DataflowQueue<Bundle> channel1= new DataflowQueue<Bundle>();
+                FlowGraph fGraph= new FlowGraph();
+                fGraph.operator(Arrays.asList(channel0), Arrays.asList(channel1), 8, new DataflowMessagingRunnable(1) {
+                    @Override
+                    protected void doRun(Object... args) {
+                        try {
+                            Bundle b= ((Bundle)args[0]);
+                            double[][][] scratchpad= b.scratchpad;
+                            int lworkload= b.lworkload;
+                            particle[] one= b.one;
+                            int mdsize= b.mdsize;
+                            int scratch_idx= b.scratch_idx;
+                            int i= b.i;
+                            int ilow= i;
+                            int iupper= i + lworkload;
+                            if (iupper > mdsize) {
+                                iupper= mdsize;
+                            }
+                            double workingpad[][]= scratchpad[scratch_idx];
+                            for (int j= 0; j < 3; j++) {
+                                for (int l= 0; l < mdsize; l++) {
+                                    workingpad[j][l]= 0;
+                                }
+                            }
+                            MDStore store= new MDStore();
+                            for (int idx= ilow; idx < iupper; idx++) {
+                                one[idx].force(side, rcoff, mdsize, idx, xx, yy, zz, mymd, store, workingpad);
+                            }
+                            b.workingpad= workingpad;
+                            b.store= store;
+                            channel1.bind(b);
+                        } catch (Exception e) {
+                        }
+                    }
+                });
+                fGraph.operator(Arrays.asList(channel1), Arrays.asList(), new DataflowMessagingRunnable(1) {
+                    @Override
+                    protected void doRun(Object... args) {
+                        try {
+                            Bundle b= ((Bundle)args[0]);
+                            double[][] workingpad= b.workingpad;
+                            MDStore store= b.store;
+                            int mdsize= b.mdsize;
+                            for (int k= 0; k < 3; k++) {
+                                for (int j= 0; j < mdsize; j++) {
+                                    sh_force[k][j]+= workingpad[k][j];
+                                }
+                            }
+                            l_epot+= store.epot;
+                            l_vir+= store.vir;
+                            l_interacts+= store.interacts;
+                        } catch (Exception e) {
+                        }
+                    }
+                });
                 for (int i= 0, scratch_idx= 0; i < mdsize; i+= lworkload, scratch_idx++) {
 
-                    // Begin Stage1
-                    int ilow= i;
-                    int iupper= i + lworkload;
-                    if (iupper > mdsize) {
-                        iupper= mdsize;
-                    }
-
-                    double workingpad[][]= scratchpad[scratch_idx];
-                    for (int j= 0; j < 3; j++) {
-                        for (int l= 0; l < mdsize; l++) {
-                            workingpad[j][l]= 0;
-                        }
-                    }
-                    MDStore store= new MDStore();
-                    for (int idx= ilow; idx < iupper; idx++) {
-                        one[idx].force(side, rcoff, mdsize, idx, xx, yy, zz, mymd, store, workingpad);
-                    }
-                    // End Stage1
-
-                    // Begin Stage2
-                    for (int k= 0; k < 3; k++) {
-                        for (int j= 0; j < mdsize; j++) {
-                            sh_force[k][j]+= workingpad[k][j];
-                        }
-                    }
-                    l_epot+= store.epot;
-                    l_vir+= store.vir;
-                    l_interacts+= store.interacts;
-                    // End Stage2
+                    Bundle b= new Bundle();
+                    b.i= i;
+                    b.scratch_idx= scratch_idx;
+                    b.lworkload= lworkload;
+                    b.mdsize= mdsize;
+                    b.one= one;
+                    b.scratchpad= scratchpad;
+                    channel0.bind(b);
 
                 }
+                fGraph.waitForAll();
             } catch (Exception e) {
             }
 
