@@ -1,4 +1,9 @@
 package edu.illinois.jflow.benchmark;
+
+import java.util.Arrays;
+
+import groovyx.gpars.DataflowMessagingRunnable;
+import groovyx.gpars.dataflow.DataflowQueue;
 /* =============================================================================
  *
  * normal.java
@@ -85,6 +90,7 @@ package edu.illinois.jflow.benchmark;
  *
  * =============================================================================
  */
+import groovyx.gpars.dataflow.operator.FlowGraph;
 
 public class Normal {
     int CHUNK;
@@ -102,6 +108,36 @@ public class Normal {
 
     private static float delta;
 
+    static class Bundle {
+        float[][] clusters;
+
+        float[][] feature;
+
+        GlobalArgs globalArgs;
+
+        int i1;
+
+        int i2;
+
+        int[] indexArray;
+
+        int[] membership;
+
+        int nclusters;
+
+        float[][] new_centers;
+
+        int[] new_centers_len;
+
+        int nfeatures;
+
+        int npoints;
+
+        int start;
+
+        int stop;
+    }
+
     public static void work(int myId, GlobalArgs globalArgs) {
 
         float[][] feature= globalArgs.feature;
@@ -118,46 +154,88 @@ public class Normal {
 
         try {
 
+            final DataflowQueue<Bundle> channel0= new DataflowQueue<Bundle>();
+            final DataflowQueue<Bundle> channel1= new DataflowQueue<Bundle>();
+            FlowGraph fGraph= new FlowGraph();
+            fGraph.operator(Arrays.asList(channel0), Arrays.asList(channel1), 8, new DataflowMessagingRunnable(1) {
+                @Override
+                protected void doRun(Object... args) {
+                    try {
+                        Bundle b= ((Bundle)args[0]);
+                        int nclusters= b.nclusters;
+                        int nfeatures= b.nfeatures;
+                        int npoints= b.npoints;
+                        float[][] clusters= b.clusters;
+                        int start= b.start;
+                        float[][] feature= b.feature;
+                        int stop= (((start + CHUNK) < npoints) ? (start + CHUNK) : npoints);
+                        int indexArrayLen= stop - start;
+                        int indexArray[]= new int[indexArrayLen];
+                        int pidx= 0;
+                        for (int i1= start; i1 < stop; i1++) {
+                            int index= Common.common_findNearestPoint(feature[i1], nfeatures, clusters, nclusters);
+                            indexArray[pidx]= index;
+                            pidx++;
+                        }
+                        b.stop= stop;
+                        b.indexArray= indexArray;
+                        channel1.bind(b);
+                    } catch (Exception e) {
+                    }
+                }
+            });
+            fGraph.operator(Arrays.asList(channel1), Arrays.asList(), new DataflowMessagingRunnable(1) {
+                @Override
+                protected void doRun(Object... args) {
+                    try {
+                        Bundle b= ((Bundle)args[0]);
+                        int stop= b.stop;
+                        GlobalArgs globalArgs= b.globalArgs;
+                        int nfeatures= b.nfeatures;
+                        int npoints= b.npoints;
+                        int start= b.start;
+                        int[] membership= b.membership;
+                        int[] new_centers_len= b.new_centers_len;
+                        int[] indexArray= b.indexArray;
+                        float[][] new_centers= b.new_centers;
+                        float[][] feature= b.feature;
+                        int sidx= 0;
+                        for (int i2= start; i2 < stop; i2++) {
+                            int newIndex= indexArray[sidx];
+                            if (membership[i2] != newIndex) {
+                                delta+= 1.0f;
+                            }
+                            membership[i2]= newIndex;
+                            new_centers_len[newIndex]= new_centers_len[newIndex] + 1;
+                            float[] tmpnew_centers= new_centers[newIndex];
+                            float[] tmpfeature= feature[i2];
+                            for (int j= 0; j < nfeatures; j++) {
+                                tmpnew_centers[j]= tmpnew_centers[j] + tmpfeature[j];
+                            }
+                            sidx++;
+                        }
+                        if (start + CHUNK < npoints) {
+                            globalArgs.global_i= start + CHUNK;
+                        }
+                    } catch (Exception e) {
+                    }
+                }
+            });
             for (int start= myId * CHUNK; start < npoints; start+= CHUNK) {
-                // Begin Stage1
-                int stop= (((start + CHUNK) < npoints) ? (start + CHUNK) : npoints);
-                int indexArrayLen= stop - start;
-                int indexArray[]= new int[indexArrayLen];
-                int pidx= 0;
-                for (int i1= start; i1 < stop; i1++) {
-                    int index= Common.common_findNearestPoint(feature[i1], nfeatures, clusters, nclusters);
-                    indexArray[pidx]= index;
-                    pidx++;
-                }
-                // End Stage1
-
-                // Begin Stage2
-                int sidx= 0;
-                for (int i2= start; i2 < stop; i2++) {
-
-                    int newIndex= indexArray[sidx];
-                    if (membership[i2] != newIndex) {
-                        delta+= 1.0f;
-                    }
-
-                    membership[i2]= newIndex;
-                    new_centers_len[newIndex]= new_centers_len[newIndex] + 1;
-
-                    float[] tmpnew_centers= new_centers[newIndex];
-                    float[] tmpfeature= feature[i2];
-
-                    for (int j= 0; j < nfeatures; j++) {
-                        tmpnew_centers[j]= tmpnew_centers[j] + tmpfeature[j];
-                    }
-
-                    sidx++;
-                }
-
-                if (start + CHUNK < npoints) {
-                    globalArgs.global_i= start + CHUNK;
-                }
-                // End Stage2
+                Bundle b= new Bundle();
+                b.start= start;
+                b.clusters= clusters;
+                b.feature= feature;
+                b.globalArgs= globalArgs;
+                b.membership= membership;
+                b.nclusters= nclusters;
+                b.new_centers= new_centers;
+                b.new_centers_len= new_centers_len;
+                b.nfeatures= nfeatures;
+                b.npoints= npoints;
+                channel0.bind(b);
             }
+            fGraph.waitForAll();
         } catch (Exception e) {
 
         }
