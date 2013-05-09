@@ -108,8 +108,6 @@ public class AppDemo extends Universal {
         this.nRunsMC= nRunsMC;
         this.initialised= false;
         this.workload= workload;
-        set_prompt(prompt);
-        set_DEBUG(DEBUG);
     }
 
     /**

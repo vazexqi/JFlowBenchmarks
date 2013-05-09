@@ -74,8 +74,6 @@ public class PathId extends Universal {
      */
     public PathId() {
         super();
-        set_prompt(prompt);
-        set_DEBUG(DEBUG);
     }
 
     /**
@@ -84,8 +82,6 @@ public class PathId extends Universal {
      * @param name The name for the security to record.
      */
     public PathId(String name) {
-        set_prompt(prompt);
-        set_DEBUG(DEBUG);
         this.name= name;
     }
 

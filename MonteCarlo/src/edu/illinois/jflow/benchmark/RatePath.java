@@ -102,7 +102,6 @@ public class RatePath extends PathId {
      * @exception DemoException thrown if there is a problem reading in the data file.
      */
     public RatePath(String filename) {
-        set_prompt(prompt);
         set_DEBUG(DEBUG);
         readRatesFile(filename);
     }
@@ -122,7 +121,6 @@ public class RatePath extends PathId {
         set_startDate(startDate);
         set_endDate(endDate);
         set_dTime(dTime);
-        set_prompt(prompt);
         set_DEBUG(DEBUG);
         this.pathValue= pathValue;
         this.nAcceptedPathValue= pathValue.length;
@@ -165,8 +163,6 @@ public class RatePath extends PathId {
         set_startDate(startDate);
         set_endDate(endDate);
         set_dTime(dTime);
-        set_prompt(prompt);
-        set_DEBUG(DEBUG);
         this.pathValue= new double[pathValueLength];
         this.nAcceptedPathValue= pathValue.length;
     }

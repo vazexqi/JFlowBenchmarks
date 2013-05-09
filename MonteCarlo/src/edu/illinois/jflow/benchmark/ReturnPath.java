@@ -131,9 +131,6 @@ public class ReturnPath extends PathId {
 //    mean = Double.NaN;
 
 //    variance = Double.NaN;
-
-        set_prompt(prompt);
-        set_DEBUG(DEBUG);
     }
 
     /**
@@ -145,8 +142,6 @@ public class ReturnPath extends PathId {
      * @param returnDefinition to tell this class how the return path values were computed.
      */
     public ReturnPath(double[] pathValue, int nPathValue, int returnDefinition) {
-        set_prompt(prompt);
-        set_DEBUG(DEBUG);
         this.pathValue= pathValue;
         this.nPathValue= nPathValue;
         this.returnDefinition= returnDefinition;

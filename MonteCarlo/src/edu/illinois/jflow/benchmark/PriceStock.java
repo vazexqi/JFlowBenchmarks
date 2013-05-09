@@ -91,8 +91,6 @@ public class PriceStock extends Universal {
     public PriceStock() {
         super();
         mcPath= new MonteCarloPath();
-        set_prompt(prompt);
-        set_DEBUG(DEBUG);
     }
 
     // ------------------------------------------------------------------------

@@ -46,12 +46,12 @@ public class Universal {
      * Variable, for whether to print debug messages. This one can be set by subsequent child
      * classes.
      */
-    private boolean DEBUG= true;
+    private static boolean DEBUG= true;
 
     /**
      * The prompt to write before any debug messages.
      */
-    private String prompt= "Universal> ";
+    private static String prompt= "Universal> ";
 
     //------------------------------------------------------------------------
     // Constructors.

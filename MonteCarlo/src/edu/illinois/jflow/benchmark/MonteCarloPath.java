@@ -104,8 +104,6 @@ public class MonteCarloPath extends PathId {
      */
     public MonteCarloPath() {
         super();
-        set_prompt(prompt);
-        set_DEBUG(DEBUG);
     }
 
     /**
@@ -128,8 +126,6 @@ public class MonteCarloPath extends PathId {
         /**
          * Whether to debug, and how.
          */
-        set_prompt(prompt);
-        set_DEBUG(DEBUG);
     }
 
     /**
@@ -162,8 +158,6 @@ public class MonteCarloPath extends PathId {
         /**
          * Whether to debug, and how.
          */
-        set_prompt(prompt);
-        set_DEBUG(DEBUG);
     }
 
     /**
@@ -195,11 +189,6 @@ public class MonteCarloPath extends PathId {
         this.nTimeSteps= nTimeSteps;
         this.pathValue= new double[nTimeSteps];
         this.fluctuations= new double[nTimeSteps];
-        /**
-         * Whether to debug, and how.
-         */
-        set_prompt(prompt);
-        set_DEBUG(DEBUG);
     }
 
     // ------------------------------------------------------------------------
