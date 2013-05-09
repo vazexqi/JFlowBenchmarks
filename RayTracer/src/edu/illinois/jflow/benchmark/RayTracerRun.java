@@ -1,5 +1,5 @@
 package edu.illinois.jflow.benchmark;
-public class test {
+public class RayTracerRun {
 
 	public static void main(String argv[]) {
 	  boolean vtest=false;

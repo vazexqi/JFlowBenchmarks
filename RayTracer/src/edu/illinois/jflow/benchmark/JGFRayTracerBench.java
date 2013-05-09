@@ -78,29 +78,12 @@ public class JGFRayTracerBench extends RayTracer {
 	}
 
 	public void JGFrun(int size, JGFInstrumentor instr,boolean vtest) {
-
-//		instr.addTimer("Section3:RayTracer:Total", "Solutions", size);
-//		instr.addTimer("Section3:RayTracer:Init", "Objects", size);
-//		instr.addTimer("Section3:RayTracer:Run", "Pixels", size);
-
 		JGFsetsize(size);
 
-//		instr.startTimer("Section3:RayTracer:Total");
-
+        long sTime= System.currentTimeMillis();
 		JGFinitialise();
 		JGFapplication(vtest);
-//		JGFvalidate();
-//		JGFtidyup();
-
-//		instr.stopTimer("Section3:RayTracer:Total");
-//
-//		instr.addOpsToTimer("Section3:RayTracer:Init", (double) numobjects);
-//		instr.addOpsToTimer("Section3:RayTracer:Run",(double) (width * height));
-//		instr.addOpsToTimer("Section3:RayTracer:Total", 1);
-//
-//		instr.printTimer("Section3:RayTracer:Init");
-//		instr.printTimer("Section3:RayTracer:Run");
-//		instr.printTimer("Section3:RayTracer:Total");
+		System.out.println("Time=" + (System.currentTimeMillis() - sTime));
 	}
 
 }
