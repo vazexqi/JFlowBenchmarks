@@ -1,5 +1,9 @@
 package edu.illinois.jflow.benchmark;
 
+import groovyx.gpars.DataflowMessagingRunnable;
+import groovyx.gpars.dataflow.DataflowQueue;
+import groovyx.gpars.dataflow.operator.FlowGraph;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -10,6 +14,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.itadaki.bzip2.BZip2InputStream;
@@ -82,6 +87,13 @@ public class RoundTrip {
     }
 
 
+    static class Bundle {
+        File inputFile;
+
+        File tempFile;
+    }
+
+
     /**
      * Compresses and decompresses each of a list of files, using a temporary file to hold the
      * compressed data
@@ -92,36 +104,59 @@ public class RoundTrip {
     private static void roundTrip(List<File> files) throws IOException {
 
 
+        final DataflowQueue<Bundle> channel0= new DataflowQueue<Bundle>();
+        final DataflowQueue<Bundle> channel1= new DataflowQueue<Bundle>();
+        FlowGraph fGraph= new FlowGraph();
+        fGraph.operator(Arrays.asList(channel0), Arrays.asList(channel1), 8, new DataflowMessagingRunnable(1) {
+            @Override
+            protected void doRun(Object... args) {
+                try {
+                    Bundle b= ((Bundle)args[0]);
+                    File inputFile= b.inputFile;
+                    File tempFile= File.createTempFile("rtr", ".tmp");
+                    InputStream fileInputStream= new BufferedInputStream(new FileInputStream(inputFile));
+                    OutputStream compressedOutputStream= new BufferedOutputStream(new FileOutputStream(tempFile));
+                    BZip2OutputStream bzip2OutputStream= new BZip2OutputStream(compressedOutputStream);
+                    byte[] buffer= new byte[524288];
+                    int bytesRead;
+                    while ((bytesRead= fileInputStream.read(buffer, 0, buffer.length)) != -1) {
+                        bzip2OutputStream.write(buffer, 0, bytesRead);
+                    }
+                    bzip2OutputStream.close();
+                    compressedOutputStream.close();
+                    fileInputStream.close();
+                    b.tempFile= tempFile;
+                    channel1.bind(b);
+                } catch (Exception e) {
+                }
+            }
+        });
+        fGraph.operator(Arrays.asList(channel1), Arrays.asList(), 8, new DataflowMessagingRunnable(1) {
+            @Override
+            protected void doRun(Object... args) {
+                try {
+                    Bundle b= ((Bundle)args[0]);
+                    File tempFile= b.tempFile;
+                    InputStream compressedInputStream= new BufferedInputStream(new FileInputStream(tempFile));
+                    BZip2InputStream bzip2InputStream= new BZip2InputStream(compressedInputStream, false);
+                    byte[] decoded= new byte[524288];
+                    int bytesRead;
+                    while ((bytesRead= bzip2InputStream.read(decoded)) != -1)
+                        ;
+                    compressedInputStream.close();
+                    bzip2InputStream.close();
+                } catch (Exception e) {
+                }
+            }
+        });
         for (File inputFile : files) {
 
-            // Begin Stage1
-            File tempFile= File.createTempFile("rtr", ".tmp");
-            InputStream fileInputStream= new BufferedInputStream(new FileInputStream(inputFile));
-            OutputStream compressedOutputStream= new BufferedOutputStream(new FileOutputStream(tempFile));
-            BZip2OutputStream bzip2OutputStream= new BZip2OutputStream(compressedOutputStream);
-
-            byte[] buffer= new byte[524288];
-            int bytesRead;
-            while ((bytesRead= fileInputStream.read(buffer, 0, buffer.length)) != -1) {
-                bzip2OutputStream.write(buffer, 0, bytesRead);
-            }
-            bzip2OutputStream.close();
-            compressedOutputStream.close();
-            fileInputStream.close();
-            // End Stage1
-
-            // Begin Stage2
-            InputStream compressedInputStream= new BufferedInputStream(new FileInputStream(tempFile));
-            BZip2InputStream bzip2InputStream= new BZip2InputStream(compressedInputStream, false);
-            byte[] decoded= new byte[524288];
-            while ((bytesRead= bzip2InputStream.read(decoded)) != -1)
-                ;
-
-            compressedInputStream.close();
-            bzip2InputStream.close();
-            // End Stage2
+            Bundle b= new Bundle();
+            b.inputFile= inputFile;
+            channel0.bind(b);
 
         }
+        fGraph.waitForAll();
 
     }
 
