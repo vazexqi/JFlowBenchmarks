@@ -118,7 +118,7 @@ public class JGFMolDynBench {
         thobjects[0].md.run();
 //    }
         long end= System.currentTimeMillis();
-//    System.out.println("Total="+(end-start));
+        System.out.println("Time=" + (end - start));
     }
 
 }
