@@ -281,9 +281,6 @@ public class RayTracer {
                             row[pixCounter_t]= tempArray[x];
                         }
                         checksum+= line_checksum;
-                        if (yLine == (interval.yto - 1)) {
-                            System.out.println("CHECKSUM=" + checksum);
-                        }
                     } catch (Exception e) {
                     }
                 }
@@ -301,6 +298,7 @@ public class RayTracer {
                 channel0.bind(b);
             }
             fGraph.waitForAll();
+            System.out.println("CHECKSUM=" + checksum);
         } catch (Exception e) {
 
         }
