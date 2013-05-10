@@ -234,7 +234,7 @@ public class Processor {
         try {
             final DataflowQueue<Bundle> channel0= new DataflowQueue<Bundle>();
             FlowGraph fGraph= new FlowGraph();
-            fGraph.operator(Arrays.asList(channel0), Arrays.asList(), 8, new DataflowMessagingRunnable(1) {
+            fGraph.operator(Arrays.asList(channel0), Arrays.asList(), 4, new DataflowMessagingRunnable(1) {
                 @Override
                 protected void doRun(Object... args) {
                     try {

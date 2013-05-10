@@ -224,7 +224,7 @@ public class RayTracer {
             final DataflowQueue<Bundle> channel0= new DataflowQueue<Bundle>();
             final DataflowQueue<Bundle> channel1= new DataflowQueue<Bundle>();
             FlowGraph fGraph= new FlowGraph();
-            fGraph.operator(Arrays.asList(channel0), Arrays.asList(channel1), 8, new DataflowMessagingRunnable(1) {
+            fGraph.operator(Arrays.asList(channel0), Arrays.asList(channel1), 4, new DataflowMessagingRunnable(1) {
                 @Override
                 protected void doRun(Object... args) {
                     try {

@@ -90,7 +90,7 @@ public class LireIndexingExample {
         final DataflowQueue<Bundle> channel2= new DataflowQueue<Bundle>();
         final DataflowQueue<Bundle> channel3= new DataflowQueue<Bundle>();
         FlowGraph fGraph= new FlowGraph();
-        fGraph.operator(Arrays.asList(channel0), Arrays.asList(channel1), 8, new DataflowMessagingRunnable(1) {
+        fGraph.operator(Arrays.asList(channel0), Arrays.asList(channel1), 4, new DataflowMessagingRunnable(1) {
             @Override
             protected void doRun(Object... args) {
                 try {
@@ -105,7 +105,7 @@ public class LireIndexingExample {
                 }
             }
         });
-        fGraph.operator(Arrays.asList(channel1), Arrays.asList(channel2), 8, new DataflowMessagingRunnable(1) {
+        fGraph.operator(Arrays.asList(channel1), Arrays.asList(channel2), 4, new DataflowMessagingRunnable(1) {
             @Override
             protected void doRun(Object... args) {
                 try {
@@ -120,7 +120,7 @@ public class LireIndexingExample {
                 }
             }
         });
-        fGraph.operator(Arrays.asList(channel2), Arrays.asList(channel3), 8, new DataflowMessagingRunnable(1) {
+        fGraph.operator(Arrays.asList(channel2), Arrays.asList(channel3), 4, new DataflowMessagingRunnable(1) {
             @Override
             protected void doRun(Object... args) {
                 try {
