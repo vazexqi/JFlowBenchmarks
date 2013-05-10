@@ -296,7 +296,9 @@ public class Processor {
         index(sources1, batch_size);
 
         // second, traverse group 2 to look for matches with group 1
+        long start= System.currentTimeMillis();
         linkRecords(sources2, true, batch_size);
+        System.out.println("ACTUAL TIME LINKAGE: " + (System.currentTimeMillis() - start));
     }
 
     /**
