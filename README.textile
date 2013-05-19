@@ -50,4 +50,8 @@ h4. MonteCarlo
 
 Monte Carlo simulation for option pricing. From OoOJava, which ported it over from the Java Grande benchmarks.
 
+h4. RayTracer
+
+Ray tracing application. From OoOJava, which ported it over from the Java Grande benchmarks.
+
 
