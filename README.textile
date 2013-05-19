@@ -16,9 +16,9 @@ When coding with Eclipse, please use the included code formatter (from Eclipse J
 
 h2. The benchmarks (that we actually used)
 
-While there are several benchmarks that we have looked at, we decided on _six_. We made this decision based on the lines of code, and whether the benchmarks were too array-intensive. Our analysis is _index-insensitive_ meaning that it will unlikely work well for heavy array operations.
+While there are several benchmarks that we have looked at, we decided on _seven_. We made this decision based on the lines of code, and whether the benchmarks were too array-intensive. Our analysis is _index-insensitive_ meaning that it will unlikely work well for heavy array operations.
 
-We further divide those six benchmarks into two categories: big and small. Big applications (Lire, Jbzip2, Duke) are real applications that we could find. Small applications (MolDyn, KMeans, MonteCarlo) are from the group who did OoOJava. We use the big applications to show the utility of our tool on large applications where static analysis is likely to give warnings. We use the small applications as verification to show that our tool can work without much user intervention on small applications (that others have worked on).
+We further divide those six benchmarks into two categories: big and small. Big applications (Lire, Jbzip2, Duke) are real applications that we could find. Small applications (MolDyn, KMeans, MonteCarlo, RayTracer) are from the group who did OoOJava. We use the big applications to show the utility of our tool on large applications where static analysis is likely to give warnings. We use the small applications as verification to show that our tool can work without much user intervention on small applications (that others have worked on).
 
 h4. Lire
 
