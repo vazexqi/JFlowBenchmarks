@@ -90,36 +90,37 @@ public class RoundTrip {
      * @throws IOException On any error compressing or decompressing the files
      */
     private static void roundTrip(List<File> files) throws IOException {
-
-
         for (File inputFile : files) {
             // Begin Stage1
-            File outputFile= File.createTempFile("jflow", ".tmp");
+            File uncompressedOutputFile= File.createTempFile("jflow_in", ".tmp");
             InputStream fileInputStream= new BufferedInputStream(new FileInputStream(inputFile));
             BZip2InputStream compressedInputStream= new BZip2InputStream(fileInputStream, false);
-            OutputStream bzipInputStream= new BufferedOutputStream(new FileOutputStream(outputFile), 524288);
+            OutputStream uncompressedFileStream= new BufferedOutputStream(new FileOutputStream(uncompressedOutputFile), 524288);
 
             byte[] decoded= new byte[524288];
             int bytesRead;
             while ((bytesRead= compressedInputStream.read(decoded)) != -1) {
-                bzipInputStream.write(decoded, 0, bytesRead);
+                uncompressedFileStream.write(decoded, 0, bytesRead);
             }
-            bzipInputStream.close();
+            uncompressedFileStream.close();
             compressedInputStream.close();
             // End Stage1
 
             // Do some processing in the middle
 
             // Begin Stage2
-            InputStream compressedOutputStream= new BufferedInputStream(new FileInputStream(outputFile));
-            OutputStream bzipOutputStream= new BufferedOutputStream(new FileOutputStream(inputFile), 524288);
-            BZip2OutputStream fileOutputStream= new BZip2OutputStream(bzipOutputStream);
+            File compressedOutputFile= File.createTempFile("jflow_out", ".bz2");
+            InputStream fileStream= new BufferedInputStream(new FileInputStream(uncompressedOutputFile));
+            OutputStream fileOutputStream= new BufferedOutputStream(new FileOutputStream(compressedOutputFile), 524288);
+            BZip2OutputStream outputStream= new BZip2OutputStream(fileOutputStream);
+
             byte[] buffer= new byte[524288];
-            while ((bytesRead= compressedOutputStream.read(buffer)) != -1) {
-                bzipOutputStream.write(buffer, 0, bytesRead);
+            int bytesWritten;
+            while ((bytesWritten= fileStream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, bytesWritten);
             }
-            fileOutputStream.close();
-            compressedOutputStream.close();
+            outputStream.close();
+            fileStream.close();
             // End Stage2
         }
 
