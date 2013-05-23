@@ -14,6 +14,12 @@ h4. Coding Conventions
 
 When coding with Eclipse, please use the included code formatter (from Eclipse JDT) in the "Coding conventions" folder. For more information on using the custom code formatter, refer to this "guide":http://help.eclipse.org/juno/index.jsp?topic=/org.eclipse.jdt.doc.user/reference/preferences/java/codestyle/ref-preferences-formatter.htm.
 
+h2. Getting the right version of GPars
+
+The parallelized version uses a `FlowGraph` construct that is not part of the official GPars distribution. We have bundled the necessary jars with the parallelized versions of the benchmarks. We have also set up the .classpath file so that Eclipse can recognize those libraries.
+
+If you are interested in seeing the source code for our implementation of `FlowGraph` consult our [forked|https://github.com/vazexqi/GPars/commits/master] version of the GPars repository.
+
 h2. The benchmarks (that we actually used)
 
 While there are several benchmarks that we have looked at, we decided on _seven_. We made this decision based on the lines of code, and whether the benchmarks were too array-intensive. Our analysis is _index-insensitive_ meaning that it will unlikely work well for heavy array operations.
