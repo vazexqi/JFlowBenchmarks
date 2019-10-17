@@ -30,7 +30,7 @@ TO PUBLISH SNAPSHOTS
     <dependency>
       <groupId>org.apache.lucene</groupId>
       <artifactId>lucene-core</artifactId>
-      <version>4.0.0</version>
+      <version>7.1.0</version>
     </dependency>
 
     <!-- necessary to get KeywordAnalyzer and StandardAnalyzer -->
